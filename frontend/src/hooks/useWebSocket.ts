@@ -2,7 +2,7 @@ import { useEffect, useRef, useCallback } from 'react';
 import type { Message, Subgroup } from '../types';
 import { useDeliberationStore } from '../stores/deliberationStore';
 
-const WS_BASE = import.meta.env.VITE_WS_URL || `ws://${window.location.hostname}:58432`;
+const WS_BASE = import.meta.env.VITE_WS_URL || `ws://${window.location.host}`;
 
 export function useWebSocket() {
   const wsRef = useRef<WebSocket | null>(null);

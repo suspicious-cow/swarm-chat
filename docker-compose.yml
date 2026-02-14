@@ -55,12 +55,34 @@ services:
     volumes:
       - ./frontend:/app
       - /app/node_modules
-    environment:
-      - VITE_API_URL=http://localhost:58432
-      - VITE_WS_URL=ws://localhost:58432
     depends_on:
       - backend
     command: npm run dev -- --host 0.0.0.0 --port 3000
+
+  e2e:
+    build:
+      context: ./e2e
+      dockerfile: Dockerfile
+    environment:
+      - BASE_URL=http://frontend:3000
+      - API_BASE=http://backend:8000
+      - SCREENSHOTS_DIR=/app/screenshots
+    depends_on:
+      - frontend
+      - backend
+    volumes:
+      - ./screenshots:/app/screenshots
+    command: >
+      bash -c "
+        echo 'Waiting for backend...' &&
+        until curl -sf http://backend:8000/api/health > /dev/null 2>&1; do sleep 2; done &&
+        echo 'Backend ready. Waiting for frontend...' &&
+        until curl -sf http://frontend:3000 > /dev/null 2>&1; do sleep 2; done &&
+        echo 'Frontend ready. Running E2E tests...' &&
+        npx playwright test
+      "
+    profiles:
+      - e2e
 
 volumes:
   pgdata:
