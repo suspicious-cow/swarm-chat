@@ -4,7 +4,7 @@ Usage:
   docker compose exec backend python -m scripts.seed --session-code ABC123 --users 20
 
 Or run directly:
-  python scripts/seed.py --api-url http://localhost:8000 --session-code ABC123 --users 20
+  python scripts/seed.py --api-url http://localhost:58432 --session-code ABC123 --users 20
 """
 import argparse
 import asyncio
@@ -41,7 +41,7 @@ SAMPLE_MESSAGES = [
 
 async def main():
     parser = argparse.ArgumentParser(description="Seed a Swarm Chat session")
-    parser.add_argument("--api-url", default="http://localhost:8000")
+    parser.add_argument("--api-url", default="http://localhost:58432")
     parser.add_argument("--session-code", required=True, help="Join code for the session")
     parser.add_argument("--users", type=int, default=15, help="Number of simulated users")
     parser.add_argument("--messages", type=int, default=3, help="Messages per user")
