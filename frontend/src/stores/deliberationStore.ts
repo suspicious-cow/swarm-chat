@@ -1,8 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
+import { useToastStore } from './toastStore';
 import type { Session, User, Subgroup, Message, Idea } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
+
+type View = 'home' | 'new-session' | 'join-session' | 'settings'
+  | 'waiting' | 'chat' | 'visualizer' | 'participants';
 
 interface DeliberationState {
   // Current user & session
@@ -16,7 +20,7 @@ interface DeliberationState {
   ideas: Idea[];
 
   // UI state
-  view: 'dashboard' | 'lobby' | 'waiting' | 'chat' | 'visualizer';
+  view: View;
   surrogateTyping: boolean;
   error: string | null;
 
@@ -33,7 +37,7 @@ interface DeliberationState {
   setSurrogateTyping: (typing: boolean) => void;
   setSubgroups: (subgroups: Subgroup[]) => void;
   setCurrentSubgroup: (subgroup: Subgroup) => void;
-  setView: (view: DeliberationState['view']) => void;
+  setView: (view: View) => void;
   setError: (error: string | null) => void;
   reset: () => void;
 }
@@ -45,7 +49,7 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
   subgroups: [],
   messages: [],
   ideas: [],
-  view: 'dashboard',
+  view: 'home',
   surrogateTyping: false,
   error: null,
 
@@ -60,8 +64,10 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
       if (!res.ok) throw new Error('Failed to create session');
       const session: Session = await res.json();
       set({ currentSession: session, error: null });
+      useToastStore.getState().addToast('Session created!', 'success');
     } catch (e: unknown) {
       set({ error: (e as Error).message });
+      useToastStore.getState().addToast('Failed to create session', 'error');
     }
   },
 
@@ -92,6 +98,8 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
         error: null,
       });
 
+      useToastStore.getState().addToast(`Joined "${session.title}"`, 'success');
+
       // If already active and assigned to a subgroup, load messages
       if (user.subgroup_id) {
         const userRes = await fetch(`${API_BASE}/api/users/${user.id}`, {
@@ -104,6 +112,7 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
       }
     } catch (e: unknown) {
       set({ error: (e as Error).message });
+      useToastStore.getState().addToast((e as Error).message, 'error');
     }
   },
 
@@ -125,8 +134,10 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
         currentSession: { ...currentSession, status: 'active' },
         error: null,
       });
+      useToastStore.getState().addToast('Deliberation started!', 'success');
     } catch (e: unknown) {
       set({ error: (e as Error).message });
+      useToastStore.getState().addToast('Failed to start deliberation', 'error');
     }
   },
 
@@ -139,8 +150,10 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
         credentials: 'include',
       });
       set({ currentSession: { ...currentSession, status: 'completed' } });
+      useToastStore.getState().addToast('Deliberation ended', 'info');
     } catch (e: unknown) {
       set({ error: (e as Error).message });
+      useToastStore.getState().addToast('Failed to stop deliberation', 'error');
     }
   },
 
@@ -153,7 +166,9 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
       });
       const session: Session = await res.json();
       set({ currentSession: session });
-    } catch (_) {}
+    } catch {
+      // silent
+    }
   },
 
   fetchMessages: async () => {
@@ -167,7 +182,9 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
         const messages: Message[] = await res.json();
         set({ messages });
       }
-    } catch (_) {}
+    } catch {
+      // silent
+    }
   },
 
   fetchSubgroups: async () => {
@@ -181,7 +198,9 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
         const subgroups: Subgroup[] = await res.json();
         set({ subgroups });
       }
-    } catch (_) {}
+    } catch {
+      // silent
+    }
   },
 
   fetchIdeas: async () => {
@@ -195,7 +214,9 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
         const ideas: Idea[] = await res.json();
         set({ ideas });
       }
-    } catch (_) {}
+    } catch {
+      // silent
+    }
   },
 
   addMessage: (message) => {
@@ -217,15 +238,29 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
     subgroups: [],
     messages: [],
     ideas: [],
-    view: 'dashboard',
+    view: 'home',
     surrogateTyping: false,
     error: null,
   }),
 }), {
   name: 'swarm-chat-session',
+  version: 2,
   partialize: (state) => ({
     currentUser: state.currentUser,
     currentSession: state.currentSession,
     view: state.view,
   }),
+  migrate: (persisted: unknown, version: number) => {
+    const state = persisted as Record<string, unknown>;
+    if (version < 2) {
+      // Map old view names to new ones
+      const viewMap: Record<string, string> = {
+        dashboard: 'home',
+        lobby: 'home',
+      };
+      const oldView = state.view as string;
+      state.view = viewMap[oldView] || oldView;
+    }
+    return state as unknown as DeliberationState;
+  },
 }));

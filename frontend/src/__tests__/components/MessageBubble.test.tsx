@@ -21,7 +21,7 @@ describe('MessageBubble', () => {
     expect(screen.getByText('Hello everyone!')).toBeInTheDocument();
   });
 
-  it('renders surrogate message with AI RELAY badge', () => {
+  it('renders surrogate message with Surrogate badge', () => {
     const msg: Message = {
       ...baseMsg,
       user_id: null,
@@ -29,7 +29,7 @@ describe('MessageBubble', () => {
       msg_type: 'surrogate',
     };
     render(<MessageBubble message={msg} isOwn={false} />);
-    expect(screen.getByText('AI RELAY')).toBeInTheDocument();
+    expect(screen.getByText('Surrogate')).toBeInTheDocument();
   });
 
   it('renders contributor message with AI badge', () => {

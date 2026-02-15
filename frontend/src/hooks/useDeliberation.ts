@@ -27,7 +27,9 @@ export function useDeliberation() {
     if (currentSession?.status === 'active' && view === 'waiting') {
       // Refresh user to get subgroup assignment
       if (currentUser) {
-        fetch(`${import.meta.env.VITE_API_URL || ''}/api/users/${currentUser.id}`)
+        fetch(`${import.meta.env.VITE_API_URL || ''}/api/users/${currentUser.id}`, {
+          credentials: 'include',
+        })
           .then(r => r.json())
           .then(user => {
             useDeliberationStore.setState({
@@ -42,10 +44,10 @@ export function useDeliberation() {
     }
   }, [currentSession?.status]);
 
-  // Poll ideas while in visualizer or chat
+  // Poll ideas while in visualizer, chat, or participants
   useEffect(() => {
     if (!currentSession || currentSession.status !== 'active') return;
-    if (view !== 'chat' && view !== 'visualizer') return;
+    if (view !== 'chat' && view !== 'visualizer' && view !== 'participants') return;
 
     const interval = setInterval(() => {
       fetchIdeas();

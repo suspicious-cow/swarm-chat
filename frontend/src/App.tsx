@@ -4,11 +4,14 @@ import { useDeliberation } from './hooks/useDeliberation';
 import { Layout } from './components/Layout';
 import { LoginView } from './components/LoginView';
 import { MfaChallengeView } from './components/MfaChallengeView';
-import { DashboardView } from './components/DashboardView';
-import { LobbyView } from './components/LobbyView';
+import { HomeView } from './components/HomeView';
+import { NewSessionView } from './components/NewSessionView';
+import { JoinSessionView } from './components/JoinSessionView';
+import { SettingsView } from './components/SettingsView';
 import { WaitingView } from './components/WaitingView';
 import { ChatRoom } from './components/ChatRoom';
 import { Visualizer } from './components/Visualizer';
+import { ParticipantsView } from './components/ParticipantsView';
 
 export default function App() {
   const { account, loading, mfaRequired, fetchMe } = useAuthStore();
@@ -46,11 +49,14 @@ export default function App() {
 
   return (
     <Layout>
-      {view === 'dashboard' && <DashboardView />}
-      {view === 'lobby' && <LobbyView />}
+      {view === 'home' && <HomeView />}
+      {view === 'new-session' && <NewSessionView />}
+      {view === 'join-session' && <JoinSessionView />}
+      {view === 'settings' && <SettingsView />}
       {view === 'waiting' && <WaitingView />}
       {view === 'chat' && <ChatRoom />}
       {view === 'visualizer' && <Visualizer />}
+      {view === 'participants' && <ParticipantsView />}
     </Layout>
   );
 }

@@ -1,52 +1,58 @@
 import type { ReactNode } from 'react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
+import { Sidebar } from './Sidebar';
+import { ToastContainer } from './ToastContainer';
+import { LAYOUT, COLORS } from '../styles/constants';
 
 const styles = {
-  container: {
-    minHeight: '100vh',
-    background: '#0f0f23',
-    color: '#e0e0e0',
+  root: {
+    display: 'flex',
+    height: '100vh',
+    background: COLORS.BG_PRIMARY,
+    color: COLORS.TEXT_PRIMARY,
     fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
   } as React.CSSProperties,
-  header: {
+  rightPanel: {
+    flex: 1,
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    padding: '12px 24px',
-    background: '#1a1a3e',
-    borderBottom: '1px solid #2a2a5a',
-  } as React.CSSProperties,
-  title: {
-    fontSize: '20px',
-    fontWeight: 700,
-    color: '#7c8aff',
-    margin: 0,
-  } as React.CSSProperties,
-  nav: {
+    flexDirection: 'column' as const,
+    minWidth: 0,
+  },
+  topBar: {
+    height: `${LAYOUT.TOP_BAR_HEIGHT}px`,
+    minHeight: `${LAYOUT.TOP_BAR_HEIGHT}px`,
     display: 'flex',
-    gap: '12px',
+    justifyContent: 'flex-end',
     alignItems: 'center',
+    padding: '0 24px',
+    background: COLORS.BG_CARD,
+    borderBottom: `1px solid ${COLORS.BORDER}`,
+    gap: '16px',
   } as React.CSSProperties,
-  navBtn: {
+  userInfo: {
+    fontSize: '13px',
+    color: COLORS.TEXT_MUTED,
+  },
+  logoutBtn: {
     background: 'none',
-    border: '1px solid #3a3a6a',
-    color: '#a0a0d0',
-    padding: '6px 14px',
+    border: `1px solid #5a3a3a`,
+    color: '#d08080',
+    padding: '5px 14px',
     borderRadius: '6px',
     cursor: 'pointer',
-    fontSize: '13px',
-  } as React.CSSProperties,
+    fontSize: '12px',
+  },
   main: {
-    maxWidth: '1200px',
-    margin: '0 auto',
-    padding: '24px',
-  } as React.CSSProperties,
+    flex: 1,
+    overflow: 'auto',
+    padding: `${LAYOUT.CONTENT_PADDING}px`,
+  },
 };
 
 export function Layout({ children }: { children: ReactNode }) {
   const { account, logout } = useAuthStore();
-  const { currentSession, currentUser, view, setView, reset } = useDeliberationStore();
+  const { reset } = useDeliberationStore();
 
   const handleLogout = () => {
     logout();
@@ -54,50 +60,24 @@ export function Layout({ children }: { children: ReactNode }) {
   };
 
   return (
-    <div style={styles.container}>
-      <header style={styles.header}>
-        <h1 style={styles.title}>Swarm Chat</h1>
-        <div style={styles.nav}>
+    <div style={styles.root}>
+      <Sidebar />
+      <div style={styles.rightPanel}>
+        <div style={styles.topBar}>
           {account && (
-            <span style={{ color: '#8888bb', fontSize: '13px' }}>
-              {account.display_name}
-            </span>
-          )}
-          {currentSession && (
-            <span style={{ color: '#6a6a9a', fontSize: '13px' }}>
-              {currentSession.title} ({currentSession.status})
-              {currentSession.join_code && ` | Code: ${currentSession.join_code}`}
-            </span>
-          )}
-          {currentUser && view === 'chat' && (
-            <button style={styles.navBtn} onClick={() => setView('visualizer')}>
-              Visualizer
-            </button>
-          )}
-          {currentUser && view === 'visualizer' && (
-            <button style={styles.navBtn} onClick={() => setView('chat')}>
-              Chat
-            </button>
-          )}
-          {currentSession && (
-            <button
-              style={{ ...styles.navBtn, borderColor: '#5a3a3a', color: '#d08080' }}
-              onClick={reset}
-            >
-              Leave
-            </button>
-          )}
-          {account && (
-            <button
-              style={{ ...styles.navBtn, borderColor: '#5a3a3a', color: '#d08080' }}
-              onClick={handleLogout}
-            >
-              Logout
-            </button>
+            <>
+              <span style={styles.userInfo}>{account.display_name}</span>
+              <button style={styles.logoutBtn} onClick={handleLogout}>
+                Logout
+              </button>
+            </>
           )}
         </div>
-      </header>
-      <main style={styles.main}>{children}</main>
+        <main style={styles.main}>
+          {children}
+        </main>
+      </div>
+      <ToastContainer />
     </div>
   );
 }

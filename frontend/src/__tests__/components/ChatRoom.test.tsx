@@ -47,11 +47,10 @@ describe('ChatRoom', () => {
     expect(screen.getByText('ThinkTank 1')).toBeInTheDocument();
   });
 
-  it('renders member list', () => {
+  it('renders member count in header', () => {
     setupState();
     render(<ChatRoom />);
-    expect(screen.getByText(/Alice/)).toBeInTheDocument();
-    expect(screen.getByText(/Bob/)).toBeInTheDocument();
+    expect(screen.getByText('2 members')).toBeInTheDocument();
   });
 
   it('shows empty message text when no messages', () => {

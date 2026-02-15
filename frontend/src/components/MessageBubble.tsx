@@ -37,15 +37,15 @@ const styles = {
     borderBottomLeftRadius: '4px',
   },
   surrogate: {
-    background: 'linear-gradient(135deg, #1a3a4a, #1a2a5a)',
-    color: '#a0d0ff',
-    border: '1px solid #2a4a6a',
+    background: '#1a2a3e',
+    color: '#c0d8f0',
+    border: '1px solid #2a3a5a',
     borderBottomLeftRadius: '4px',
   },
   contributor: {
-    background: 'linear-gradient(135deg, #2a1a4a, #3a1a4a)',
-    color: '#d0a0ff',
-    border: '1px solid #4a2a6a',
+    background: '#251a3e',
+    color: '#d0c0f0',
+    border: '1px solid #3a2a5a',
     borderBottomLeftRadius: '4px',
   },
   time: {
@@ -55,18 +55,20 @@ const styles = {
   },
   badge: {
     display: 'inline-block',
-    fontSize: '10px',
+    fontSize: '9px',
     fontWeight: 600,
-    padding: '2px 6px',
-    borderRadius: '4px',
+    padding: '1px 5px',
+    borderRadius: '3px',
     marginLeft: '6px',
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.5px',
   },
   surrogateBadge: {
-    background: '#1a3a4a',
+    background: 'rgba(106, 176, 208, 0.15)',
     color: '#6ab0d0',
   },
   contributorBadge: {
-    background: '#2a1a4a',
+    background: 'rgba(176, 128, 208, 0.15)',
     color: '#b080d0',
   },
 };
@@ -102,9 +104,9 @@ export function MessageBubble({ message, isOwn }: Props) {
       }}
     >
       <div style={{ ...styles.name, color: nameColor }}>
-        {message.display_name || (isSurrogate ? 'Surrogate Agent' : isContributor ? 'Contributor Agent' : 'Unknown')}
+        {message.display_name || (isSurrogate ? 'Cross-group Insight' : isContributor ? 'AI Contributor' : 'Unknown')}
         {isSurrogate && (
-          <span style={{ ...styles.badge, ...styles.surrogateBadge }}>AI RELAY</span>
+          <span style={{ ...styles.badge, ...styles.surrogateBadge }}>Surrogate</span>
         )}
         {isContributor && (
           <span style={{ ...styles.badge, ...styles.contributorBadge }}>AI</span>

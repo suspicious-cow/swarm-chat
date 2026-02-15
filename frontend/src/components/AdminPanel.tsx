@@ -7,7 +7,8 @@ const styles = {
     border: '1px solid #3a3a5a',
     borderRadius: '12px',
     padding: '24px',
-    width: '400px',
+    width: '100%',
+    maxWidth: '500px',
   },
   title: {
     fontSize: '16px',
@@ -74,6 +75,7 @@ export function AdminPanel() {
     try {
       const res = await fetch(`${API_BASE}/api/admin/${currentSession.id}/summary`, {
         method: 'POST',
+        credentials: 'include',
       });
       const data = await res.json();
       setSummary(data.summary);

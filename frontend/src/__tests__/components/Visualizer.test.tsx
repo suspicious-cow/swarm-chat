@@ -1,6 +1,15 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen } from '@testing-library/react';
 import { useDeliberationStore } from '../../stores/deliberationStore';
+
+// Mock ResizeObserver for jsdom
+class MockResizeObserver {
+  observe = vi.fn();
+  unobserve = vi.fn();
+  disconnect = vi.fn();
+}
+vi.stubGlobal('ResizeObserver', MockResizeObserver);
+
 import { Visualizer } from '../../components/Visualizer';
 
 beforeEach(() => {

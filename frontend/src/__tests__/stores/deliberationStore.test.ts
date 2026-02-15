@@ -16,8 +16,8 @@ beforeEach(() => {
 
 describe('deliberationStore', () => {
   describe('initial state', () => {
-    it('has lobby view by default', () => {
-      expect(useDeliberationStore.getState().view).toBe('lobby');
+    it('has home view by default', () => {
+      expect(useDeliberationStore.getState().view).toBe('home');
     });
 
     it('has null user and session', () => {
@@ -160,7 +160,7 @@ describe('deliberationStore', () => {
       useDeliberationStore.getState().reset();
 
       const state = useDeliberationStore.getState();
-      expect(state.view).toBe('lobby');
+      expect(state.view).toBe('home');
       expect(state.error).toBeNull();
       expect(state.messages).toEqual([]);
       expect(state.currentUser).toBeNull();

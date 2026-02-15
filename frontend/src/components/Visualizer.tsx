@@ -1,13 +1,13 @@
-import { useEffect } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { SubgroupNode } from './SubgroupNode';
-import { AdminPanel } from './AdminPanel';
 
 const styles = {
   container: {
     display: 'flex',
-    gap: '24px',
-    height: 'calc(100vh - 120px)',
+    flexDirection: 'column' as const,
+    height: 'calc(100vh - 100px)',
+    gap: '16px',
   },
   vizArea: {
     flex: 1,
@@ -16,6 +16,7 @@ const styles = {
     border: '1px solid #2a2a5a',
     position: 'relative' as const,
     overflow: 'hidden',
+    minHeight: '300px',
   },
   vizHeader: {
     padding: '12px 20px',
@@ -29,19 +30,20 @@ const styles = {
     fontWeight: 600,
     color: '#c0c0ff',
   },
-  sidebar: {
-    width: '300px',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '16px',
-    overflowY: 'auto' as const,
+  canvas: {
+    position: 'absolute' as const,
+    top: 0,
+    left: 0,
+    width: '100%',
+    height: '100%',
+    pointerEvents: 'none' as const,
   },
   ideasPanel: {
     background: '#1a1a3e',
     border: '1px solid #2a2a5a',
     borderRadius: '12px',
     padding: '16px',
-    flex: 1,
+    maxHeight: '240px',
     overflowY: 'auto' as const,
   },
   ideasTitle: {
@@ -74,29 +76,41 @@ const styles = {
     marginTop: '4px',
     background: '#2a2a5a',
   },
-  canvas: {
-    position: 'absolute' as const,
-    top: 0,
-    left: 0,
-    width: '100%',
-    height: '100%',
-    pointerEvents: 'none' as const,
-  },
 };
 
 export function Visualizer() {
   const { currentSession, currentUser, subgroups, ideas, fetchSubgroups, fetchIdeas } = useDeliberationStore();
+  const vizRef = useRef<HTMLDivElement>(null);
+  const [size, setSize] = useState({ width: 600, height: 500 });
 
   useEffect(() => {
     fetchSubgroups();
     fetchIdeas();
   }, []);
 
+  // Responsive sizing
+  useEffect(() => {
+    if (!vizRef.current) return;
+
+    const observer = new ResizeObserver((entries) => {
+      const entry = entries[0];
+      if (entry) {
+        setSize({
+          width: entry.contentRect.width,
+          height: entry.contentRect.height,
+        });
+      }
+    });
+
+    observer.observe(vizRef.current);
+    return () => observer.disconnect();
+  }, []);
+
   if (!currentSession) return null;
 
-  const centerX = 300;
-  const centerY = 260;
-  const radius = 180;
+  const centerX = size.width / 2;
+  const centerY = (size.height - 50) / 2; // offset for header
+  const radius = Math.min(centerX, centerY) * 0.65;
 
   // Compute connection lines between subgroups
   const connections: { x1: number; y1: number; x2: number; y2: number }[] = [];
@@ -121,7 +135,7 @@ export function Visualizer() {
 
   return (
     <div style={styles.container}>
-      <div style={styles.vizArea}>
+      <div style={styles.vizArea} ref={vizRef}>
         <div style={styles.vizHeader}>
           <span style={styles.vizTitle}>Deliberation Map</span>
           <span style={{ color: '#6a6a9a', fontSize: '13px' }}>
@@ -171,41 +185,38 @@ export function Visualizer() {
         ))}
       </div>
 
-      <div style={styles.sidebar}>
-        <div style={styles.ideasPanel}>
-          <div style={styles.ideasTitle}>
-            Live Ideas ({ideas.length})
-          </div>
-          {ideas.length === 0 && (
-            <div style={{ color: '#6a6a9a', fontSize: '13px' }}>
-              Ideas will appear here as the discussion progresses.
-            </div>
-          )}
-          {ideas.map(idea => (
-            <div key={idea.id} style={styles.idea}>
-              <div style={styles.ideaSummary}>{idea.summary}</div>
-              <div style={styles.ideaMeta}>
-                <span>Support: {idea.support_count} | Challenge: {idea.challenge_count}</span>
-                <span style={{ color: getSentimentColor(idea.sentiment) }}>
-                  {idea.sentiment > 0 ? '+' : ''}{idea.sentiment.toFixed(1)}
-                </span>
-              </div>
-              <div style={styles.sentimentBar}>
-                <div
-                  style={{
-                    height: '100%',
-                    borderRadius: '2px',
-                    width: `${Math.abs(idea.sentiment) * 100}%`,
-                    background: getSentimentColor(idea.sentiment),
-                    marginLeft: idea.sentiment < 0 ? 'auto' : 0,
-                  }}
-                />
-              </div>
-            </div>
-          ))}
+      {/* Ideas panel below map */}
+      <div style={styles.ideasPanel}>
+        <div style={styles.ideasTitle}>
+          Live Ideas ({ideas.length})
         </div>
-
-        {currentUser?.is_admin && <AdminPanel />}
+        {ideas.length === 0 && (
+          <div style={{ color: '#6a6a9a', fontSize: '13px' }}>
+            Ideas will appear here as the discussion progresses.
+          </div>
+        )}
+        {ideas.map(idea => (
+          <div key={idea.id} style={styles.idea}>
+            <div style={styles.ideaSummary}>{idea.summary}</div>
+            <div style={styles.ideaMeta}>
+              <span>Support: {idea.support_count} | Challenge: {idea.challenge_count}</span>
+              <span style={{ color: getSentimentColor(idea.sentiment) }}>
+                {idea.sentiment > 0 ? '+' : ''}{idea.sentiment.toFixed(1)}
+              </span>
+            </div>
+            <div style={styles.sentimentBar}>
+              <div
+                style={{
+                  height: '100%',
+                  borderRadius: '2px',
+                  width: `${Math.abs(idea.sentiment) * 100}%`,
+                  background: getSentimentColor(idea.sentiment),
+                  marginLeft: idea.sentiment < 0 ? 'auto' : 0,
+                }}
+              />
+            </div>
+          </div>
+        ))}
       </div>
     </div>
   );
