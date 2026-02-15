@@ -1,11 +1,13 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select, func
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.orm import selectinload
 
+from app.auth import get_optional_account
 from app.database import get_db
+from app.models.account import Account
 from app.models.session import Session, SessionStatus
 from app.models.subgroup import Subgroup
 from app.models.user import User

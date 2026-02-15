@@ -14,6 +14,7 @@ class UserOut(BaseModel):
     display_name: str
     session_id: uuid.UUID
     subgroup_id: uuid.UUID | None = None
+    account_id: uuid.UUID | None = None
     is_admin: bool
     created_at: datetime
 

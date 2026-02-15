@@ -16,6 +16,9 @@ class Settings(BaseSettings):
     CME_CONCURRENCY: int = 10
     DB_POOL_SIZE: int = 20
     DB_MAX_OVERFLOW: int = 40
+    JWT_ALGORITHM: str = "HS256"
+    JWT_EXPIRY_HOURS: int = 72
+    DEBUG: bool = True
 
     model_config = {"env_file": ".env", "extra": "ignore"}
 

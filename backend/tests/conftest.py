@@ -20,6 +20,23 @@ def compile_uuid_sqlite(type_, compiler, **kw):
     return "CHAR(36)"
 
 
+# Override bind processor so SQLite accepts both str and uuid.UUID values
+_original_bind_processor = PG_UUID.bind_processor
+
+
+def _patched_bind_processor(self, dialect):
+    if dialect.name == "sqlite":
+        def process(value):
+            if value is None:
+                return value
+            return str(value) if not isinstance(value, str) else value
+        return process
+    return _original_bind_processor(self, dialect)
+
+
+PG_UUID.bind_processor = _patched_bind_processor
+
+
 # ---------------------------------------------------------------------------
 # Test database engine / session (in-memory SQLite)
 # ---------------------------------------------------------------------------
@@ -141,3 +158,78 @@ async def client():
         yield ac
 
     app.dependency_overrides.pop(get_db, None)
+
+
+# ---------------------------------------------------------------------------
+# Auth fixtures — test account and pre-authenticated client
+# ---------------------------------------------------------------------------
+
+@pytest.fixture
+async def account(db):
+    """Create a test account with known credentials."""
+    from app.auth import hash_password
+    from app.models.account import Account
+
+    acct = Account(
+        username="testuser",
+        password_hash=hash_password("testpass123"),
+        display_name="Test User",
+    )
+    db.add(acct)
+    await db.commit()
+    await db.refresh(acct)
+    return acct
+
+
+@pytest.fixture
+async def admin_account(db):
+    """Create an admin account with known credentials."""
+    from app.auth import hash_password
+    from app.models.account import Account
+
+    acct = Account(
+        username="adminuser",
+        password_hash=hash_password("adminpass123"),
+        display_name="Admin User",
+        is_server_admin=True,
+    )
+    db.add(acct)
+    await db.commit()
+    await db.refresh(acct)
+    return acct
+
+
+@pytest.fixture
+async def auth_client(client, account):
+    """Client with swarm_token cookie set for the test account."""
+    from app.auth import create_access_token
+
+    token = create_access_token(str(account.id))
+    client.cookies.set("swarm_token", token)
+    return client
+
+
+@pytest.fixture
+async def admin_auth_client(client, admin_account):
+    """Client with swarm_token cookie set for the admin account."""
+    from app.auth import create_access_token
+
+    token = create_access_token(str(admin_account.id))
+    client.cookies.set("swarm_token", token)
+    return client
+
+
+@pytest.fixture
+async def invite_code(db, admin_account):
+    """Create a test invite code."""
+    from app.models.invite_code import InviteCode
+
+    code = InviteCode(
+        code="TESTCODE",
+        created_by=admin_account.id,
+        max_uses=10,
+    )
+    db.add(code)
+    await db.commit()
+    await db.refresh(code)
+    return code

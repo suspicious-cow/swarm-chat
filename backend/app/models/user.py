@@ -17,7 +17,11 @@ class User(Base, UUIDPrimaryKey, TimestampMixin):
     subgroup_id: Mapped[uuid.UUID | None] = mapped_column(
         UUID(as_uuid=True), ForeignKey("subgroups.id"), nullable=True
     )
+    account_id: Mapped[uuid.UUID | None] = mapped_column(
+        UUID(as_uuid=True), ForeignKey("accounts.id", ondelete="SET NULL"), nullable=True, index=True
+    )
     is_admin: Mapped[bool] = mapped_column(Boolean, default=False)
 
     session = relationship("Session", back_populates="users")
     subgroup = relationship("Subgroup", back_populates="members")
+    account = relationship("Account", back_populates="users")

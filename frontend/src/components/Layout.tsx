@@ -1,4 +1,5 @@
 import type { ReactNode } from 'react';
+import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
 
 const styles = {
@@ -44,13 +45,24 @@ const styles = {
 };
 
 export function Layout({ children }: { children: ReactNode }) {
+  const { account, logout } = useAuthStore();
   const { currentSession, currentUser, view, setView, reset } = useDeliberationStore();
+
+  const handleLogout = () => {
+    logout();
+    reset();
+  };
 
   return (
     <div style={styles.container}>
       <header style={styles.header}>
         <h1 style={styles.title}>Swarm Chat</h1>
         <div style={styles.nav}>
+          {account && (
+            <span style={{ color: '#8888bb', fontSize: '13px' }}>
+              {account.display_name}
+            </span>
+          )}
           {currentSession && (
             <span style={{ color: '#6a6a9a', fontSize: '13px' }}>
               {currentSession.title} ({currentSession.status})
@@ -73,6 +85,14 @@ export function Layout({ children }: { children: ReactNode }) {
               onClick={reset}
             >
               Leave
+            </button>
+          )}
+          {account && (
+            <button
+              style={{ ...styles.navBtn, borderColor: '#5a3a3a', color: '#d08080' }}
+              onClick={handleLogout}
+            >
+              Logout
             </button>
           )}
         </div>

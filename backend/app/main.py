@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import engine
 from app.models.base import Base
-from app.routers import sessions, users, admin
+from app.routers import sessions, users, admin, auth, dashboard, invite_codes, mfa
 from app.websocket.routes import router as ws_router
 from app.engine.cme import start_cme_loop, stop_cme_loop
 from app.services.redis import close_redis, start_redis_subscriber
@@ -71,9 +71,13 @@ app.add_middleware(
 )
 
 # REST routers
+app.include_router(auth.router)
+app.include_router(dashboard.router)
 app.include_router(sessions.router)
 app.include_router(users.router)
 app.include_router(admin.router)
+app.include_router(invite_codes.router)
+app.include_router(mfa.router)
 
 # WebSocket routes
 app.include_router(ws_router)

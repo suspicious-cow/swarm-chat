@@ -48,6 +48,26 @@ export interface Idea {
   created_at: string;
 }
 
+export interface Account {
+  id: string;
+  username: string;
+  display_name: string;
+  is_server_admin: boolean;
+  totp_enabled: boolean;
+  created_at: string;
+}
+
+export interface InviteCode {
+  id: string;
+  code: string;
+  created_by: string;
+  max_uses: number | null;
+  use_count: number;
+  expires_at: string | null;
+  is_active: boolean;
+  created_at: string;
+}
+
 export interface WSEvent {
   event: string;
   data: Record<string, unknown>;

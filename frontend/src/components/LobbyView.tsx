@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
 
 const styles = {
@@ -80,12 +81,14 @@ const styles = {
 };
 
 export function LobbyView() {
-  const { createSession, joinSession, currentSession, error, setView } = useDeliberationStore();
+  const { account } = useAuthStore();
+  const { createSession, joinSession, currentSession, error, setView, reset } = useDeliberationStore();
+  const defaultName = account?.display_name || '';
   const [createTitle, setCreateTitle] = useState('');
   const [createSize, setCreateSize] = useState(5);
   const [joinCode, setJoinCode] = useState('');
-  const [joinName, setJoinName] = useState('');
-  const [creatorName, setCreatorName] = useState('');
+  const [joinName, setJoinName] = useState(defaultName);
+  const [creatorName, setCreatorName] = useState(defaultName);
 
   const handleCreate = async () => {
     if (!createTitle.trim() || !creatorName.trim()) return;
@@ -108,6 +111,14 @@ export function LobbyView() {
   if (currentSession && !useDeliberationStore.getState().currentUser) {
     return (
       <div style={styles.container}>
+        {account && (
+          <button
+            style={{ ...styles.btn, width: 'auto', padding: '8px 20px', background: 'transparent', border: '1px solid #3a3a6a', color: '#8888bb', alignSelf: 'flex-start' }}
+            onClick={reset}
+          >
+            Back to Dashboard
+          </button>
+        )}
         <div style={styles.hero}>
           <h2 style={styles.heroTitle}>Session Created!</h2>
           <p style={styles.heroSubtitle}>
@@ -144,6 +155,14 @@ export function LobbyView() {
 
   return (
     <div style={styles.container}>
+      {account && (
+        <button
+          style={{ ...styles.btn, width: 'auto', padding: '8px 20px', background: 'transparent', border: '1px solid #3a3a6a', color: '#8888bb', alignSelf: 'flex-start' }}
+          onClick={reset}
+        >
+          Back to Dashboard
+        </button>
+      )}
       <div style={styles.hero}>
         <h2 style={styles.heroTitle}>Conversational Swarm Intelligence</h2>
         <p style={styles.heroSubtitle}>

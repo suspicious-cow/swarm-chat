@@ -1,4 +1,5 @@
 import { create } from 'zustand';
+import { persist } from 'zustand/middleware';
 import type { Session, User, Subgroup, Message, Idea } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
@@ -15,7 +16,7 @@ interface DeliberationState {
   ideas: Idea[];
 
   // UI state
-  view: 'lobby' | 'waiting' | 'chat' | 'visualizer';
+  view: 'dashboard' | 'lobby' | 'waiting' | 'chat' | 'visualizer';
   surrogateTyping: boolean;
   error: string | null;
 
@@ -37,14 +38,14 @@ interface DeliberationState {
   reset: () => void;
 }
 
-export const useDeliberationStore = create<DeliberationState>((set, get) => ({
+export const useDeliberationStore = create<DeliberationState>()(persist((set, get) => ({
   currentUser: null,
   currentSession: null,
   currentSubgroup: null,
   subgroups: [],
   messages: [],
   ideas: [],
-  view: 'lobby',
+  view: 'dashboard',
   surrogateTyping: false,
   error: null,
 
@@ -53,6 +54,7 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
       const res = await fetch(`${API_BASE}/api/sessions`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ title, subgroup_size: subgroupSize }),
       });
       if (!res.ok) throw new Error('Failed to create session');
@@ -68,6 +70,7 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
       const res = await fetch(`${API_BASE}/api/users`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
         body: JSON.stringify({ join_code: joinCode, display_name: displayName }),
       });
       if (!res.ok) {
@@ -77,7 +80,9 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
       const user: User = await res.json();
 
       // Fetch session details
-      const sessionRes = await fetch(`${API_BASE}/api/sessions/${user.session_id}`);
+      const sessionRes = await fetch(`${API_BASE}/api/sessions/${user.session_id}`, {
+        credentials: 'include',
+      });
       const session: Session = await sessionRes.json();
 
       set({
@@ -89,7 +94,9 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
 
       // If already active and assigned to a subgroup, load messages
       if (user.subgroup_id) {
-        const userRes = await fetch(`${API_BASE}/api/users/${user.id}`);
+        const userRes = await fetch(`${API_BASE}/api/users/${user.id}`, {
+          credentials: 'include',
+        });
         const updatedUser: User = await userRes.json();
         set({ currentUser: updatedUser });
         await get().fetchMessages();
@@ -106,6 +113,7 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
     try {
       const res = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/start`, {
         method: 'POST',
+        credentials: 'include',
       });
       if (!res.ok) {
         const data = await res.json();
@@ -128,6 +136,7 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
     try {
       await fetch(`${API_BASE}/api/sessions/${currentSession.id}/stop`, {
         method: 'POST',
+        credentials: 'include',
       });
       set({ currentSession: { ...currentSession, status: 'completed' } });
     } catch (e: unknown) {
@@ -139,7 +148,9 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
     const { currentSession } = get();
     if (!currentSession) return;
     try {
-      const res = await fetch(`${API_BASE}/api/sessions/${currentSession.id}`);
+      const res = await fetch(`${API_BASE}/api/sessions/${currentSession.id}`, {
+        credentials: 'include',
+      });
       const session: Session = await res.json();
       set({ currentSession: session });
     } catch (_) {}
@@ -149,7 +160,9 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
     const { currentUser } = get();
     if (!currentUser) return;
     try {
-      const res = await fetch(`${API_BASE}/api/users/${currentUser.id}/messages`);
+      const res = await fetch(`${API_BASE}/api/users/${currentUser.id}/messages`, {
+        credentials: 'include',
+      });
       if (res.ok) {
         const messages: Message[] = await res.json();
         set({ messages });
@@ -161,7 +174,9 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
     const { currentSession } = get();
     if (!currentSession) return;
     try {
-      const res = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/subgroups`);
+      const res = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/subgroups`, {
+        credentials: 'include',
+      });
       if (res.ok) {
         const subgroups: Subgroup[] = await res.json();
         set({ subgroups });
@@ -173,7 +188,9 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
     const { currentSession } = get();
     if (!currentSession) return;
     try {
-      const res = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/ideas`);
+      const res = await fetch(`${API_BASE}/api/sessions/${currentSession.id}/ideas`, {
+        credentials: 'include',
+      });
       if (res.ok) {
         const ideas: Idea[] = await res.json();
         set({ ideas });
@@ -200,8 +217,15 @@ export const useDeliberationStore = create<DeliberationState>((set, get) => ({
     subgroups: [],
     messages: [],
     ideas: [],
-    view: 'lobby',
+    view: 'dashboard',
     surrogateTyping: false,
     error: null,
+  }),
+}), {
+  name: 'swarm-chat-session',
+  partialize: (state) => ({
+    currentUser: state.currentUser,
+    currentSession: state.currentSession,
+    view: state.view,
   }),
 }));

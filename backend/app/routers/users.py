@@ -1,10 +1,12 @@
 import uuid
 
-from fastapi import APIRouter, Depends, HTTPException
+from fastapi import APIRouter, Depends, HTTPException, Request
 from sqlalchemy import select
 from sqlalchemy.ext.asyncio import AsyncSession
 
+from app.auth import get_optional_account
 from app.database import get_db
+from app.models.account import Account
 from app.models.session import Session, SessionStatus
 from app.models.user import User
 from app.models.message import Message
@@ -17,8 +19,14 @@ router = APIRouter(prefix="/api/users", tags=["users"])
 
 
 @router.post("", response_model=UserOut)
-async def join_session(body: UserCreate, db: AsyncSession = Depends(get_db)):
+async def join_session(
+    body: UserCreate,
+    request: Request,
+    db: AsyncSession = Depends(get_db),
+):
     """Join a session using a join code."""
+    account = await get_optional_account(request, db)
+
     result = await db.execute(
         select(Session).where(Session.join_code == body.join_code.upper())
     )
@@ -34,10 +42,15 @@ async def join_session(body: UserCreate, db: AsyncSession = Depends(get_db)):
     )
     is_admin = existing_count is None
 
+    display_name = body.display_name
+    if account and not display_name:
+        display_name = account.display_name
+
     user = User(
-        display_name=body.display_name,
+        display_name=display_name,
         session_id=session.id,
         is_admin=is_admin,
+        account_id=account.id if account else None,
     )
     db.add(user)
 

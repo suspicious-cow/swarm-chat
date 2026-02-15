@@ -35,6 +35,24 @@ const styles = {
     marginRight: '8px',
     animation: 'pulse 2s infinite',
   },
+  participantBadge: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    background: 'rgba(124, 138, 255, 0.1)',
+    border: '1px solid rgba(124, 138, 255, 0.25)',
+    borderRadius: '12px',
+    padding: '12px 24px',
+  },
+  participantCount: {
+    fontSize: '28px',
+    fontWeight: 700,
+    color: '#7c8aff',
+  },
+  participantLabel: {
+    fontSize: '14px',
+    color: '#8888bb',
+  },
 };
 
 export function WaitingView() {
@@ -54,6 +72,13 @@ export function WaitingView() {
       <h2 style={styles.title}>{currentSession.title}</h2>
 
       <div style={styles.code}>{currentSession.join_code}</div>
+
+      <div style={styles.participantBadge}>
+        <span style={styles.participantCount}>{currentSession.user_count ?? 0}</span>
+        <span style={styles.participantLabel}>
+          {(currentSession.user_count ?? 0) === 1 ? 'participant' : 'participants'}<br />joined
+        </span>
+      </div>
 
       <p style={styles.info}>
         <span style={styles.pulse} />
