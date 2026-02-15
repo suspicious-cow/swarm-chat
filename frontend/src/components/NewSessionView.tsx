@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { COLORS, FONTS } from '../styles/constants';
-import { instrumentCard, systemLabel, dataReadout, retroInput, retroButton } from '../styles/retro';
+import { instrumentCard, systemLabel, dataReadout, retroInput, retroButton, phosphorHeading } from '../styles/retro';
 import { fadeIn } from '../styles/motion';
 
 export function NewSessionView() {
@@ -58,12 +58,8 @@ export function NewSessionView() {
 
         <h2
           style={{
-            fontFamily: FONTS.DISPLAY,
+            ...phosphorHeading,
             fontSize: '24px',
-            fontWeight: 700,
-            color: COLORS.TEXT_HEADING,
-            letterSpacing: '2px',
-            textTransform: 'uppercase' as const,
             margin: 0,
           }}
         >
@@ -177,12 +173,8 @@ export function NewSessionView() {
 
       <h2
         style={{
-          fontFamily: FONTS.DISPLAY,
+          ...phosphorHeading,
           fontSize: '24px',
-          fontWeight: 700,
-          color: COLORS.TEXT_HEADING,
-          letterSpacing: '2px',
-          textTransform: 'uppercase' as const,
           margin: 0,
         }}
       >
@@ -232,7 +224,7 @@ export function NewSessionView() {
           style={{
             fontFamily: FONTS.BODY,
             fontSize: '12px',
-            color: COLORS.TEXT_DIM,
+            color: COLORS.TEXT_MUTED,
             marginTop: '4px',
             marginBottom: '20px',
             lineHeight: 1.5,

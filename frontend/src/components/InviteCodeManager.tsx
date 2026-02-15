@@ -83,7 +83,7 @@ const styles = {
   expiryText: {
     fontFamily: FONTS.MONO,
     fontSize: '11px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     flexGrow: 1,
   },
   statusContainer: {
@@ -104,7 +104,7 @@ const styles = {
     fontFamily: FONTS.MONO,
     fontSize: '11px',
     fontWeight: 600,
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     letterSpacing: '1px',
     textTransform: 'uppercase' as const,
   },
@@ -137,7 +137,7 @@ const styles = {
   },
   empty: {
     fontFamily: FONTS.MONO,
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     fontSize: '12px',
     textAlign: 'center' as const,
     padding: '24px 0',

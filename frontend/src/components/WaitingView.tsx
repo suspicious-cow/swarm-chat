@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { AdminPanel } from './AdminPanel';
 import { COLORS, FONTS } from '../styles/constants';
-import { systemLabel, dataReadout, statusLed } from '../styles/retro';
+import { systemLabel, dataReadout, statusLed, phosphorHeading } from '../styles/retro';
 import { fadeIn, staggerContainer, staggerItem, pulseVariant } from '../styles/motion';
 
 const csiSteps = [
@@ -43,12 +43,9 @@ const styles = {
     marginBottom: '4px',
   } as React.CSSProperties,
   heading: {
-    fontFamily: FONTS.DISPLAY,
+    ...phosphorHeading,
     fontSize: '28px',
-    fontWeight: 700,
-    color: COLORS.TEXT_HEADING,
     letterSpacing: '3px',
-    textTransform: 'uppercase' as const,
     margin: 0,
   },
   sessionTitle: {
@@ -147,7 +144,7 @@ const styles = {
   joinedAs: {
     fontFamily: FONTS.MONO,
     fontSize: '12px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     textAlign: 'center' as const,
     margin: 0,
   },

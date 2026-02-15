@@ -3,7 +3,7 @@ import { useAuthStore } from '../stores/authStore';
 import { MfaSettingsPanel } from './MfaSettingsPanel';
 import { InviteCodeManager } from './InviteCodeManager';
 import { COLORS, FONTS } from '../styles/constants';
-import { instrumentCard, systemLabel, dataReadout } from '../styles/retro';
+import { instrumentCard, systemLabel, dataReadout, phosphorHeading } from '../styles/retro';
 import { staggerContainer, staggerItem } from '../styles/motion';
 
 const styles = {
@@ -19,12 +19,8 @@ const styles = {
     marginBottom: '4px',
   } as React.CSSProperties,
   title: {
-    fontFamily: FONTS.DISPLAY,
+    ...phosphorHeading,
     fontSize: '24px',
-    fontWeight: 700,
-    color: COLORS.TEXT_HEADING,
-    letterSpacing: '2px',
-    textTransform: 'uppercase' as const,
     margin: 0,
   },
   section: {

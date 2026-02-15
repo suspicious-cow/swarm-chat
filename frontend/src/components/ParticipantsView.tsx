@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { motion } from 'motion/react';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { COLORS, FONTS } from '../styles/constants';
-import { instrumentCard, systemLabel, statusLed } from '../styles/retro';
+import { instrumentCard, systemLabel, statusLed, phosphorHeading } from '../styles/retro';
 import { staggerContainer, staggerItem, fadeIn } from '../styles/motion';
 
 const RETRO_GROUP_COLORS = [
@@ -51,12 +51,9 @@ export function ParticipantsView() {
       >
         <h2
           style={{
-            fontFamily: FONTS.DISPLAY,
+            ...phosphorHeading,
             fontSize: '22px',
-            fontWeight: 700,
-            color: COLORS.TEXT_HEADING,
             letterSpacing: '1px',
-            textTransform: 'uppercase' as const,
             margin: 0,
           }}
         >
@@ -66,7 +63,7 @@ export function ParticipantsView() {
           style={{
             fontFamily: FONTS.MONO,
             fontSize: '11px',
-            color: COLORS.TEXT_DIM,
+            color: COLORS.TEXT_MUTED,
             letterSpacing: '1px',
           }}
         >
@@ -82,7 +79,7 @@ export function ParticipantsView() {
             textAlign: 'center' as const,
             fontFamily: FONTS.MONO,
             fontSize: '13px',
-            color: COLORS.TEXT_DIM,
+            color: COLORS.TEXT_MUTED,
           }}
         >
           ThinkTanks will appear here once the deliberation starts.
@@ -117,7 +114,7 @@ export function ParticipantsView() {
                   }}
                 >
                   <span>[ GROUP {i + 1} ]</span>
-                  <span style={{ color: COLORS.TEXT_DIM, fontSize: '10px' }}>
+                  <span style={{ color: COLORS.TEXT_MUTED, fontSize: '10px' }}>
                     &mdash; {sg.label}
                   </span>
                   {isMyGroup && (
@@ -187,7 +184,7 @@ export function ParticipantsView() {
                           style={{
                             fontFamily: FONTS.MONO,
                             fontSize: '10px',
-                            color: COLORS.TEXT_DIM,
+                            color: COLORS.TEXT_MUTED,
                             letterSpacing: '1px',
                             textTransform: 'uppercase' as const,
                           }}
@@ -225,7 +222,7 @@ export function ParticipantsView() {
                         padding: '12px 14px',
                         fontFamily: FONTS.MONO,
                         fontSize: '11px',
-                        color: COLORS.TEXT_DIM,
+                        color: COLORS.TEXT_MUTED,
                       }}
                     >
                       No personnel assigned
@@ -238,7 +235,7 @@ export function ParticipantsView() {
                   style={{
                     fontFamily: FONTS.MONO,
                     fontSize: '10px',
-                    color: COLORS.TEXT_DIM,
+                    color: COLORS.TEXT_MUTED,
                     marginTop: '4px',
                     textAlign: 'right' as const,
                     letterSpacing: '1px',

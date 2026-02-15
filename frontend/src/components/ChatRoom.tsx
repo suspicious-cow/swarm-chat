@@ -5,7 +5,7 @@ import { useWebSocket } from '../hooks/useWebSocket';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
 import { COLORS, FONTS } from '../styles/constants';
-import { systemLabel, gridBg } from '../styles/retro';
+import { systemLabel, gridBg, phosphorHeading } from '../styles/retro';
 import { messageVariants } from '../styles/motion';
 
 const styles = {
@@ -28,23 +28,21 @@ const styles = {
     background: COLORS.BG_ELEVATED,
   },
   chatTitle: {
-    fontFamily: FONTS.DISPLAY,
+    ...phosphorHeading,
     fontSize: '16px',
-    fontWeight: 600,
-    color: COLORS.TEXT_HEADING,
     letterSpacing: '1px',
     margin: 0,
   },
   chatSubtitle: {
     fontFamily: FONTS.MONO,
     fontSize: '11px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     letterSpacing: '0.5px',
   },
   memberCount: {
     fontFamily: FONTS.MONO,
     fontSize: '11px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     letterSpacing: '0.5px',
   },
   messageList: {
@@ -66,7 +64,7 @@ const styles = {
   emptyState: {
     textAlign: 'center' as const,
     fontFamily: FONTS.MONO,
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     fontSize: '13px',
     padding: '40px',
     letterSpacing: '0.5px',

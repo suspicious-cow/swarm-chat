@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { COLORS, FONTS } from '../styles/constants';
-import { instrumentCard, systemLabel, dataReadout, statusLed, retroButton } from '../styles/retro';
+import { instrumentCard, systemLabel, dataReadout, statusLed, retroButton, phosphorHeading } from '../styles/retro';
 import { staggerContainer, staggerItem, fadeIn } from '../styles/motion';
 import type { Session } from '../types';
 
@@ -78,12 +78,8 @@ export function HomeView() {
       {/* Heading */}
       <h1
         style={{
-          fontFamily: FONTS.DISPLAY,
+          ...phosphorHeading,
           fontSize: '28px',
-          fontWeight: 700,
-          color: COLORS.TEXT_HEADING,
-          letterSpacing: '2px',
-          textTransform: 'uppercase' as const,
           margin: 0,
         }}
       >
@@ -95,7 +91,7 @@ export function HomeView() {
         style={{
           fontFamily: FONTS.BODY,
           fontSize: '14px',
-          color: COLORS.TEXT_MUTED,
+          color: COLORS.TEXT_PRIMARY,
           lineHeight: 1.7,
           maxWidth: '600px',
           margin: 0,
@@ -241,7 +237,7 @@ export function HomeView() {
             style={{
               fontFamily: FONTS.BODY,
               fontSize: '13px',
-              color: COLORS.TEXT_DIM,
+              color: COLORS.TEXT_MUTED,
               lineHeight: 1.5,
             }}
           >
@@ -302,7 +298,7 @@ export function HomeView() {
             style={{
               fontFamily: FONTS.BODY,
               fontSize: '13px',
-              color: COLORS.TEXT_DIM,
+              color: COLORS.TEXT_MUTED,
               lineHeight: 1.5,
             }}
           >
@@ -368,7 +364,7 @@ export function HomeView() {
                 padding: '40px',
                 textAlign: 'center' as const,
                 fontFamily: FONTS.BODY,
-                color: COLORS.TEXT_DIM,
+                color: COLORS.TEXT_MUTED,
                 fontSize: '14px',
                 borderStyle: 'dashed',
               }}

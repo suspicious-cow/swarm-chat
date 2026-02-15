@@ -3,7 +3,7 @@ import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { COLORS, FONTS } from '../styles/constants';
-import { instrumentCard, systemLabel, retroInput, statusLed } from '../styles/retro';
+import { instrumentCard, systemLabel, retroInput, statusLed, phosphorHeading } from '../styles/retro';
 import { staggerContainer, staggerItem, fadeIn } from '../styles/motion';
 import type { Session } from '../types';
 
@@ -84,12 +84,8 @@ export function JoinSessionView() {
       {/* Heading */}
       <h2
         style={{
-          fontFamily: FONTS.DISPLAY,
+          ...phosphorHeading,
           fontSize: '24px',
-          fontWeight: 700,
-          color: COLORS.TEXT_HEADING,
-          letterSpacing: '2px',
-          textTransform: 'uppercase' as const,
           margin: 0,
         }}
       >
@@ -232,7 +228,7 @@ export function JoinSessionView() {
           <p
             style={{
               fontFamily: FONTS.MONO,
-              color: COLORS.TEXT_DIM,
+              color: COLORS.TEXT_MUTED,
               fontSize: '13px',
               textAlign: 'center' as const,
               padding: '32px 0',
@@ -244,7 +240,7 @@ export function JoinSessionView() {
           <p
             style={{
               fontFamily: FONTS.MONO,
-              color: COLORS.TEXT_DIM,
+              color: COLORS.TEXT_MUTED,
               fontSize: '13px',
               textAlign: 'center' as const,
               padding: '32px 0',
@@ -310,7 +306,7 @@ export function JoinSessionView() {
                       style={{
                         fontFamily: FONTS.MONO,
                         fontSize: '11px',
-                        color: COLORS.TEXT_DIM,
+                        color: COLORS.TEXT_MUTED,
                       }}
                     >
                       {session.user_count ?? 0} participants &middot;{' '}

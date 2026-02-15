@@ -61,7 +61,7 @@ const styles = {
   timestamp: {
     fontFamily: FONTS.MONO,
     fontSize: '11px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     marginLeft: 'auto',
     flexShrink: 0,
   },

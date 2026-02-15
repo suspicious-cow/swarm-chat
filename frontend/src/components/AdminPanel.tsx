@@ -27,7 +27,7 @@ const styles = {
   infoLabel: {
     fontFamily: FONTS.MONO,
     fontSize: '11px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     textTransform: 'uppercase' as const,
     letterSpacing: '1px',
   },

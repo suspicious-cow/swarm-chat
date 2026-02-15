@@ -57,7 +57,7 @@ export function ToastContainer() {
                 fontWeight: 500,
                 letterSpacing: '1.5px',
                 textTransform: 'uppercase',
-                color: COLORS.TEXT_DIM,
+                color: COLORS.TEXT_MUTED,
                 flexShrink: 0,
                 marginTop: '1px',
               }}>

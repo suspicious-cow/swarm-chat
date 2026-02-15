@@ -28,7 +28,7 @@ const styles = {
     ...systemLabel,
     padding: '14px 20px 10px',
     textAlign: 'center' as const,
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
   } as React.CSSProperties,
   brand: {
     padding: '16px 20px 14px',
@@ -51,7 +51,7 @@ const styles = {
   sectionLabel: {
     ...systemLabel,
     padding: '12px 16px 6px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     fontSize: '10px',
     letterSpacing: '2.5px',
   } as React.CSSProperties,

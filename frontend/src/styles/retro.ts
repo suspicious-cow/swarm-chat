@@ -81,6 +81,16 @@ export const gridBg: React.CSSProperties = {
   backgroundSize: '24px 24px',
 };
 
+/** CRT phosphor heading — amber glow text-shadow */
+export const phosphorHeading: React.CSSProperties = {
+  fontFamily: FONTS.DISPLAY,
+  fontWeight: 700,
+  color: COLORS.TEXT_HEADING,
+  textShadow: COLORS.TEXT_GLOW_AMBER,
+  letterSpacing: '2px',
+  textTransform: 'uppercase',
+};
+
 /** Retro input field styling */
 export const retroInput: React.CSSProperties = {
   width: '100%',

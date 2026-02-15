@@ -63,7 +63,7 @@ const styles = {
     marginTop: '6px',
     fontFamily: FONTS.MONO,
     fontSize: '11px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
   },
   sentimentBar: {
     height: '3px',
@@ -298,7 +298,7 @@ export function Visualizer() {
           [ LIVE IDEAS ] &mdash; {ideas.length}
         </div>
         {ideas.length === 0 && (
-          <div style={{ color: COLORS.TEXT_DIM, fontFamily: FONTS.MONO, fontSize: '12px' }}>
+          <div style={{ color: COLORS.TEXT_MUTED, fontFamily: FONTS.MONO, fontSize: '12px' }}>
             Ideas will appear here as the discussion progresses.
           </div>
         )}

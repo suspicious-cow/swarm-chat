@@ -23,12 +23,12 @@ export const COLORS = {
   BORDER: '#1e1e2a',
   BORDER_LIGHT: '#2a2a3a',
 
-  // Text
-  TEXT_PRIMARY: '#d4cfc4',
-  TEXT_HEADING: '#e8e4d8',
+  // Text — CRT phosphor amber tint
+  TEXT_PRIMARY: '#d4c494',
+  TEXT_HEADING: '#ffe0a6',
   TEXT_ACCENT: '#FFB800',
-  TEXT_MUTED: '#6a6670',
-  TEXT_DIM: '#4a4650',
+  TEXT_MUTED: '#a89868',
+  TEXT_DIM: '#7a6e50',
 
   // Accent — CRT Phosphor
   ACCENT: '#FFB800',
@@ -65,6 +65,10 @@ export const COLORS = {
   SHADOW_MD: '0 4px 16px rgba(0,0,0,0.6)',
   SHADOW_GLOW: '0 0 20px rgba(255,184,0,0.15)',
   SHADOW_TEAL: '0 0 20px rgba(0,212,170,0.12)',
+
+  // CRT phosphor text glow
+  TEXT_GLOW_AMBER: '0 0 8px rgba(255,184,0,0.35), 0 0 20px rgba(255,184,0,0.12)',
+  TEXT_GLOW_TEAL: '0 0 8px rgba(0,212,170,0.3), 0 0 20px rgba(0,212,170,0.1)',
 
   // Badge colors
   BADGE_WAITING_BG: '#1a1500',

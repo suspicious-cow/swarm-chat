@@ -70,7 +70,7 @@ const styles = {
     fontFamily: FONTS.MONO,
     fontSize: '11px',
     letterSpacing: '1px',
-    color: COLORS.TEXT_DIM,
+    color: COLORS.TEXT_MUTED,
     marginBottom: '6px',
     textTransform: 'uppercase' as const,
   },
