@@ -61,3 +61,6 @@ screenshots/
 
 # Claude Code
 .claude/
+
+# Context
+context/
