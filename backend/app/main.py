@@ -12,17 +12,19 @@ from app.models.base import Base
 from app.routers import sessions, users, admin
 from app.websocket.routes import router as ws_router
 from app.engine.cme import start_cme_loop, stop_cme_loop
-from app.services.redis import close_redis
+from app.services.redis import close_redis, start_redis_subscriber
+from app.websocket.manager import manager
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
 cme_task: asyncio.Task | None = None
+redis_sub_task: asyncio.Task | None = None
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    global cme_task
+    global cme_task, redis_sub_task
     # Startup: create tables and start CME
     async with engine.begin() as conn:
         await conn.run_sync(Base.metadata.create_all)
@@ -31,12 +33,22 @@ async def lifespan(app: FastAPI):
     cme_task = asyncio.create_task(start_cme_loop())
     logger.info("CME background loop started")
 
+    redis_sub_task = asyncio.create_task(
+        start_redis_subscriber(
+            on_subgroup_msg=manager.broadcast_to_subgroup,
+            on_session_msg=manager.broadcast_to_session,
+        )
+    )
+    logger.info("Redis subscriber started")
+
     yield
 
     # Shutdown
     stop_cme_loop()
     if cme_task:
         cme_task.cancel()
+    if redis_sub_task:
+        redis_sub_task.cancel()
     await close_redis()
     await engine.dispose()
     logger.info("Shutdown complete")

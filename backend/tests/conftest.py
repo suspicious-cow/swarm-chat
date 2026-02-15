@@ -99,10 +99,27 @@ def mock_redis(monkeypatch):
     monkeypatch.setattr("app.engine.surrogate.publish_to_subgroup", mock_pub_subgroup)
     monkeypatch.setattr("app.engine.contributor.publish_to_subgroup", mock_pub_subgroup)
 
+    # Import site in websocket handlers (human chat messages now go through Redis)
+    monkeypatch.setattr("app.websocket.handlers.publish_to_subgroup", mock_pub_subgroup)
+
+    # start_redis_subscriber — no-op in tests (no real Redis connection)
+    monkeypatch.setattr("app.services.redis.start_redis_subscriber", AsyncMock())
+
+    # Mock get_redis in cme module (used by distributed lock)
+    mock_redis_client = AsyncMock()
+    mock_redis_client.set = AsyncMock(return_value=True)
+    mock_redis_client.get = AsyncMock(return_value=None)
+    mock_redis_client.expire = AsyncMock(return_value=True)
+    mock_redis_client.delete = AsyncMock(return_value=1)
+    mock_get_redis = AsyncMock(return_value=mock_redis_client)
+    monkeypatch.setattr("app.engine.cme.get_redis", mock_get_redis)
+
     return {
         "publish_to_subgroup": mock_pub_subgroup,
         "publish_to_session": mock_pub_session,
         "enqueue_cme_task": mock_enqueue,
+        "redis_client": mock_redis_client,
+        "get_redis": mock_get_redis,
     }
 
 

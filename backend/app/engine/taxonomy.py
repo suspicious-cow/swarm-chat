@@ -52,22 +52,20 @@ Return ONLY valid JSON, no markdown formatting."""
 
     raw_ideas = await generate_json(prompt)
 
+    # Batch fetch all existing summaries for dedup (avoids N queries)
+    existing_result = await db.execute(
+        select(Idea.summary).where(Idea.session_id == session_id)
+    )
+    existing_summaries = set(existing_result.scalars().all())
+
     new_ideas = []
     for idea_data in raw_ideas:
         summary = idea_data.get("summary", "").strip()
         sentiment = idea_data.get("sentiment", 0.0)
-        if not summary:
+        if not summary or summary in existing_summaries:
             continue
 
-        # Check if a similar idea already exists (simple dedup by session)
-        existing = await db.execute(
-            select(Idea)
-            .where(Idea.session_id == session_id)
-            .where(Idea.summary == summary)
-        )
-        if existing.scalar_one_or_none():
-            continue
-
+        existing_summaries.add(summary)  # prevent duplicates within batch
         idea = Idea(
             session_id=session_id,
             subgroup_id=subgroup_id,

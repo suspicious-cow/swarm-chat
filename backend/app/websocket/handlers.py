@@ -8,7 +8,6 @@ from sqlalchemy.ext.asyncio import AsyncSession
 
 from app.models.message import Message, MessageType
 from app.models.user import User
-from app.websocket.manager import manager
 from app.services.redis import publish_to_subgroup
 
 logger = logging.getLogger(__name__)
@@ -53,4 +52,4 @@ async def handle_chat_message(
         "created_at": message.created_at.isoformat() if message.created_at else datetime.now(timezone.utc).isoformat(),
     }
 
-    await manager.broadcast_to_subgroup(subgroup_id, "chat:new_message", msg_data)
+    await publish_to_subgroup(subgroup_id, "chat:new_message", msg_data)

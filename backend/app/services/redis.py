@@ -48,3 +48,37 @@ async def enqueue_cme_task(session_id: uuid.UUID, subgroup_id: uuid.UUID):
         "cme:queue",
         json.dumps({"session_id": str(session_id), "subgroup_id": str(subgroup_id)}),
     )
+
+
+async def start_redis_subscriber(on_subgroup_msg, on_session_msg):
+    """Subscribe to subgroup:* and session:* channels, call handlers on messages.
+
+    Runs as a long-lived background task. Each Gunicorn worker starts one
+    subscriber so that Redis-published messages are delivered to the local
+    WebSocket connections managed by that worker.
+    """
+    import logging
+
+    logger = logging.getLogger(__name__)
+    r = aioredis.from_url(settings.REDIS_URL, decode_responses=True)
+    pubsub = r.pubsub()
+    await pubsub.psubscribe("subgroup:*", "session:*")
+    logger.info("Redis subscriber started (subgroup:*, session:*)")
+    try:
+        async for raw_msg in pubsub.listen():
+            if raw_msg["type"] != "pmessage":
+                continue
+            channel = raw_msg["channel"]
+            payload = json.loads(raw_msg["data"])
+            try:
+                if channel.startswith("subgroup:"):
+                    sg_id = uuid.UUID(channel.split(":", 1)[1])
+                    await on_subgroup_msg(sg_id, payload["event"], payload["data"])
+                elif channel.startswith("session:"):
+                    sess_id = uuid.UUID(channel.split(":", 1)[1])
+                    await on_session_msg(sess_id, payload["event"], payload["data"])
+            except Exception as e:
+                logger.error(f"Redis subscriber handler error: {e}")
+    finally:
+        await pubsub.punsubscribe("subgroup:*", "session:*")
+        await r.close()

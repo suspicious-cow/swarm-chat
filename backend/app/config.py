@@ -13,6 +13,9 @@ class Settings(BaseSettings):
     SUBGROUP_SIZE: int = 5
     CME_INTERVAL_SECONDS: int = 20
     SURROGATE_INTERVAL_SECONDS: int = 30
+    CME_CONCURRENCY: int = 10
+    DB_POOL_SIZE: int = 20
+    DB_MAX_OVERFLOW: int = 40
 
     model_config = {"env_file": ".env", "extra": "ignore"}
 
