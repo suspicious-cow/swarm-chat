@@ -31,16 +31,23 @@ const styles = {
     color: COLORS.TEXT_MUTED,
   } as React.CSSProperties,
   brand: {
-    padding: '16px 20px 14px',
-    fontSize: '18px',
+    padding: '20px 20px 16px',
+    borderBottom: `1px solid ${COLORS.BORDER}`,
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    gap: '10px',
+  },
+  brandLogo: {
+    filter: `drop-shadow(0 0 12px rgba(255,184,0,0.4))`,
+  },
+  brandName: {
+    fontSize: '16px',
     fontWeight: 700,
     fontFamily: FONTS.DISPLAY,
     color: COLORS.ACCENT,
-    borderBottom: `1px solid ${COLORS.BORDER}`,
-    display: 'flex',
-    alignItems: 'center',
-    gap: '10px',
-    letterSpacing: '-0.3px',
+    letterSpacing: '3px',
+    textTransform: 'uppercase' as const,
     textShadow: COLORS.SHADOW_GLOW,
   },
   nav: {
@@ -220,10 +227,10 @@ export function Sidebar() {
     <div style={styles.sidebar}>
       <div style={styles.systemHeader}>[ SWARM CONTROL ]</div>
       <div style={styles.brand}>
-        <div style={{ filter: `drop-shadow(${COLORS.SHADOW_GLOW})` }}>
-          <SwarmLogo size={28} />
+        <div style={styles.brandLogo}>
+          <SwarmLogo size={56} glow />
         </div>
-        Swarm Chat
+        <span style={styles.brandName}>Swarm Chat</span>
       </div>
 
       {inSession && currentSession && (
