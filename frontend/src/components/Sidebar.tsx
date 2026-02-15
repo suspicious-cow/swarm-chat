@@ -1,7 +1,8 @@
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { SwarmLogo } from './SwarmLogo';
-import { LAYOUT, COLORS } from '../styles/constants';
+import { LAYOUT, COLORS, FONTS } from '../styles/constants';
+import { systemLabel, statusLed } from '../styles/retro';
 
 type View = 'home' | 'new-session' | 'join-session' | 'settings'
   | 'waiting' | 'chat' | 'visualizer' | 'participants';
@@ -23,22 +24,37 @@ const styles = {
     height: '100vh',
     overflow: 'hidden',
   },
+  systemHeader: {
+    ...systemLabel,
+    padding: '14px 20px 10px',
+    textAlign: 'center' as const,
+    color: COLORS.TEXT_DIM,
+  } as React.CSSProperties,
   brand: {
-    padding: '20px 20px 16px',
+    padding: '16px 20px 14px',
     fontSize: '18px',
     fontWeight: 700,
+    fontFamily: FONTS.DISPLAY,
     color: COLORS.ACCENT,
     borderBottom: `1px solid ${COLORS.BORDER}`,
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
     letterSpacing: '-0.3px',
+    textShadow: COLORS.SHADOW_GLOW,
   },
   nav: {
     flex: 1,
     overflowY: 'auto' as const,
     padding: '8px 0',
   },
+  sectionLabel: {
+    ...systemLabel,
+    padding: '12px 16px 6px',
+    color: COLORS.TEXT_DIM,
+    fontSize: '10px',
+    letterSpacing: '2.5px',
+  } as React.CSSProperties,
   navIcon: {
     fontSize: '16px',
     width: '22px',
@@ -56,6 +72,7 @@ const styles = {
     padding: '10px 16px 10px 14px',
     fontSize: '13.5px',
     fontWeight: 500,
+    fontFamily: FONTS.BODY,
     color: COLORS.TEXT_MUTED,
     cursor: 'pointer',
     borderLeft: '3px solid transparent',
@@ -78,15 +95,22 @@ const styles = {
     padding: '12px 20px',
     borderBottom: `1px solid ${COLORS.BORDER}`,
   },
+  sessionTitleRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    marginBottom: '4px',
+  },
   sessionTitle: {
     fontSize: '13px',
     fontWeight: 600,
+    fontFamily: FONTS.DISPLAY,
     color: COLORS.TEXT_ACCENT,
-    marginBottom: '4px',
     whiteSpace: 'nowrap' as const,
     overflow: 'hidden',
     textOverflow: 'ellipsis',
-  },
+    flex: 1,
+  } as React.CSSProperties,
   sessionCode: {
     display: 'flex',
     alignItems: 'center',
@@ -97,7 +121,7 @@ const styles = {
     fontWeight: 600,
     color: COLORS.ACCENT,
     letterSpacing: '2px',
-    fontFamily: 'monospace',
+    fontFamily: FONTS.MONO,
   },
   copyBtn: {
     background: 'none',
@@ -107,6 +131,7 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     fontSize: '11px',
+    fontFamily: FONTS.MONO,
     transition: 'border-color 0.15s',
   },
   leaveBtn: {
@@ -120,6 +145,7 @@ const styles = {
     color: COLORS.ERROR,
     fontSize: '13px',
     fontWeight: 500,
+    fontFamily: FONTS.BODY,
     cursor: 'pointer',
     textAlign: 'center' as const,
     transition: 'all 0.15s',
@@ -179,8 +205,11 @@ export function Sidebar() {
   if (!account) {
     return (
       <div style={styles.sidebar}>
+        <div style={styles.systemHeader}>[ SWARM CONTROL ]</div>
         <div style={styles.brand}>
-          <SwarmLogo size={28} />
+          <div style={{ filter: `drop-shadow(${COLORS.SHADOW_GLOW})` }}>
+            <SwarmLogo size={28} />
+          </div>
           Swarm Chat
         </div>
       </div>
@@ -189,14 +218,23 @@ export function Sidebar() {
 
   return (
     <div style={styles.sidebar}>
+      <div style={styles.systemHeader}>[ SWARM CONTROL ]</div>
       <div style={styles.brand}>
-        <SwarmLogo size={28} />
+        <div style={{ filter: `drop-shadow(${COLORS.SHADOW_GLOW})` }}>
+          <SwarmLogo size={28} />
+        </div>
         Swarm Chat
       </div>
 
       {inSession && currentSession && (
         <div style={styles.sessionInfo}>
-          <div style={styles.sessionTitle}>{currentSession.title}</div>
+          <div style={styles.sessionTitleRow}>
+            <span style={statusLed(
+              currentSession.status === 'active' ? COLORS.SUCCESS : COLORS.WARNING,
+              currentSession.status === 'waiting',
+            )} />
+            <div style={styles.sessionTitle}>{currentSession.title}</div>
+          </div>
           <div style={styles.sessionCode}>
             <span style={styles.codeText}>{currentSession.join_code}</span>
             <button style={styles.copyBtn} onClick={handleCopy}>Copy</button>
@@ -207,19 +245,23 @@ export function Sidebar() {
       <div style={styles.nav}>
         {inSession ? (
           <>
+            <div style={styles.sectionLabel}>[ SESSION ]</div>
             {currentSession?.status === 'waiting' && renderNavItem({ label: 'Waiting Room', view: 'waiting', icon: '\u23F3' })}
             {currentSession?.status === 'active' && sessionNav.map(renderNavItem)}
             {currentUser?.is_admin && (
               <>
                 <div style={styles.divider} />
+                <div style={styles.sectionLabel}>[ ADMIN ]</div>
                 {renderNavItem({ label: 'Admin Controls', view: 'waiting', icon: '\u2699' })}
               </>
             )}
           </>
         ) : (
           <>
+            <div style={styles.sectionLabel}>[ NAVIGATION ]</div>
             {standardNav.map(renderNavItem)}
             <div style={styles.divider} />
+            <div style={styles.sectionLabel}>[ SYSTEM ]</div>
             {renderNavItem({ label: 'Settings', view: 'settings', icon: '\u2699' })}
           </>
         )}

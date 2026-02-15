@@ -1,9 +1,12 @@
 import type { ReactNode } from 'react';
+import { AnimatePresence, motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { Sidebar } from './Sidebar';
 import { ToastContainer } from './ToastContainer';
-import { LAYOUT, COLORS } from '../styles/constants';
+import { LAYOUT, COLORS, FONTS } from '../styles/constants';
+import { scanLineOverlay, crtVignette, gridBg } from '../styles/retro';
+import { viewTransition } from '../styles/motion';
 
 const styles = {
   root: {
@@ -11,7 +14,8 @@ const styles = {
     height: '100vh',
     background: COLORS.BG_PRIMARY,
     color: COLORS.TEXT_PRIMARY,
-    fontFamily: "'Inter', -apple-system, BlinkMacSystemFont, sans-serif",
+    fontFamily: FONTS.BODY,
+    position: 'relative' as const,
   } as React.CSSProperties,
   rightPanel: {
     flex: 1,
@@ -29,7 +33,7 @@ const styles = {
     background: COLORS.BG_CARD,
     borderBottom: `1px solid ${COLORS.BORDER}`,
     gap: '12px',
-    boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
+    boxShadow: COLORS.SHADOW_SM,
   } as React.CSSProperties,
   userChip: {
     display: 'flex',
@@ -39,6 +43,7 @@ const styles = {
     background: COLORS.BG_HOVER,
     borderRadius: '20px',
     fontSize: '13px',
+    fontFamily: FONTS.BODY,
     color: COLORS.TEXT_PRIMARY,
   },
   userAvatar: {
@@ -51,6 +56,7 @@ const styles = {
     justifyContent: 'center',
     fontSize: '11px',
     fontWeight: 700,
+    fontFamily: FONTS.DISPLAY,
     color: '#fff',
   },
   logoutBtn: {
@@ -61,13 +67,15 @@ const styles = {
     borderRadius: '6px',
     cursor: 'pointer',
     fontSize: '12px',
+    fontFamily: FONTS.BODY,
     transition: 'all 0.15s',
   },
   main: {
     flex: 1,
     overflow: 'auto',
     padding: `${LAYOUT.CONTENT_PADDING}px`,
-  },
+    ...gridBg,
+  } as React.CSSProperties,
 };
 
 const globalKeyframes = `
@@ -84,12 +92,16 @@ const globalKeyframes = `
     100% { background-position: 200% 0; }
   }
   @keyframes glowPulse {
-    0%, 100% { box-shadow: 0 0 8px rgba(245,158,11,0.2); }
-    50% { box-shadow: 0 0 20px rgba(245,158,11,0.4); }
+    0%, 100% { box-shadow: 0 0 8px rgba(255,184,0,0.2); }
+    50% { box-shadow: 0 0 20px rgba(255,184,0,0.4); }
   }
   @keyframes spin {
     from { transform: rotate(0deg); }
     to { transform: rotate(360deg); }
+  }
+  @keyframes ledPulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.4; }
   }
 
   /* Scrollbar */
@@ -99,7 +111,7 @@ const globalKeyframes = `
   ::-webkit-scrollbar-thumb:hover { background: ${COLORS.BORDER_LIGHT}; }
 
   /* Selection */
-  ::selection { background: rgba(245, 158, 11, 0.25); color: #fff; }
+  ::selection { background: rgba(255, 184, 0, 0.25); color: #fff; }
 
   /* Focus ring */
   :focus-visible { outline: 2px solid ${COLORS.ACCENT}; outline-offset: 2px; }
@@ -108,7 +120,7 @@ const globalKeyframes = `
 
 export function Layout({ children }: { children: ReactNode }) {
   const { account, logout } = useAuthStore();
-  const { reset } = useDeliberationStore();
+  const { view, reset } = useDeliberationStore();
 
   const handleLogout = () => {
     logout();
@@ -118,6 +130,13 @@ export function Layout({ children }: { children: ReactNode }) {
   return (
     <div style={styles.root}>
       <style>{globalKeyframes}</style>
+
+      {/* Scan lines overlay */}
+      <div style={scanLineOverlay} />
+
+      {/* CRT vignette overlay */}
+      <div style={crtVignette} />
+
       <Sidebar />
       <div style={styles.rightPanel}>
         <div style={styles.topBar}>
@@ -147,7 +166,18 @@ export function Layout({ children }: { children: ReactNode }) {
           )}
         </div>
         <main style={styles.main}>
-          {children}
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={view}
+              initial={viewTransition.initial}
+              animate={viewTransition.animate}
+              exit={viewTransition.exit}
+              transition={viewTransition.transition}
+              style={{ height: '100%' }}
+            >
+              {children}
+            </motion.div>
+          </AnimatePresence>
         </main>
       </div>
       <ToastContainer />

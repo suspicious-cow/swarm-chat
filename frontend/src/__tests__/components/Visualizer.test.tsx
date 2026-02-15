@@ -52,7 +52,7 @@ describe('Visualizer', () => {
   it('renders Deliberation Map title', () => {
     setupState();
     render(<Visualizer />);
-    expect(screen.getByText('Deliberation Map')).toBeInTheDocument();
+    expect(screen.getByText(/TACTICAL DISPLAY/)).toBeInTheDocument();
   });
 
   it('renders SubgroupNode for each subgroup', () => {
@@ -66,7 +66,7 @@ describe('Visualizer', () => {
     setupState();
     render(<Visualizer />);
     expect(screen.getByText('Ban cars from downtown')).toBeInTheDocument();
-    expect(screen.getByText(/Live Ideas/)).toBeInTheDocument();
+    expect(screen.getByText(/LIVE IDEAS/)).toBeInTheDocument();
   });
 
   it('returns null without currentSession', () => {

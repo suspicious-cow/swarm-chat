@@ -1,94 +1,106 @@
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { SwarmLogo } from './SwarmLogo';
-import { COLORS } from '../styles/constants';
+import { COLORS, FONTS } from '../styles/constants';
+import { instrumentCard, systemLabel, retroInput, retroButton } from '../styles/retro';
+import { fadeIn } from '../styles/motion';
 
 const styles = {
-  container: {
+  page: {
+    minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column' as const,
     alignItems: 'center',
-    gap: '40px',
-    paddingTop: '60px',
+    justifyContent: 'center',
+    background: COLORS.GRADIENT_HERO,
+    padding: '24px',
   },
-  hero: {
-    textAlign: 'center' as const,
-    maxWidth: '600px',
+  logoWrap: {
+    marginBottom: '16px',
+    boxShadow: COLORS.SHADOW_GLOW,
+    borderRadius: '50%',
+    padding: '12px',
     display: 'flex',
-    flexDirection: 'column' as const,
     alignItems: 'center',
-    gap: '16px',
+    justifyContent: 'center',
   },
-  heroTitle: {
-    fontSize: '36px',
-    fontWeight: 700,
-    color: COLORS.TEXT_HEADING,
-    marginBottom: '4px',
-  },
-  heroSubtitle: {
-    fontSize: '16px',
+  sysLabel: {
+    ...systemLabel,
+    marginBottom: '24px',
     color: COLORS.TEXT_MUTED,
-    lineHeight: 1.6,
-  },
+  } as React.CSSProperties,
   card: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '16px',
-    padding: '36px',
-    width: '360px',
-    animation: 'fadeIn 0.3s ease',
-    boxShadow: COLORS.SHADOW_MD,
-  },
-  cardTitle: {
-    fontSize: '18px',
+    ...instrumentCard,
+    padding: '32px',
+    width: '380px',
+    maxWidth: '100%',
+  } as React.CSSProperties,
+  heading: {
+    fontFamily: FONTS.DISPLAY,
+    fontSize: '20px',
     fontWeight: 600,
-    color: COLORS.TEXT_ACCENT,
-    marginBottom: '20px',
-  },
-  input: {
-    width: '100%',
-    padding: '10px 14px',
-    background: COLORS.BG_INPUT,
-    border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    borderRadius: '8px',
-    color: COLORS.TEXT_PRIMARY,
-    fontSize: '14px',
-    marginBottom: '12px',
-    boxSizing: 'border-box' as const,
+    letterSpacing: '3px',
+    textTransform: 'uppercase' as const,
+    color: COLORS.TEXT_HEADING,
+    marginBottom: '24px',
+    textAlign: 'center' as const,
   },
   label: {
     display: 'block',
-    fontSize: '12px',
-    color: COLORS.TEXT_DIM,
-    marginBottom: '4px',
+    fontFamily: FONTS.MONO,
+    fontSize: '11px',
+    fontWeight: 500,
+    letterSpacing: '1.5px',
+    textTransform: 'uppercase' as const,
+    color: COLORS.TEXT_MUTED,
+    marginBottom: '6px',
   },
+  inputWrap: {
+    marginBottom: '16px',
+  },
+  input: {
+    ...retroInput,
+  } as React.CSSProperties,
   btn: {
+    ...retroButton,
     width: '100%',
-    padding: '12px',
-    background: COLORS.GRADIENT_PRIMARY,
-    border: 'none',
-    borderRadius: '8px',
-    color: '#fff',
-    fontSize: '15px',
-    fontWeight: 600,
-    cursor: 'pointer',
     marginTop: '8px',
-    transition: 'opacity 0.15s, transform 0.1s',
-    boxShadow: '0 2px 8px rgba(217, 119, 6, 0.3)',
   } as React.CSSProperties,
   error: {
+    fontFamily: FONTS.MONO,
+    fontSize: '12px',
     color: COLORS.ERROR,
-    fontSize: '13px',
-    marginTop: '8px',
+    marginTop: '12px',
+    textAlign: 'center' as const,
   },
   toggle: {
-    color: COLORS.ACCENT,
-    fontSize: '13px',
-    marginTop: '16px',
+    fontFamily: FONTS.MONO,
+    fontSize: '12px',
+    color: COLORS.TEXT_MUTED,
+    marginTop: '20px',
     textAlign: 'center' as const,
     cursor: 'pointer',
+    transition: 'color 0.15s',
+  },
+  toggleAccent: {
+    color: COLORS.ACCENT,
   },
 };
+
+const focusStyle = {
+  boxShadow: '0 0 12px rgba(255,184,0,0.2)',
+  borderColor: COLORS.ACCENT,
+};
+
+function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
+  Object.assign(e.currentTarget.style, focusStyle);
+}
+
+function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
+  e.currentTarget.style.boxShadow = '';
+  e.currentTarget.style.borderColor = COLORS.BORDER;
+}
 
 export function LoginView() {
   const { login, register, loading, error } = useAuthStore();
@@ -113,89 +125,125 @@ export function LoginView() {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.hero}>
-        <SwarmLogo size={56} />
-        <h2 style={styles.heroTitle}>Conversational Swarm Intelligence</h2>
-        <p style={styles.heroSubtitle}>
-          Enable productive real-time group deliberation at scale.
-        </p>
-      </div>
+    <div style={styles.page}>
+      <motion.div
+        variants={fadeIn}
+        initial="initial"
+        animate="animate"
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      >
+        {/* Logo with amber glow */}
+        <div style={styles.logoWrap}>
+          <SwarmLogo size={56} />
+        </div>
 
-      <div style={styles.card}>
-        <h3 style={styles.cardTitle}>{isRegister ? 'Create Account' : 'Sign In'}</h3>
+        {/* System label */}
+        <div style={styles.sysLabel}>[ SYSTEM ACCESS ]</div>
 
-        <label style={styles.label}>Username</label>
-        <input
-          style={styles.input}
-          placeholder="Enter username"
-          value={username}
-          onChange={e => setUsername(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
+        {/* Form card */}
+        <div style={styles.card}>
+          <h2 style={styles.heading}>
+            {isRegister ? 'CREATE ACCOUNT' : 'AUTHENTICATE'}
+          </h2>
 
-        <label style={styles.label}>Password</label>
-        <input
-          style={styles.input}
-          type="password"
-          placeholder="Enter password"
-          value={password}
-          onChange={e => setPassword(e.target.value)}
-          onKeyDown={handleKeyDown}
-        />
-
-        {isRegister && (
-          <>
-            <label style={styles.label}>Display Name</label>
+          {/* Username */}
+          <div style={styles.inputWrap}>
+            <label style={styles.label}>Username</label>
             <input
               style={styles.input}
-              placeholder="How others will see you"
-              value={displayName}
-              onChange={e => setDisplayName(e.target.value)}
+              placeholder="Enter username"
+              value={username}
+              onChange={e => setUsername(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
+          </div>
 
-            <label style={styles.label}>Invite Code</label>
+          {/* Password */}
+          <div style={styles.inputWrap}>
+            <label style={styles.label}>Password</label>
             <input
               style={styles.input}
-              placeholder="Enter invite code (first user exempt)"
-              value={inviteCode}
-              onChange={e => setInviteCode(e.target.value)}
+              type="password"
+              placeholder="Enter password"
+              value={password}
+              onChange={e => setPassword(e.target.value)}
               onKeyDown={handleKeyDown}
+              onFocus={handleFocus}
+              onBlur={handleBlur}
             />
-          </>
-        )}
+          </div>
 
-        <button
-          style={styles.btn}
-          onClick={handleSubmit}
-          disabled={loading}
-          onMouseEnter={e => {
-            e.currentTarget.style.transform = 'scale(1.02)';
-            e.currentTarget.style.boxShadow = '0 4px 16px rgba(217, 119, 6, 0.4)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.transform = 'scale(1)';
-            e.currentTarget.style.boxShadow = '0 2px 8px rgba(217, 119, 6, 0.3)';
-          }}
-        >
-          {loading ? 'Please wait...' : isRegister ? 'Register' : 'Sign In'}
-        </button>
+          {isRegister && (
+            <>
+              {/* Display Name */}
+              <div style={styles.inputWrap}>
+                <label style={styles.label}>Display Name</label>
+                <input
+                  style={styles.input}
+                  placeholder="How others will see you"
+                  value={displayName}
+                  onChange={e => setDisplayName(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                />
+              </div>
 
-        {error && <p style={styles.error}>{error}</p>}
+              {/* Invite Code */}
+              <div style={styles.inputWrap}>
+                <label style={styles.label}>Invite Code</label>
+                <input
+                  style={styles.input}
+                  placeholder="Enter invite code (first user exempt)"
+                  value={inviteCode}
+                  onChange={e => setInviteCode(e.target.value)}
+                  onKeyDown={handleKeyDown}
+                  onFocus={handleFocus}
+                  onBlur={handleBlur}
+                />
+              </div>
+            </>
+          )}
 
-        <p
-          style={styles.toggle}
-          onClick={() => {
-            setIsRegister(!isRegister);
-            useAuthStore.setState({ error: null });
-          }}
-        >
-          {isRegister
-            ? 'Already have an account? Sign in'
-            : "Don't have an account? Register"}
-        </p>
-      </div>
+          <button
+            style={styles.btn}
+            onClick={handleSubmit}
+            disabled={loading}
+            onMouseEnter={e => {
+              e.currentTarget.style.boxShadow = '0 0 24px rgba(255,184,0,0.35)';
+              e.currentTarget.style.transform = 'scale(1.02)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.boxShadow = COLORS.SHADOW_GLOW;
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            {loading ? 'PLEASE WAIT...' : isRegister ? 'REGISTER' : 'SIGN IN'}
+          </button>
+
+          {error && <p style={styles.error}>{error}</p>}
+
+          <p
+            style={styles.toggle}
+            onClick={() => {
+              setIsRegister(!isRegister);
+              useAuthStore.setState({ error: null });
+            }}
+            onMouseEnter={e => {
+              e.currentTarget.style.color = COLORS.ACCENT;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.color = COLORS.TEXT_MUTED;
+            }}
+          >
+            {isRegister
+              ? 'Already have an account? Sign in'
+              : "Don't have an account? Register"}
+          </p>
+        </div>
+      </motion.div>
     </div>
   );
 }

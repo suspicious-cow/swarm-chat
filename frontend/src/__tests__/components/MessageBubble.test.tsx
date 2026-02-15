@@ -43,7 +43,7 @@ describe('MessageBubble', () => {
     expect(screen.getByText('AI')).toBeInTheDocument();
   });
 
-  it('own messages get different alignment', () => {
+  it('own messages get different styling', () => {
     const { container: ownContainer } = render(
       <MessageBubble message={baseMsg} isOwn={true} />
     );
@@ -53,8 +53,8 @@ describe('MessageBubble', () => {
 
     const ownDiv = ownContainer.firstElementChild as HTMLElement;
     const otherDiv = otherContainer.firstElementChild as HTMLElement;
-    expect(ownDiv.style.alignSelf).toBe('flex-end');
-    expect(otherDiv.style.alignSelf).toBe('flex-start');
+    // Own messages use amber left border, others use muted border
+    expect(ownDiv.style.borderLeftColor).not.toBe(otherDiv.style.borderLeftColor);
   });
 
   it('renders message content', () => {

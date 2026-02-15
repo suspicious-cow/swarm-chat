@@ -56,7 +56,7 @@ describe('ChatRoom', () => {
   it('shows empty message text when no messages', () => {
     setupState();
     render(<ChatRoom />);
-    expect(screen.getByText(/No messages yet/)).toBeInTheDocument();
+    expect(screen.getByText(/No transmissions yet/)).toBeInTheDocument();
   });
 
   it('renders messages', () => {

@@ -1,126 +1,10 @@
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
-import { COLORS } from '../styles/constants';
-
-const styles = {
-  container: {
-    maxWidth: '560px',
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '32px',
-    paddingTop: '20px',
-    animation: 'fadeIn 0.3s ease',
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: 700,
-    color: COLORS.TEXT_HEADING,
-  },
-  card: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '14px',
-    padding: '32px',
-    boxShadow: COLORS.SHADOW_SM,
-  },
-  label: {
-    display: 'block',
-    fontSize: '13px',
-    fontWeight: 500,
-    color: COLORS.TEXT_MUTED,
-    marginBottom: '6px',
-  },
-  helper: {
-    fontSize: '12px',
-    color: COLORS.TEXT_DIM,
-    marginTop: '2px',
-    marginBottom: '14px',
-    lineHeight: 1.5,
-  },
-  input: {
-    width: '100%',
-    padding: '10px 14px',
-    background: COLORS.BG_INPUT,
-    border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    borderRadius: '8px',
-    color: COLORS.TEXT_PRIMARY,
-    fontSize: '14px',
-    boxSizing: 'border-box' as const,
-  },
-  btn: {
-    width: '100%',
-    padding: '12px',
-    background: COLORS.GRADIENT_PRIMARY,
-    border: 'none',
-    borderRadius: '8px',
-    color: '#fff',
-    fontSize: '15px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    marginTop: '8px',
-    transition: 'opacity 0.15s, transform 0.15s',
-    boxShadow: '0 2px 8px rgba(217, 119, 6, 0.3)',
-  },
-  btnDisabled: {
-    opacity: 0.5,
-    cursor: 'not-allowed',
-  },
-  error: {
-    color: COLORS.ERROR,
-    fontSize: '13px',
-    marginTop: '8px',
-  },
-  // Created state
-  createdContainer: {
-    maxWidth: '480px',
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    alignItems: 'center',
-    gap: '24px',
-    paddingTop: '40px',
-    textAlign: 'center' as const,
-  },
-  createdTitle: {
-    fontSize: '24px',
-    fontWeight: 700,
-    color: COLORS.TEXT_HEADING,
-  },
-  createdSubtitle: {
-    fontSize: '14px',
-    color: COLORS.TEXT_MUTED,
-    lineHeight: 1.5,
-  },
-  codeDisplay: {
-    fontSize: '48px',
-    fontWeight: 800,
-    color: COLORS.ACCENT,
-    letterSpacing: '8px',
-  },
-  copyBtn: {
-    background: 'transparent',
-    border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    color: COLORS.TEXT_MUTED,
-    padding: '6px 16px',
-    borderRadius: '6px',
-    cursor: 'pointer',
-    fontSize: '13px',
-  },
-  enterBtn: {
-    padding: '12px 40px',
-    background: COLORS.GRADIENT_PRIMARY,
-    border: 'none',
-    borderRadius: '8px',
-    color: '#fff',
-    fontSize: '15px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'opacity 0.15s, transform 0.15s',
-    boxShadow: '0 2px 8px rgba(217, 119, 6, 0.3)',
-  },
-};
+import { COLORS, FONTS } from '../styles/constants';
+import { instrumentCard, systemLabel, dataReadout, retroInput, retroButton } from '../styles/retro';
+import { fadeIn } from '../styles/motion';
 
 export function NewSessionView() {
   const { account } = useAuthStore();
@@ -157,70 +41,261 @@ export function NewSessionView() {
   // Show "session created" screen
   if (currentSession && !currentUser) {
     return (
-      <div style={styles.createdContainer}>
-        <h2 style={styles.createdTitle}>Session Created!</h2>
-        <p style={styles.createdSubtitle}>
+      <motion.div
+        {...fadeIn}
+        style={{
+          maxWidth: '480px',
+          margin: '0 auto',
+          display: 'flex',
+          flexDirection: 'column' as const,
+          alignItems: 'center',
+          gap: '24px',
+          paddingTop: '40px',
+          textAlign: 'center' as const,
+        }}
+      >
+        <div style={systemLabel}>[ MISSION CONFIGURED ]</div>
+
+        <h2
+          style={{
+            fontFamily: FONTS.DISPLAY,
+            fontSize: '24px',
+            fontWeight: 700,
+            color: COLORS.TEXT_HEADING,
+            letterSpacing: '2px',
+            textTransform: 'uppercase' as const,
+            margin: 0,
+          }}
+        >
+          SESSION CREATED
+        </h2>
+
+        <p
+          style={{
+            fontFamily: FONTS.BODY,
+            fontSize: '14px',
+            color: COLORS.TEXT_MUTED,
+            lineHeight: 1.5,
+            margin: 0,
+          }}
+        >
           Share this code with participants so they can join the deliberation.
         </p>
-        <div style={styles.codeDisplay}>{currentSession.join_code}</div>
+
+        {/* Large code readout */}
+        <div
+          style={{
+            ...dataReadout,
+            fontSize: '36px',
+            fontWeight: 800,
+            letterSpacing: '10px',
+            padding: '20px 32px',
+            color: COLORS.ACCENT,
+            fontFamily: FONTS.MONO,
+            textAlign: 'center' as const,
+          }}
+        >
+          {currentSession.join_code}
+        </div>
+
         <div style={{ display: 'flex', gap: '12px' }}>
-          <button style={styles.copyBtn} onClick={handleCopy}>
+          <button
+            style={{
+              background: 'transparent',
+              border: `1px solid ${COLORS.BORDER_LIGHT}`,
+              borderRadius: '2px',
+              color: copied ? COLORS.ACCENT : COLORS.TEXT_MUTED,
+              padding: '8px 20px',
+              cursor: 'pointer',
+              fontFamily: FONTS.MONO,
+              fontSize: '12px',
+              letterSpacing: '1px',
+              textTransform: 'uppercase' as const,
+              transition: 'all 0.15s',
+              boxShadow: copied ? COLORS.SHADOW_GLOW : 'none',
+            }}
+            onClick={handleCopy}
+          >
             {copied ? 'Copied!' : 'Copy Code'}
           </button>
         </div>
-        <p style={{ fontSize: '14px', color: COLORS.TEXT_MUTED }}>
+
+        <p
+          style={{
+            fontFamily: FONTS.MONO,
+            fontSize: '13px',
+            color: COLORS.TEXT_MUTED,
+            margin: 0,
+          }}
+        >
           {currentSession.title}
         </p>
+
         <button
           style={{
-            ...styles.enterBtn,
-            ...(entering ? styles.btnDisabled : {}),
+            ...retroButton,
+            width: 'auto',
+            padding: '12px 40px',
+            opacity: entering ? 0.5 : 1,
+            cursor: entering ? 'not-allowed' : 'pointer',
           }}
           onClick={handleEnter}
           disabled={entering}
         >
           {entering ? 'Entering...' : 'Enter Session'}
         </button>
-        {error && <p style={styles.error}>{error}</p>}
-      </div>
+
+        {error && (
+          <p
+            style={{
+              fontFamily: FONTS.MONO,
+              color: COLORS.ERROR,
+              fontSize: '13px',
+              margin: 0,
+            }}
+          >
+            {error}
+          </p>
+        )}
+      </motion.div>
     );
   }
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Create a New Session</h2>
+    <motion.div
+      {...fadeIn}
+      style={{
+        maxWidth: '560px',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '24px',
+        paddingTop: '20px',
+      }}
+    >
+      <div style={systemLabel}>[ MISSION CONFIGURATION ]</div>
 
-      <div style={styles.card}>
-        <label style={styles.label}>Deliberation topic / question</label>
+      <h2
+        style={{
+          fontFamily: FONTS.DISPLAY,
+          fontSize: '24px',
+          fontWeight: 700,
+          color: COLORS.TEXT_HEADING,
+          letterSpacing: '2px',
+          textTransform: 'uppercase' as const,
+          margin: 0,
+        }}
+      >
+        INITIALIZE SESSION
+      </h2>
+
+      <div
+        style={{
+          ...instrumentCard,
+          padding: '32px',
+        }}
+      >
+        {/* Topic label */}
+        <label
+          style={{
+            display: 'block',
+            fontFamily: FONTS.MONO,
+            fontSize: '11px',
+            fontWeight: 500,
+            color: COLORS.TEXT_MUTED,
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase' as const,
+            marginBottom: '8px',
+          }}
+        >
+          Deliberation Topic / Question
+        </label>
         <input
-          style={styles.input}
+          style={{
+            ...retroInput,
+            fontFamily: FONTS.BODY,
+          }}
           placeholder="e.g. Should cities ban cars from downtown?"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           onKeyDown={(e) => e.key === 'Enter' && handleCreate()}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = COLORS.ACCENT_DIM;
+            e.currentTarget.style.boxShadow = `0 0 12px ${COLORS.ACCENT_GLOW}`;
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = COLORS.BORDER;
+            e.currentTarget.style.boxShadow = 'none';
+          }}
         />
-        <p style={styles.helper}>
+        <p
+          style={{
+            fontFamily: FONTS.BODY,
+            fontSize: '12px',
+            color: COLORS.TEXT_DIM,
+            marginTop: '4px',
+            marginBottom: '20px',
+            lineHeight: 1.5,
+          }}
+        >
           Frame as a clear question to guide focused discussion.
         </p>
 
-        <label style={styles.label}>ThinkTank size (3-10)</label>
+        {/* ThinkTank size label */}
+        <label
+          style={{
+            display: 'block',
+            fontFamily: FONTS.MONO,
+            fontSize: '11px',
+            fontWeight: 500,
+            color: COLORS.TEXT_MUTED,
+            letterSpacing: '1.5px',
+            textTransform: 'uppercase' as const,
+            marginBottom: '8px',
+          }}
+        >
+          ThinkTank Size (3-10)
+        </label>
         <input
-          style={{ ...styles.input, marginBottom: 0 }}
+          style={{
+            ...retroInput,
+            fontFamily: FONTS.MONO,
+          }}
           type="number"
           min={3}
           max={10}
           value={size}
           onChange={(e) => setSize(Number(e.target.value))}
+          onFocus={(e) => {
+            e.currentTarget.style.borderColor = COLORS.ACCENT_DIM;
+            e.currentTarget.style.boxShadow = `0 0 12px ${COLORS.ACCENT_GLOW}`;
+          }}
+          onBlur={(e) => {
+            e.currentTarget.style.borderColor = COLORS.BORDER;
+            e.currentTarget.style.boxShadow = 'none';
+          }}
         />
-        <p style={styles.helper}>
-          Research shows groups of 4-7 participants with an AI Surrogate produce
-          optimal deliberation. Default of 5 is recommended.
-        </p>
+
+        {/* Size parameter readout */}
+        <div
+          style={{
+            ...dataReadout,
+            marginTop: '8px',
+            marginBottom: '20px',
+            fontSize: '12px',
+          }}
+        >
+          Research shows groups of 4-7 participants with an AI Surrogate produce optimal
+          deliberation. Default of 5 is recommended.
+        </div>
 
         <button
           style={{
-            ...styles.btn,
-            ...(creating || !title.trim() ? styles.btnDisabled : {}),
+            ...retroButton,
+            width: '100%',
+            marginTop: '8px',
+            opacity: creating || !title.trim() ? 0.5 : 1,
+            cursor: creating || !title.trim() ? 'not-allowed' : 'pointer',
           }}
           onClick={handleCreate}
           disabled={creating || !title.trim()}
@@ -228,8 +303,19 @@ export function NewSessionView() {
           {creating ? 'Creating...' : 'Create Session'}
         </button>
 
-        {error && <p style={styles.error}>{error}</p>}
+        {error && (
+          <p
+            style={{
+              fontFamily: FONTS.MONO,
+              color: COLORS.ERROR,
+              fontSize: '13px',
+              marginTop: '8px',
+            }}
+          >
+            {error}
+          </p>
+        )}
       </div>
-    </div>
+    </motion.div>
   );
 }

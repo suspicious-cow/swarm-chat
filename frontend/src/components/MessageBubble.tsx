@@ -1,77 +1,76 @@
-import { COLORS } from '../styles/constants';
+import { COLORS, FONTS } from '../styles/constants';
 import type { Message } from '../types';
 
+const PURPLE_ACCENT = '#8b5cf6';
+
 const styles = {
-  container: {
+  entry: {
     display: 'flex',
     flexDirection: 'column' as const,
-    maxWidth: '75%',
-    gap: '2px',
-    animation: 'fadeIn 0.2s ease',
+    padding: '10px 14px',
+    borderRadius: '2px',
+    borderLeft: '2px solid transparent',
+    width: '100%',
+    boxSizing: 'border-box' as const,
   },
-  ownContainer: {
-    alignSelf: 'flex-end' as const,
+  ownEntry: {
+    background: COLORS.OWN_MSG_BG,
+    borderLeftColor: COLORS.ACCENT,
   },
-  otherContainer: {
-    alignSelf: 'flex-start' as const,
+  otherEntry: {
+    background: COLORS.OTHER_MSG_BG,
+    borderLeftColor: COLORS.BORDER_LIGHT,
+  },
+  surrogateEntry: {
+    background: COLORS.SURROGATE_BG,
+    borderLeftColor: COLORS.TEAL,
+  },
+  contributorEntry: {
+    background: COLORS.CONTRIBUTOR_BG,
+    borderLeftColor: PURPLE_ACCENT,
+  },
+  header: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    marginBottom: '3px',
   },
   name: {
-    fontSize: '11px',
-    fontWeight: 600,
-    marginBottom: '2px',
-    padding: '0 8px',
-  },
-  bubble: {
-    padding: '10px 14px',
-    borderRadius: '12px',
-    fontSize: '14px',
-    lineHeight: 1.5,
-    wordBreak: 'break-word' as const,
-  },
-  humanOwn: {
-    background: COLORS.OWN_MSG_BG,
-    color: COLORS.TEXT_PRIMARY,
-    borderBottomRightRadius: '4px',
-  },
-  humanOther: {
-    background: COLORS.OTHER_MSG_BG,
-    color: COLORS.TEXT_PRIMARY,
-    borderBottomLeftRadius: '4px',
-  },
-  surrogate: {
-    background: COLORS.SURROGATE_BG,
-    color: COLORS.SURROGATE_TEXT,
-    border: `1px solid ${COLORS.SURROGATE_BORDER}`,
-    borderBottomLeftRadius: '4px',
-  },
-  contributor: {
-    background: COLORS.CONTRIBUTOR_BG,
-    color: COLORS.CONTRIBUTOR_TEXT,
-    border: `1px solid ${COLORS.CONTRIBUTOR_BORDER}`,
-    borderBottomLeftRadius: '4px',
-  },
-  time: {
-    fontSize: '10px',
-    color: COLORS.TEXT_DIM,
-    padding: '0 8px',
+    fontFamily: FONTS.MONO,
+    fontSize: '12px',
+    fontWeight: 700,
   },
   badge: {
+    fontFamily: FONTS.MONO,
     display: 'inline-block',
     fontSize: '9px',
     fontWeight: 600,
     padding: '1px 5px',
-    borderRadius: '3px',
-    marginLeft: '6px',
+    borderRadius: '2px',
     textTransform: 'uppercase' as const,
     letterSpacing: '0.5px',
   },
   surrogateBadge: {
-    background: 'rgba(20, 184, 166, 0.15)',
-    color: COLORS.ACCENT_TERTIARY,
+    background: 'rgba(0,212,170,0.15)',
+    color: COLORS.TEAL,
   },
   contributorBadge: {
-    background: 'rgba(208, 184, 224, 0.15)',
-    color: COLORS.CONTRIBUTOR_TEXT,
+    background: 'rgba(139,92,246,0.15)',
+    color: PURPLE_ACCENT,
+  },
+  timestamp: {
+    fontFamily: FONTS.MONO,
+    fontSize: '11px',
+    color: COLORS.TEXT_DIM,
+    marginLeft: 'auto',
+    flexShrink: 0,
+  },
+  content: {
+    fontFamily: FONTS.BODY,
+    fontSize: '14px',
+    lineHeight: 1.5,
+    color: COLORS.TEXT_PRIMARY,
+    wordBreak: 'break-word' as const,
   },
 };
 
@@ -83,13 +82,12 @@ interface Props {
 export function MessageBubble({ message, isOwn }: Props) {
   const isSurrogate = message.msg_type === 'surrogate';
   const isContributor = message.msg_type === 'contributor';
-  const isAI = isSurrogate || isContributor;
 
-  const getBubbleStyle = () => {
-    if (isSurrogate) return { ...styles.bubble, ...styles.surrogate };
-    if (isContributor) return { ...styles.bubble, ...styles.contributor };
-    if (isOwn) return { ...styles.bubble, ...styles.humanOwn };
-    return { ...styles.bubble, ...styles.humanOther };
+  const getEntryStyle = (): React.CSSProperties => {
+    if (isSurrogate) return { ...styles.entry, ...styles.surrogateEntry };
+    if (isContributor) return { ...styles.entry, ...styles.contributorEntry };
+    if (isOwn) return { ...styles.entry, ...styles.ownEntry };
+    return { ...styles.entry, ...styles.otherEntry };
   };
 
   const nameColor = isSurrogate
@@ -104,26 +102,30 @@ export function MessageBubble({ message, isOwn }: Props) {
     ? new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })
     : '';
 
+  const displayName = message.display_name
+    || (isSurrogate ? 'Cross-group Insight' : isContributor ? 'AI Contributor' : 'Unknown');
+
   return (
-    <div
-      style={{
-        ...styles.container,
-        ...(isOwn && !isAI ? styles.ownContainer : styles.otherContainer),
-      }}
-    >
-      <div style={{ ...styles.name, color: nameColor }}>
-        {message.display_name || (isSurrogate ? 'Cross-group Insight' : isContributor ? 'AI Contributor' : 'Unknown')}
+    <div style={getEntryStyle()}>
+      <div style={styles.header}>
+        <span style={{ ...styles.name, color: nameColor }}>
+          {displayName}
+        </span>
         {isSurrogate && (
           <span style={{ ...styles.badge, ...styles.surrogateBadge }}>Surrogate</span>
         )}
         {isContributor && (
           <span style={{ ...styles.badge, ...styles.contributorBadge }}>AI</span>
         )}
+        <span style={styles.timestamp}>{time}</span>
       </div>
-      <div style={getBubbleStyle()}>
+      <div style={{
+        ...styles.content,
+        ...(isSurrogate ? { color: COLORS.SURROGATE_TEXT } : {}),
+        ...(isContributor ? { color: COLORS.CONTRIBUTOR_TEXT } : {}),
+      }}>
         {message.content}
       </div>
-      <div style={styles.time}>{time}</div>
     </div>
   );
 }

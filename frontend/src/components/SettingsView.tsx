@@ -1,7 +1,10 @@
+import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { MfaSettingsPanel } from './MfaSettingsPanel';
 import { InviteCodeManager } from './InviteCodeManager';
-import { COLORS } from '../styles/constants';
+import { COLORS, FONTS } from '../styles/constants';
+import { instrumentCard, systemLabel, dataReadout } from '../styles/retro';
+import { staggerContainer, staggerItem } from '../styles/motion';
 
 const styles = {
   container: {
@@ -10,39 +13,61 @@ const styles = {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: '28px',
-    animation: 'fadeIn 0.3s ease',
   },
+  topLabel: {
+    ...systemLabel,
+    marginBottom: '4px',
+  } as React.CSSProperties,
   title: {
+    fontFamily: FONTS.DISPLAY,
     fontSize: '24px',
     fontWeight: 700,
     color: COLORS.TEXT_HEADING,
+    letterSpacing: '2px',
+    textTransform: 'uppercase' as const,
+    margin: 0,
   },
   section: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '14px',
+    ...instrumentCard,
     padding: '24px',
-    boxShadow: COLORS.SHADOW_SM,
-  },
-  sectionTitle: {
+  } as React.CSSProperties,
+  sectionLabel: {
+    ...systemLabel,
+    marginBottom: '16px',
+    display: 'block',
+  } as React.CSSProperties,
+  sectionHeading: {
+    fontFamily: FONTS.DISPLAY,
     fontSize: '16px',
     fontWeight: 600,
     color: COLORS.TEXT_ACCENT,
-    marginBottom: '16px',
+    letterSpacing: '1px',
+    textTransform: 'uppercase' as const,
+    marginBottom: '12px',
   },
   row: {
     display: 'flex',
     justifyContent: 'space-between',
-    padding: '8px 0',
-    fontSize: '14px',
+    alignItems: 'center',
+    padding: '10px 0',
+    borderBottom: `1px solid ${COLORS.BORDER}`,
+  },
+  rowLast: {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center',
+    padding: '10px 0',
   },
   label: {
+    fontFamily: FONTS.BODY,
+    fontSize: '13px',
     color: COLORS.TEXT_MUTED,
   },
   value: {
-    color: COLORS.TEXT_PRIMARY,
-    fontWeight: 500,
-  },
+    ...dataReadout,
+    padding: '4px 10px',
+    fontSize: '13px',
+  } as React.CSSProperties,
 };
 
 export function SettingsView() {
@@ -51,11 +76,19 @@ export function SettingsView() {
   if (!account) return null;
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Settings</h2>
+    <motion.div
+      style={styles.container}
+      variants={staggerContainer}
+      initial="initial"
+      animate="animate"
+    >
+      <motion.div variants={staggerItem}>
+        <span style={styles.topLabel}>[ SYSTEM CONFIGURATION ]</span>
+        <h2 style={styles.title}>Preferences</h2>
+      </motion.div>
 
-      <div style={styles.section}>
-        <h3 style={styles.sectionTitle}>Account</h3>
+      <motion.div style={styles.section} variants={staggerItem}>
+        <span style={styles.sectionLabel}>[ ACCOUNT ]</span>
         <div style={styles.row}>
           <span style={styles.label}>Username</span>
           <span style={styles.value}>{account.username}</span>
@@ -64,23 +97,23 @@ export function SettingsView() {
           <span style={styles.label}>Display Name</span>
           <span style={styles.value}>{account.display_name}</span>
         </div>
-        <div style={styles.row}>
+        <div style={styles.rowLast}>
           <span style={styles.label}>Role</span>
           <span style={styles.value}>{account.is_server_admin ? 'Server Admin' : 'User'}</span>
         </div>
-      </div>
+      </motion.div>
 
-      <div>
-        <h3 style={{ ...styles.sectionTitle, marginBottom: '12px' }}>Two-Factor Authentication</h3>
+      <motion.div variants={staggerItem}>
+        <span style={styles.sectionHeading}>[ SECURITY ]</span>
         <MfaSettingsPanel />
-      </div>
+      </motion.div>
 
       {account.is_server_admin && (
-        <div>
-          <h3 style={{ ...styles.sectionTitle, marginBottom: '12px' }}>Invite Codes</h3>
+        <motion.div variants={staggerItem}>
+          <span style={styles.sectionHeading}>[ ACCESS CODES ]</span>
           <InviteCodeManager />
-        </div>
+        </motion.div>
       )}
-    </div>
+    </motion.div>
   );
 }

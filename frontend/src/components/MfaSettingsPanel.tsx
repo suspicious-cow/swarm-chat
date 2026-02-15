@@ -1,96 +1,129 @@
 import { useState } from 'react';
 import { useAuthStore } from '../stores/authStore';
-import { COLORS } from '../styles/constants';
+import { COLORS, FONTS } from '../styles/constants';
+import { instrumentCard, systemLabel, dataReadout, statusLed, retroInput, retroButton } from '../styles/retro';
 
 const styles = {
   panel: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '12px',
+    ...instrumentCard,
     padding: '24px',
     width: '100%',
-  },
-  title: {
+    boxSizing: 'border-box' as const,
+  } as React.CSSProperties,
+  topLabel: {
+    ...systemLabel,
+    marginBottom: '16px',
+    display: 'block',
+  } as React.CSSProperties,
+  heading: {
+    fontFamily: FONTS.DISPLAY,
     fontSize: '16px',
     fontWeight: 600,
-    color: COLORS.TEXT_ACCENT,
+    color: COLORS.TEXT_HEADING,
+    letterSpacing: '1px',
+    textTransform: 'uppercase' as const,
     marginBottom: '16px',
+    margin: 0,
   },
-  status: {
-    fontSize: '14px',
+  statusRow: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
+    marginBottom: '20px',
+    fontFamily: FONTS.MONO,
+    fontSize: '13px',
     color: COLORS.TEXT_MUTED,
+  },
+  statusText: {
+    fontWeight: 600,
+    fontSize: '13px',
+    fontFamily: FONTS.MONO,
+  },
+  qrFrame: {
+    ...instrumentCard,
+    textAlign: 'center' as const,
+    padding: '20px',
+    margin: '16px 0',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    gap: '12px',
+  } as React.CSSProperties,
+  secretDisplay: {
+    ...dataReadout,
+    fontSize: '11px',
+    wordBreak: 'break-all' as const,
+    maxWidth: '320px',
+  } as React.CSSProperties,
+  codeInput: {
+    ...retroInput,
+    fontFamily: FONTS.MONO,
+    fontSize: '20px',
+    letterSpacing: '6px',
+    textAlign: 'center' as const,
+    maxWidth: '220px',
     marginBottom: '16px',
-  },
-  enabled: {
-    color: COLORS.SUCCESS,
-    fontWeight: 600,
-  },
-  disabled: {
-    color: COLORS.ERROR,
-    fontWeight: 600,
-  },
-  input: {
-    width: '100%',
-    padding: '10px 14px',
-    background: COLORS.BG_INPUT,
-    border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    borderRadius: '8px',
-    color: COLORS.TEXT_PRIMARY,
-    fontSize: '14px',
-    marginBottom: '12px',
-    boxSizing: 'border-box' as const,
+    padding: '12px 16px',
+  } as React.CSSProperties,
+  label: {
+    display: 'block',
+    fontFamily: FONTS.MONO,
+    fontSize: '11px',
+    letterSpacing: '1px',
+    color: COLORS.TEXT_DIM,
+    marginBottom: '6px',
+    textTransform: 'uppercase' as const,
   },
   btn: {
+    ...retroButton,
     padding: '10px 20px',
-    background: COLORS.BUTTON,
-    border: 'none',
-    borderRadius: '8px',
-    color: '#fff',
-    fontSize: '14px',
-    fontWeight: 600,
-    cursor: 'pointer',
+    fontSize: '13px',
     marginRight: '8px',
-    transition: 'background 0.15s',
-  },
+  } as React.CSSProperties,
   btnDanger: {
     padding: '10px 20px',
     background: COLORS.ERROR,
     border: 'none',
-    borderRadius: '8px',
-    color: '#fff',
-    fontSize: '14px',
+    borderRadius: '2px',
+    color: '#0a0a0f',
+    fontFamily: FONTS.DISPLAY,
+    fontSize: '13px',
     fontWeight: 600,
+    letterSpacing: '1px',
+    textTransform: 'uppercase' as const,
     cursor: 'pointer',
-    transition: 'background 0.15s',
+    transition: 'box-shadow 0.15s, transform 0.1s',
   },
   btnSecondary: {
     padding: '10px 20px',
     background: 'transparent',
     border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    borderRadius: '8px',
+    borderRadius: '2px',
     color: COLORS.TEXT_MUTED,
-    fontSize: '14px',
-    cursor: 'pointer',
-  },
-  qrContainer: {
-    textAlign: 'center' as const,
-    margin: '16px 0',
-  },
-  secretText: {
+    fontFamily: FONTS.MONO,
     fontSize: '12px',
-    color: COLORS.TEXT_DIM,
-    wordBreak: 'break-all' as const,
-    margin: '8px 0',
+    cursor: 'pointer',
+    letterSpacing: '1px',
+    textTransform: 'uppercase' as const,
+  },
+  bodyText: {
+    fontFamily: FONTS.BODY,
+    color: COLORS.TEXT_PRIMARY,
+    fontSize: '14px',
+    marginBottom: '12px',
+    lineHeight: '1.5',
   },
   error: {
+    fontFamily: FONTS.MONO,
     color: COLORS.ERROR,
-    fontSize: '13px',
-    marginTop: '8px',
+    fontSize: '12px',
+    marginTop: '12px',
   },
   success: {
+    fontFamily: FONTS.MONO,
     color: COLORS.SUCCESS,
-    fontSize: '13px',
-    marginTop: '8px',
+    fontSize: '12px',
+    marginTop: '12px',
   },
 };
 
@@ -147,14 +180,33 @@ export function MfaSettingsPanel() {
     setLoading(false);
   };
 
+  const ledColor = hasMfa
+    ? COLORS.SUCCESS
+    : setupData
+      ? COLORS.ACCENT
+      : COLORS.TEXT_DIM;
+
+  const statusText = hasMfa
+    ? 'ENABLED'
+    : setupData
+      ? 'CONFIGURING'
+      : 'DISABLED';
+
   return (
     <div style={styles.panel}>
-      <h4 style={styles.title}>Two-Factor Authentication</h4>
-      <p style={styles.status}>
-        Status: <span style={hasMfa ? styles.enabled : styles.disabled}>
-          {hasMfa ? 'Enabled' : 'Disabled'}
+      <span style={styles.topLabel}>[ SECURITY PROTOCOLS ]</span>
+      <h4 style={styles.heading}>Two-Factor Authentication</h4>
+
+      <div style={styles.statusRow}>
+        <span style={statusLed(ledColor, hasMfa)} />
+        <span>Status:</span>
+        <span style={{
+          ...styles.statusText,
+          color: hasMfa ? COLORS.SUCCESS : setupData ? COLORS.ACCENT : COLORS.TEXT_DIM,
+        }}>
+          {statusText}
         </span>
-      </p>
+      </div>
 
       {!hasMfa && !setupData && (
         <button style={styles.btn} onClick={handleSetup}>
@@ -164,50 +216,74 @@ export function MfaSettingsPanel() {
 
       {setupData && (
         <div>
-          <p style={{ color: COLORS.TEXT_PRIMARY, fontSize: '14px', marginBottom: '12px' }}>
+          <p style={styles.bodyText}>
             Scan this QR code with your authenticator app, or manually enter the secret key:
           </p>
-          <div style={styles.qrContainer}>
+          <div style={styles.qrFrame}>
             <img
               src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(setupData.uri)}`}
               alt="TOTP QR Code"
               width={200}
               height={200}
-              style={{ borderRadius: '8px' }}
+              style={{ borderRadius: '2px' }}
             />
-            <p style={styles.secretText}>Secret: {setupData.secret}</p>
+            <div style={styles.secretDisplay}>
+              SECRET: {setupData.secret}
+            </div>
           </div>
-          <label style={{ display: 'block', fontSize: '12px', color: COLORS.TEXT_DIM, marginBottom: '4px' }}>
+          <label style={styles.label}>
             Enter code from authenticator to confirm
           </label>
-          <input
-            style={styles.input}
-            placeholder="6-digit code"
-            value={code}
-            onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            maxLength={6}
-          />
-          <button style={styles.btn} onClick={handleEnable} disabled={loading || code.length !== 6}>
-            {loading ? 'Enabling...' : 'Enable MFA'}
-          </button>
-          <button style={styles.btnSecondary} onClick={() => { setSetupData(null); setCode(''); }}>
-            Cancel
-          </button>
+          <div>
+            <input
+              style={styles.codeInput}
+              placeholder="000000"
+              value={code}
+              onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              maxLength={6}
+              onFocus={e => {
+                e.target.style.borderColor = COLORS.ACCENT;
+                e.target.style.boxShadow = `0 0 12px ${COLORS.ACCENT_GLOW}`;
+              }}
+              onBlur={e => {
+                e.target.style.borderColor = COLORS.BORDER;
+                e.target.style.boxShadow = 'none';
+              }}
+            />
+          </div>
+          <div style={{ display: 'flex', gap: '8px', marginTop: '4px' }}>
+            <button style={styles.btn} onClick={handleEnable} disabled={loading || code.length !== 6}>
+              {loading ? 'Enabling...' : 'Enable MFA'}
+            </button>
+            <button style={styles.btnSecondary} onClick={() => { setSetupData(null); setCode(''); }}>
+              Cancel
+            </button>
+          </div>
         </div>
       )}
 
       {hasMfa && (
         <div>
-          <label style={{ display: 'block', fontSize: '12px', color: COLORS.TEXT_DIM, marginBottom: '4px' }}>
+          <label style={styles.label}>
             Enter current TOTP code to disable MFA
           </label>
-          <input
-            style={styles.input}
-            placeholder="6-digit code"
-            value={disableCode}
-            onChange={e => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-            maxLength={6}
-          />
+          <div>
+            <input
+              style={styles.codeInput}
+              placeholder="000000"
+              value={disableCode}
+              onChange={e => setDisableCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+              maxLength={6}
+              onFocus={e => {
+                e.target.style.borderColor = COLORS.ACCENT;
+                e.target.style.boxShadow = `0 0 12px ${COLORS.ACCENT_GLOW}`;
+              }}
+              onBlur={e => {
+                e.target.style.borderColor = COLORS.BORDER;
+                e.target.style.boxShadow = 'none';
+              }}
+            />
+          </div>
           <button style={styles.btnDanger} onClick={handleDisable} disabled={loading || disableCode.length !== 6}>
             {loading ? 'Disabling...' : 'Disable MFA'}
           </button>

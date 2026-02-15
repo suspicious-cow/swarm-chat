@@ -1,144 +1,24 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
-import { COLORS } from '../styles/constants';
+import { COLORS, FONTS } from '../styles/constants';
+import { instrumentCard, systemLabel, retroInput, statusLed } from '../styles/retro';
+import { staggerContainer, staggerItem, fadeIn } from '../styles/motion';
 import type { Session } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
-
-const styles = {
-  container: {
-    maxWidth: '800px',
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '32px',
-    animation: 'fadeIn 0.3s ease',
-  },
-  title: {
-    fontSize: '24px',
-    fontWeight: 700,
-    color: COLORS.TEXT_HEADING,
-  },
-  joinCard: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '14px',
-    padding: '28px',
-    display: 'flex',
-    gap: '12px',
-    alignItems: 'flex-end',
-    boxShadow: COLORS.SHADOW_SM,
-  },
-  fieldGroup: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '4px',
-  },
-  label: {
-    fontSize: '12px',
-    color: COLORS.TEXT_DIM,
-  },
-  input: {
-    padding: '10px 14px',
-    background: COLORS.BG_INPUT,
-    border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    borderRadius: '8px',
-    color: COLORS.TEXT_PRIMARY,
-    fontSize: '14px',
-    boxSizing: 'border-box' as const,
-  },
-  joinBtn: {
-    padding: '10px 24px',
-    background: COLORS.GRADIENT_PRIMARY,
-    border: 'none',
-    borderRadius: '8px',
-    color: '#fff',
-    fontSize: '14px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    whiteSpace: 'nowrap' as const,
-    height: '42px',
-    transition: 'opacity 0.15s',
-    boxShadow: '0 2px 8px rgba(217, 119, 6, 0.25)',
-  },
-  btnDisabled: {
-    opacity: 0.5,
-    cursor: 'not-allowed',
-  },
-  error: {
-    color: COLORS.ERROR,
-    fontSize: '13px',
-  },
-  sectionTitle: {
-    fontSize: '15px',
-    fontWeight: 600,
-    color: COLORS.TEXT_MUTED,
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.5px',
-  },
-  sessionList: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '10px',
-  },
-  sessionCard: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '10px',
-    padding: '16px 20px',
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    transition: 'all 0.15s ease',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
-  },
-  sessionInfo: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '2px',
-  },
-  sessionTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: COLORS.TEXT_PRIMARY,
-  },
-  sessionMeta: {
-    fontSize: '12px',
-    color: COLORS.TEXT_DIM,
-  },
-  sessionRight: {
-    display: 'flex',
-    alignItems: 'center',
-    gap: '12px',
-  },
-  joinCode: {
-    fontSize: '13px',
-    fontWeight: 600,
-    color: COLORS.ACCENT,
-    letterSpacing: '2px',
-    fontFamily: 'monospace',
-  },
-  badge: {
-    padding: '3px 10px',
-    borderRadius: '12px',
-    fontSize: '11px',
-    fontWeight: 600,
-    textTransform: 'uppercase' as const,
-  },
-  empty: {
-    color: COLORS.TEXT_DIM,
-    fontSize: '14px',
-    textAlign: 'center' as const,
-    padding: '32px 0',
-  },
-};
 
 const badgeColors: Record<string, { background: string; color: string }> = {
   waiting: { background: COLORS.BADGE_WAITING_BG, color: COLORS.BADGE_WAITING_TEXT },
   active: { background: COLORS.BADGE_ACTIVE_BG, color: COLORS.BADGE_ACTIVE_TEXT },
   completed: { background: COLORS.BADGE_COMPLETED_BG, color: COLORS.BADGE_COMPLETED_TEXT },
+};
+
+const statusLedColor: Record<string, string> = {
+  active: COLORS.SUCCESS,
+  waiting: COLORS.ACCENT,
+  completed: COLORS.TEXT_DIM,
 };
 
 export function JoinSessionView() {
@@ -149,6 +29,7 @@ export function JoinSessionView() {
   const [joining, setJoining] = useState(false);
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -187,35 +68,131 @@ export function JoinSessionView() {
   };
 
   return (
-    <div style={styles.container}>
-      <h2 style={styles.title}>Join a Session</h2>
+    <motion.div
+      {...fadeIn}
+      style={{
+        maxWidth: '800px',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '28px',
+      }}
+    >
+      {/* System label */}
+      <div style={systemLabel}>[ FREQUENCY TUNING ]</div>
 
-      <div style={styles.joinCard}>
-        <div style={{ ...styles.fieldGroup, flex: '0 0 160px' }}>
-          <span style={styles.label}>Join code</span>
+      {/* Heading */}
+      <h2
+        style={{
+          fontFamily: FONTS.DISPLAY,
+          fontSize: '24px',
+          fontWeight: 700,
+          color: COLORS.TEXT_HEADING,
+          letterSpacing: '2px',
+          textTransform: 'uppercase' as const,
+          margin: 0,
+        }}
+      >
+        JOIN MISSION
+      </h2>
+
+      {/* Join by code card */}
+      <div
+        style={{
+          ...instrumentCard,
+          padding: '28px',
+          display: 'flex',
+          gap: '12px',
+          alignItems: 'flex-end',
+        }}
+      >
+        <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '6px', flex: '0 0 180px' }}>
+          <span
+            style={{
+              fontFamily: FONTS.MONO,
+              fontSize: '11px',
+              fontWeight: 500,
+              color: COLORS.TEXT_MUTED,
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase' as const,
+            }}
+          >
+            Join Code
+          </span>
           <input
-            style={{ ...styles.input, letterSpacing: '2px', textTransform: 'uppercase' }}
+            style={{
+              ...retroInput,
+              fontFamily: FONTS.MONO,
+              fontSize: '18px',
+              letterSpacing: '4px',
+              textTransform: 'uppercase' as const,
+              padding: '10px 14px',
+            }}
             placeholder="A3X9K2"
             value={code}
             onChange={(e) => setCode(e.target.value.toUpperCase())}
             maxLength={6}
             onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = COLORS.ACCENT_DIM;
+              e.currentTarget.style.boxShadow = `0 0 12px ${COLORS.ACCENT_GLOW}`;
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = COLORS.BORDER;
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           />
         </div>
-        <div style={{ ...styles.fieldGroup, flex: 1 }}>
-          <span style={styles.label}>Display name</span>
+        <div style={{ display: 'flex', flexDirection: 'column' as const, gap: '6px', flex: 1 }}>
+          <span
+            style={{
+              fontFamily: FONTS.MONO,
+              fontSize: '11px',
+              fontWeight: 500,
+              color: COLORS.TEXT_MUTED,
+              letterSpacing: '1.5px',
+              textTransform: 'uppercase' as const,
+            }}
+          >
+            Display Name
+          </span>
           <input
-            style={styles.input}
+            style={{
+              ...retroInput,
+              fontFamily: FONTS.BODY,
+            }}
             placeholder="Your name"
             value={displayName}
             onChange={(e) => setDisplayName(e.target.value)}
             onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
+            onFocus={(e) => {
+              e.currentTarget.style.borderColor = COLORS.ACCENT_DIM;
+              e.currentTarget.style.boxShadow = `0 0 12px ${COLORS.ACCENT_GLOW}`;
+            }}
+            onBlur={(e) => {
+              e.currentTarget.style.borderColor = COLORS.BORDER;
+              e.currentTarget.style.boxShadow = 'none';
+            }}
           />
         </div>
         <button
           style={{
-            ...styles.joinBtn,
-            ...(joining || !code.trim() || !displayName.trim() ? styles.btnDisabled : {}),
+            padding: '10px 24px',
+            background: COLORS.TEAL,
+            border: 'none',
+            borderRadius: '2px',
+            color: '#0a0a0f',
+            fontFamily: FONTS.DISPLAY,
+            fontSize: '14px',
+            fontWeight: 600,
+            letterSpacing: '1px',
+            textTransform: 'uppercase' as const,
+            cursor: joining || !code.trim() || !displayName.trim() ? 'not-allowed' : 'pointer',
+            whiteSpace: 'nowrap' as const,
+            height: '42px',
+            transition: 'box-shadow 0.15s, opacity 0.15s',
+            boxShadow: COLORS.SHADOW_TEAL,
+            opacity: joining || !code.trim() || !displayName.trim() ? 0.5 : 1,
           }}
           onClick={handleJoin}
           disabled={joining || !code.trim() || !displayName.trim()}
@@ -224,55 +201,155 @@ export function JoinSessionView() {
         </button>
       </div>
 
-      {error && <p style={styles.error}>{error}</p>}
+      {error && (
+        <p
+          style={{
+            fontFamily: FONTS.MONO,
+            color: COLORS.ERROR,
+            fontSize: '13px',
+            margin: 0,
+          }}
+        >
+          {error}
+        </p>
+      )}
 
-      <h3 style={styles.sectionTitle}>Your Sessions</h3>
+      {/* Session list header */}
+      <div style={systemLabel}>Your Sessions</div>
 
-      <div style={styles.sessionList}>
+      {/* Session list with stagger */}
+      <motion.div
+        variants={staggerContainer}
+        initial="initial"
+        animate="animate"
+        style={{
+          display: 'flex',
+          flexDirection: 'column' as const,
+          gap: '10px',
+        }}
+      >
         {loading ? (
-          <p style={styles.empty}>Loading...</p>
+          <p
+            style={{
+              fontFamily: FONTS.MONO,
+              color: COLORS.TEXT_DIM,
+              fontSize: '13px',
+              textAlign: 'center' as const,
+              padding: '32px 0',
+            }}
+          >
+            Loading...
+          </p>
         ) : sessions.length === 0 ? (
-          <p style={styles.empty}>No sessions yet.</p>
+          <p
+            style={{
+              fontFamily: FONTS.MONO,
+              color: COLORS.TEXT_DIM,
+              fontSize: '13px',
+              textAlign: 'center' as const,
+              padding: '32px 0',
+            }}
+          >
+            No sessions yet.
+          </p>
         ) : (
           sessions.map((session) => {
             const colors = badgeColors[session.status] || badgeColors.completed;
+            const ledColor = statusLedColor[session.status] || COLORS.TEXT_DIM;
+            const isHovered = hoveredCard === session.id;
+            const isCompleted = session.status === 'completed';
+
             return (
-              <div
+              <motion.div
                 key={session.id}
+                variants={staggerItem}
                 style={{
-                  ...styles.sessionCard,
-                  opacity: session.status === 'completed' ? 0.6 : 1,
-                  cursor: session.status === 'completed' ? 'default' : 'pointer',
+                  ...instrumentCard,
+                  padding: '16px 20px',
+                  cursor: isCompleted ? 'default' : 'pointer',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  alignItems: 'center',
+                  transition: 'all 0.15s ease',
+                  opacity: isCompleted ? 0.6 : 1,
+                  borderColor: isHovered && !isCompleted ? COLORS.TEAL_DIM : COLORS.BORDER,
+                  boxShadow: isHovered && !isCompleted
+                    ? `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_TEAL}`
+                    : `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_SM}`,
                 }}
                 onClick={() => handleSessionClick(session)}
-                onMouseEnter={(e) => {
-                  if (session.status !== 'completed') {
-                    e.currentTarget.style.borderColor = COLORS.BORDER_LIGHT;
-                    e.currentTarget.style.background = COLORS.BG_ELEVATED;
-                  }
-                }}
-                onMouseLeave={(e) => {
-                  e.currentTarget.style.borderColor = COLORS.BORDER;
-                  e.currentTarget.style.background = COLORS.BG_CARD;
-                }}
+                onMouseEnter={() => setHoveredCard(session.id)}
+                onMouseLeave={() => setHoveredCard(null)}
               >
-                <div style={styles.sessionInfo}>
-                  <span style={styles.sessionTitle}>{session.title}</span>
-                  <span style={styles.sessionMeta}>
-                    {session.user_count ?? 0} participants &middot; {formatDate(session.created_at)}
-                  </span>
+                <div
+                  style={{
+                    display: 'flex',
+                    alignItems: 'center',
+                    gap: '12px',
+                  }}
+                >
+                  <span style={statusLed(ledColor, session.status === 'active')} />
+                  <div
+                    style={{
+                      display: 'flex',
+                      flexDirection: 'column' as const,
+                      gap: '2px',
+                    }}
+                  >
+                    <span
+                      style={{
+                        fontFamily: FONTS.BODY,
+                        fontSize: '14px',
+                        fontWeight: 600,
+                        color: COLORS.TEXT_PRIMARY,
+                      }}
+                    >
+                      {session.title}
+                    </span>
+                    <span
+                      style={{
+                        fontFamily: FONTS.MONO,
+                        fontSize: '11px',
+                        color: COLORS.TEXT_DIM,
+                      }}
+                    >
+                      {session.user_count ?? 0} participants &middot;{' '}
+                      {formatDate(session.created_at)}
+                    </span>
+                  </div>
                 </div>
-                <div style={styles.sessionRight}>
-                  <span style={styles.joinCode}>{session.join_code}</span>
-                  <span style={{ ...styles.badge, ...colors }}>
+                <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                  <span
+                    style={{
+                      fontFamily: FONTS.MONO,
+                      fontSize: '13px',
+                      fontWeight: 600,
+                      color: COLORS.ACCENT,
+                      letterSpacing: '2px',
+                    }}
+                  >
+                    {session.join_code}
+                  </span>
+                  <span
+                    style={{
+                      padding: '3px 10px',
+                      borderRadius: '2px',
+                      fontSize: '10px',
+                      fontWeight: 600,
+                      fontFamily: FONTS.MONO,
+                      textTransform: 'uppercase' as const,
+                      letterSpacing: '1px',
+                      ...colors,
+                    }}
+                  >
                     {session.status}
                   </span>
                 </div>
-              </div>
+              </motion.div>
             );
           })
         )}
-      </div>
-    </div>
+      </motion.div>
+    </motion.div>
   );
 }

@@ -19,7 +19,7 @@ describe('AdminPanel', () => {
       },
     });
     render(<AdminPanel />);
-    expect(screen.getByText('Start Deliberation')).toBeInTheDocument();
+    expect(screen.getByText('LAUNCH')).toBeInTheDocument();
   });
 
   it('shows End Deliberation button in active status', () => {
@@ -30,7 +30,7 @@ describe('AdminPanel', () => {
       },
     });
     render(<AdminPanel />);
-    expect(screen.getByText('End Deliberation')).toBeInTheDocument();
+    expect(screen.getByText('TERMINATE')).toBeInTheDocument();
   });
 
   it('shows Generate Summary button in active status', () => {
@@ -41,7 +41,7 @@ describe('AdminPanel', () => {
       },
     });
     render(<AdminPanel />);
-    expect(screen.getByText('Generate Summary')).toBeInTheDocument();
+    expect(screen.getByText('DEBRIEF')).toBeInTheDocument();
   });
 
   it('shows Generate Summary button in completed status', () => {
@@ -52,7 +52,7 @@ describe('AdminPanel', () => {
       },
     });
     render(<AdminPanel />);
-    expect(screen.getByText('Generate Summary')).toBeInTheDocument();
+    expect(screen.getByText('DEBRIEF')).toBeInTheDocument();
   });
 
   it('does not show Start button when active', () => {
@@ -63,7 +63,7 @@ describe('AdminPanel', () => {
       },
     });
     render(<AdminPanel />);
-    expect(screen.queryByText('Start Deliberation')).not.toBeInTheDocument();
+    expect(screen.queryByText('LAUNCH')).not.toBeInTheDocument();
   });
 
   it('returns null without currentSession', () => {

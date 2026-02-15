@@ -1,195 +1,13 @@
 import { useEffect, useState } from 'react';
+import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
-import { COLORS } from '../styles/constants';
+import { COLORS, FONTS } from '../styles/constants';
+import { instrumentCard, systemLabel, dataReadout, statusLed, retroButton } from '../styles/retro';
+import { staggerContainer, staggerItem, fadeIn } from '../styles/motion';
 import type { Session } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
-
-const styles = {
-  container: {
-    maxWidth: '840px',
-    margin: '0 auto',
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '28px',
-    animation: 'fadeIn 0.3s ease',
-  },
-  hero: {
-    background: COLORS.GRADIENT_HERO,
-    borderRadius: '16px',
-    border: `1px solid ${COLORS.BORDER}`,
-    padding: '32px 32px 28px',
-    position: 'relative' as const,
-    overflow: 'hidden',
-  },
-  heroGlow: {
-    position: 'absolute' as const,
-    top: '-60px',
-    right: '-40px',
-    width: '200px',
-    height: '200px',
-    borderRadius: '50%',
-    background: 'radial-gradient(circle, rgba(245,158,11,0.08) 0%, transparent 70%)',
-    pointerEvents: 'none' as const,
-  },
-  welcome: {
-    fontSize: '26px',
-    fontWeight: 700,
-    color: COLORS.TEXT_HEADING,
-    letterSpacing: '-0.3px',
-    position: 'relative' as const,
-  },
-  subtitle: {
-    fontSize: '14px',
-    color: COLORS.TEXT_MUTED,
-    marginTop: '8px',
-    lineHeight: 1.7,
-    maxWidth: '600px',
-    position: 'relative' as const,
-  },
-  statsRow: {
-    display: 'flex',
-    gap: '12px',
-    marginTop: '20px',
-    position: 'relative' as const,
-  },
-  statCard: {
-    background: 'rgba(255,255,255,0.04)',
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '10px',
-    padding: '12px 20px',
-    textAlign: 'center' as const,
-    minWidth: '100px',
-  },
-  statNumber: {
-    fontSize: '24px',
-    fontWeight: 700,
-    lineHeight: 1.2,
-  },
-  statLabel: {
-    fontSize: '11px',
-    color: COLORS.TEXT_DIM,
-    marginTop: '2px',
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.5px',
-  },
-  quickActions: {
-    display: 'grid',
-    gridTemplateColumns: '1fr 1fr',
-    gap: '16px',
-  },
-  actionCard: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '14px',
-    padding: '24px',
-    cursor: 'pointer',
-    transition: 'all 0.2s ease',
-    boxShadow: COLORS.SHADOW_SM,
-    position: 'relative' as const,
-    overflow: 'hidden',
-  },
-  actionIconWrap: {
-    width: '44px',
-    height: '44px',
-    borderRadius: '12px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    fontSize: '20px',
-    marginBottom: '14px',
-    fontWeight: 700,
-  },
-  actionTitle: {
-    fontSize: '16px',
-    fontWeight: 600,
-    color: COLORS.TEXT_HEADING,
-    marginBottom: '6px',
-  },
-  actionDesc: {
-    fontSize: '13px',
-    color: COLORS.TEXT_DIM,
-    lineHeight: 1.5,
-  },
-  actionArrow: {
-    position: 'absolute' as const,
-    right: '20px',
-    top: '24px',
-    fontSize: '18px',
-    color: COLORS.TEXT_DIM,
-    transition: 'all 0.2s ease',
-  },
-  sectionHeader: {
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-  },
-  sectionTitle: {
-    fontSize: '15px',
-    fontWeight: 600,
-    color: COLORS.TEXT_MUTED,
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.5px',
-  },
-  viewAll: {
-    fontSize: '13px',
-    color: COLORS.ACCENT,
-    cursor: 'pointer',
-    background: 'none',
-    border: 'none',
-    fontWeight: 500,
-    transition: 'opacity 0.15s',
-  },
-  sessionList: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '8px',
-  },
-  sessionCard: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '10px',
-    padding: '14px 18px',
-    cursor: 'pointer',
-    display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    transition: 'all 0.15s ease',
-    boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
-  },
-  sessionInfo: {
-    display: 'flex',
-    flexDirection: 'column' as const,
-    gap: '2px',
-  },
-  sessionTitle: {
-    fontSize: '14px',
-    fontWeight: 600,
-    color: COLORS.TEXT_PRIMARY,
-  },
-  sessionMeta: {
-    fontSize: '12px',
-    color: COLORS.TEXT_DIM,
-  },
-  badge: {
-    padding: '3px 10px',
-    borderRadius: '12px',
-    fontSize: '11px',
-    fontWeight: 600,
-    textTransform: 'uppercase' as const,
-    letterSpacing: '0.3px',
-  },
-  empty: {
-    color: COLORS.TEXT_DIM,
-    fontSize: '14px',
-    textAlign: 'center' as const,
-    padding: '40px 0',
-    background: COLORS.BG_CARD,
-    borderRadius: '12px',
-    border: `1px dashed ${COLORS.BORDER}`,
-  },
-};
 
 const badgeColors: Record<string, { background: string; color: string }> = {
   waiting: { background: COLORS.BADGE_WAITING_BG, color: COLORS.BADGE_WAITING_TEXT },
@@ -197,11 +15,18 @@ const badgeColors: Record<string, { background: string; color: string }> = {
   completed: { background: COLORS.BADGE_COMPLETED_BG, color: COLORS.BADGE_COMPLETED_TEXT },
 };
 
+const statusLedColor: Record<string, string> = {
+  active: COLORS.SUCCESS,
+  waiting: COLORS.ACCENT,
+  completed: COLORS.TEXT_DIM,
+};
+
 export function HomeView() {
   const { account } = useAuthStore();
   const { setView, joinSession } = useDeliberationStore();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
+  const [hoveredCard, setHoveredCard] = useState<string | null>(null);
 
   useEffect(() => {
     const fetchSessions = async () => {
@@ -237,88 +62,250 @@ export function HomeView() {
   };
 
   return (
-    <div style={styles.container}>
-      {/* Hero welcome section */}
-      <div style={styles.hero}>
-        <div style={styles.heroGlow} />
-        <div style={styles.welcome}>Welcome back, {account?.display_name}</div>
-        <p style={styles.subtitle}>
-          Swarm Chat uses Conversational Swarm Intelligence to enable productive
-          group deliberation at scale. Participants are split into small ThinkTanks
-          connected by AI Surrogate Agents.
-        </p>
+    <motion.div
+      {...fadeIn}
+      style={{
+        maxWidth: '840px',
+        margin: '0 auto',
+        display: 'flex',
+        flexDirection: 'column' as const,
+        gap: '28px',
+      }}
+    >
+      {/* System label */}
+      <div style={systemLabel}>[ MISSION CONTROL ]</div>
 
-        {sessions.length > 0 && (
-          <div style={styles.statsRow}>
-            <div style={styles.statCard}>
-              <div style={{ ...styles.statNumber, color: COLORS.ACCENT }}>{sessions.length}</div>
-              <div style={styles.statLabel}>Sessions</div>
+      {/* Heading */}
+      <h1
+        style={{
+          fontFamily: FONTS.DISPLAY,
+          fontSize: '28px',
+          fontWeight: 700,
+          color: COLORS.TEXT_HEADING,
+          letterSpacing: '2px',
+          textTransform: 'uppercase' as const,
+          margin: 0,
+        }}
+      >
+        COMMAND CENTER
+      </h1>
+
+      {/* Welcome + subtitle */}
+      <p
+        style={{
+          fontFamily: FONTS.BODY,
+          fontSize: '14px',
+          color: COLORS.TEXT_MUTED,
+          lineHeight: 1.7,
+          maxWidth: '600px',
+          margin: 0,
+        }}
+      >
+        Welcome back, {account?.display_name}. Swarm Chat uses Conversational Swarm
+        Intelligence to enable productive group deliberation at scale.
+      </p>
+
+      {/* Stats readouts */}
+      {sessions.length > 0 && (
+        <div style={{ display: 'flex', gap: '12px' }}>
+          <div style={{ ...dataReadout, textAlign: 'center' as const, minWidth: '110px' }}>
+            <div
+              style={{
+                fontFamily: FONTS.MONO,
+                fontSize: '24px',
+                fontWeight: 700,
+                color: COLORS.ACCENT,
+                lineHeight: 1.2,
+              }}
+            >
+              {sessions.length}
             </div>
-            <div style={styles.statCard}>
-              <div style={{ ...styles.statNumber, color: COLORS.SUCCESS }}>{activeSessions}</div>
-              <div style={styles.statLabel}>Active</div>
-            </div>
-            <div style={styles.statCard}>
-              <div style={{ ...styles.statNumber, color: COLORS.ACCENT_TERTIARY }}>{totalParticipants}</div>
-              <div style={styles.statLabel}>Participants</div>
+            <div
+              style={{
+                fontFamily: FONTS.MONO,
+                fontSize: '10px',
+                color: COLORS.TEXT_DIM,
+                marginTop: '4px',
+                textTransform: 'uppercase' as const,
+                letterSpacing: '1.5px',
+              }}
+            >
+              Sessions
             </div>
           </div>
-        )}
-      </div>
+          <div style={{ ...dataReadout, textAlign: 'center' as const, minWidth: '110px' }}>
+            <div
+              style={{
+                fontFamily: FONTS.MONO,
+                fontSize: '24px',
+                fontWeight: 700,
+                color: COLORS.SUCCESS,
+                lineHeight: 1.2,
+              }}
+            >
+              {activeSessions}
+            </div>
+            <div
+              style={{
+                fontFamily: FONTS.MONO,
+                fontSize: '10px',
+                color: COLORS.TEXT_DIM,
+                marginTop: '4px',
+                textTransform: 'uppercase' as const,
+                letterSpacing: '1.5px',
+              }}
+            >
+              Active
+            </div>
+          </div>
+          <div style={{ ...dataReadout, textAlign: 'center' as const, minWidth: '110px' }}>
+            <div
+              style={{
+                fontFamily: FONTS.MONO,
+                fontSize: '24px',
+                fontWeight: 700,
+                color: COLORS.TEAL,
+                lineHeight: 1.2,
+              }}
+            >
+              {totalParticipants}
+            </div>
+            <div
+              style={{
+                fontFamily: FONTS.MONO,
+                fontSize: '10px',
+                color: COLORS.TEXT_DIM,
+                marginTop: '4px',
+                textTransform: 'uppercase' as const,
+                letterSpacing: '1.5px',
+              }}
+            >
+              Participants
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Quick action cards */}
-      <div style={styles.quickActions}>
+      <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '16px' }}>
         <div
-          style={styles.actionCard}
+          style={{
+            ...instrumentCard,
+            padding: '24px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            position: 'relative' as const,
+            overflow: 'hidden',
+          }}
           onClick={() => setView('new-session')}
           onMouseEnter={(e) => {
             e.currentTarget.style.borderColor = COLORS.ACCENT;
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = COLORS.SHADOW_MD;
+            e.currentTarget.style.boxShadow = COLORS.SHADOW_GLOW;
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = COLORS.BORDER;
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = COLORS.SHADOW_SM;
+            e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_SM}`;
           }}
         >
-          <div style={styles.actionArrow}>{'\u2192'}</div>
-          <div style={{
-            ...styles.actionIconWrap,
-            background: 'rgba(245, 158, 11, 0.12)',
-            color: COLORS.ACCENT,
-          }}>
+          <div
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '2px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '20px',
+              fontWeight: 700,
+              marginBottom: '14px',
+              background: COLORS.ACCENT_GLOW,
+              color: COLORS.ACCENT,
+              fontFamily: FONTS.MONO,
+            }}
+          >
             +
           </div>
-          <div style={styles.actionTitle}>Create a Session</div>
-          <div style={styles.actionDesc}>
+          <div
+            style={{
+              fontFamily: FONTS.DISPLAY,
+              fontSize: '16px',
+              fontWeight: 600,
+              color: COLORS.TEXT_HEADING,
+              marginBottom: '6px',
+              letterSpacing: '0.5px',
+            }}
+          >
+            Create a Session
+          </div>
+          <div
+            style={{
+              fontFamily: FONTS.BODY,
+              fontSize: '13px',
+              color: COLORS.TEXT_DIM,
+              lineHeight: 1.5,
+            }}
+          >
             Start a new deliberation on any topic and invite participants to join.
           </div>
         </div>
+
         <div
-          style={styles.actionCard}
+          style={{
+            ...instrumentCard,
+            padding: '24px',
+            cursor: 'pointer',
+            transition: 'all 0.2s ease',
+            position: 'relative' as const,
+            overflow: 'hidden',
+          }}
           onClick={() => setView('join-session')}
           onMouseEnter={(e) => {
-            e.currentTarget.style.borderColor = COLORS.ACCENT_TERTIARY;
-            e.currentTarget.style.transform = 'translateY(-2px)';
-            e.currentTarget.style.boxShadow = COLORS.SHADOW_MD;
+            e.currentTarget.style.borderColor = COLORS.TEAL;
+            e.currentTarget.style.boxShadow = COLORS.SHADOW_TEAL;
           }}
           onMouseLeave={(e) => {
             e.currentTarget.style.borderColor = COLORS.BORDER;
-            e.currentTarget.style.transform = 'translateY(0)';
-            e.currentTarget.style.boxShadow = COLORS.SHADOW_SM;
+            e.currentTarget.style.boxShadow = `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_SM}`;
           }}
         >
-          <div style={styles.actionArrow}>{'\u2192'}</div>
-          <div style={{
-            ...styles.actionIconWrap,
-            background: 'rgba(20, 184, 166, 0.12)',
-            color: COLORS.ACCENT_TERTIARY,
-          }}>
-            {'\u2192'}
+          <div
+            style={{
+              width: '44px',
+              height: '44px',
+              borderRadius: '2px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              fontSize: '20px',
+              fontWeight: 700,
+              marginBottom: '14px',
+              background: COLORS.TEAL_GLOW,
+              color: COLORS.TEAL,
+              fontFamily: FONTS.MONO,
+            }}
+          >
+            {'>'}
           </div>
-          <div style={styles.actionTitle}>Join a Session</div>
-          <div style={styles.actionDesc}>
+          <div
+            style={{
+              fontFamily: FONTS.DISPLAY,
+              fontSize: '16px',
+              fontWeight: 600,
+              color: COLORS.TEXT_HEADING,
+              marginBottom: '6px',
+              letterSpacing: '0.5px',
+            }}
+          >
+            Join a Session
+          </div>
+          <div
+            style={{
+              fontFamily: FONTS.BODY,
+              fontSize: '13px',
+              color: COLORS.TEXT_DIM,
+              lineHeight: 1.5,
+            }}
+          >
             Enter a join code to participate in an existing deliberation.
           </div>
         </div>
@@ -326,59 +313,157 @@ export function HomeView() {
 
       {/* Recent sessions */}
       <div>
-        <div style={styles.sectionHeader}>
-          <span style={styles.sectionTitle}>Recent Sessions</span>
+        <div
+          style={{
+            display: 'flex',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+          }}
+        >
+          <span style={systemLabel}>Recent Sessions</span>
           {sessions.length > 5 && (
-            <button style={styles.viewAll} onClick={() => setView('join-session')}>
+            <button
+              style={{
+                ...retroButton,
+                padding: '6px 16px',
+                fontSize: '11px',
+                background: 'transparent',
+                border: `1px solid ${COLORS.BORDER_LIGHT}`,
+                color: COLORS.ACCENT,
+              }}
+              onClick={() => setView('join-session')}
+            >
               View All
             </button>
           )}
         </div>
 
-        <div style={{ ...styles.sessionList, marginTop: '12px' }}>
+        <motion.div
+          variants={staggerContainer}
+          initial="initial"
+          animate="animate"
+          style={{
+            display: 'flex',
+            flexDirection: 'column' as const,
+            gap: '8px',
+            marginTop: '12px',
+          }}
+        >
           {loading ? (
-            <p style={styles.empty}>Loading...</p>
+            <p
+              style={{
+                fontFamily: FONTS.MONO,
+                color: COLORS.TEXT_DIM,
+                fontSize: '13px',
+                textAlign: 'center' as const,
+                padding: '40px 0',
+              }}
+            >
+              Loading...
+            </p>
           ) : recentSessions.length === 0 ? (
-            <div style={styles.empty}>
-              <div style={{ fontSize: '24px', marginBottom: '8px', opacity: 0.5 }}>{'\u2B22'}</div>
+            <div
+              style={{
+                ...instrumentCard,
+                padding: '40px',
+                textAlign: 'center' as const,
+                fontFamily: FONTS.BODY,
+                color: COLORS.TEXT_DIM,
+                fontSize: '14px',
+                borderStyle: 'dashed',
+              }}
+            >
+              <div style={{ fontSize: '24px', marginBottom: '8px', opacity: 0.5 }}>
+                {'\u2B22'}
+              </div>
               No sessions yet. Create your first session to get started!
             </div>
           ) : (
             recentSessions.map((session) => {
               const colors = badgeColors[session.status] || badgeColors.completed;
+              const ledColor = statusLedColor[session.status] || COLORS.TEXT_DIM;
+              const isHovered = hoveredCard === session.id;
+              const isCompleted = session.status === 'completed';
+
               return (
-                <div
+                <motion.div
                   key={session.id}
+                  variants={staggerItem}
                   style={{
-                    ...styles.sessionCard,
-                    opacity: session.status === 'completed' ? 0.6 : 1,
-                    cursor: session.status === 'completed' ? 'default' : 'pointer',
+                    ...instrumentCard,
+                    padding: '14px 18px',
+                    cursor: isCompleted ? 'default' : 'pointer',
+                    display: 'flex',
+                    justifyContent: 'space-between',
+                    alignItems: 'center',
+                    transition: 'all 0.15s ease',
+                    opacity: isCompleted ? 0.6 : 1,
+                    borderColor: isHovered && !isCompleted ? COLORS.ACCENT_DIM : COLORS.BORDER,
+                    boxShadow: isHovered && !isCompleted
+                      ? `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_GLOW}`
+                      : `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_SM}`,
                   }}
                   onClick={() => handleSessionClick(session)}
-                  onMouseEnter={(e) => {
-                    if (session.status !== 'completed') {
-                      e.currentTarget.style.borderColor = COLORS.BORDER_LIGHT;
-                      e.currentTarget.style.background = COLORS.BG_ELEVATED;
-                    }
-                  }}
-                  onMouseLeave={(e) => {
-                    e.currentTarget.style.borderColor = COLORS.BORDER;
-                    e.currentTarget.style.background = COLORS.BG_CARD;
-                  }}
+                  onMouseEnter={() => setHoveredCard(session.id)}
+                  onMouseLeave={() => setHoveredCard(null)}
                 >
-                  <div style={styles.sessionInfo}>
-                    <span style={styles.sessionTitle}>{session.title}</span>
-                    <span style={styles.sessionMeta}>
-                      {session.user_count ?? 0} participants &middot; {formatDate(session.created_at)}
-                    </span>
+                  <div
+                    style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      gap: '12px',
+                    }}
+                  >
+                    <span style={statusLed(ledColor, session.status === 'active')} />
+                    <div
+                      style={{
+                        display: 'flex',
+                        flexDirection: 'column' as const,
+                        gap: '2px',
+                      }}
+                    >
+                      <span
+                        style={{
+                          fontFamily: FONTS.BODY,
+                          fontSize: '14px',
+                          fontWeight: 600,
+                          color: COLORS.TEXT_PRIMARY,
+                        }}
+                      >
+                        {session.title}
+                      </span>
+                      <span
+                        style={{
+                          fontFamily: FONTS.MONO,
+                          fontSize: '11px',
+                          color: COLORS.TEXT_DIM,
+                        }}
+                      >
+                        {session.user_count ?? 0} participants &middot;{' '}
+                        {formatDate(session.created_at)}
+                      </span>
+                    </div>
                   </div>
-                  <span style={{ ...styles.badge, ...colors }}>{session.status}</span>
-                </div>
+                  <span
+                    style={{
+                      padding: '3px 10px',
+                      borderRadius: '2px',
+                      fontSize: '10px',
+                      fontWeight: 600,
+                      fontFamily: FONTS.MONO,
+                      textTransform: 'uppercase' as const,
+                      letterSpacing: '1px',
+                      ...colors,
+                    }}
+                  >
+                    {session.status}
+                  </span>
+                </motion.div>
               );
             })
           )}
-        </div>
+        </motion.div>
       </div>
-    </div>
+    </motion.div>
   );
 }

@@ -1,17 +1,18 @@
+import { AnimatePresence, motion } from 'motion/react';
 import { useToastStore } from '../stores/toastStore';
-import { COLORS } from '../styles/constants';
+import { COLORS, FONTS } from '../styles/constants';
+import { instrumentCard } from '../styles/retro';
+import { toastVariants } from '../styles/motion';
 import type { ToastType } from '../stores/toastStore';
 
-const toastColors: Record<ToastType, { bg: string; border: string; color: string }> = {
-  success: { bg: '#0a2a18', border: '#1a5a38', color: COLORS.SUCCESS },
-  error: { bg: '#2a0a0a', border: '#5a1a1a', color: COLORS.ERROR },
-  info: { bg: '#2a2210', border: '#4a3a10', color: COLORS.ACCENT },
+const borderColors: Record<ToastType, string> = {
+  success: COLORS.SUCCESS,
+  error: COLORS.ERROR,
+  info: COLORS.ACCENT,
 };
 
 export function ToastContainer() {
   const { toasts, removeToast } = useToastStore();
-
-  if (toasts.length === 0) return null;
 
   return (
     <div style={{
@@ -22,32 +23,78 @@ export function ToastContainer() {
       display: 'flex',
       flexDirection: 'column',
       gap: '8px',
+      pointerEvents: 'none',
     }}>
-      {toasts.map((toast) => {
-        const colors = toastColors[toast.type];
-        return (
-          <div
-            key={toast.id}
-            style={{
-              background: colors.bg,
-              border: `1px solid ${colors.border}`,
-              color: colors.color,
-              padding: '12px 20px',
-              borderRadius: '8px',
-              fontSize: '13px',
-              fontWeight: 500,
-              minWidth: '240px',
-              maxWidth: '400px',
-              cursor: 'pointer',
-              boxShadow: COLORS.SHADOW_MD,
-              animation: 'fadeIn 0.2s ease',
-            }}
-            onClick={() => removeToast(toast.id)}
-          >
-            {toast.message}
-          </div>
-        );
-      })}
+      <AnimatePresence mode="popLayout">
+        {toasts.map((toast) => {
+          const borderColor = borderColors[toast.type];
+          return (
+            <motion.div
+              key={toast.id}
+              variants={toastVariants}
+              initial="initial"
+              animate="animate"
+              exit="exit"
+              layout
+              style={{
+                ...instrumentCard,
+                borderLeft: `3px solid ${borderColor}`,
+                padding: '12px 16px',
+                minWidth: '280px',
+                maxWidth: '420px',
+                cursor: 'pointer',
+                pointerEvents: 'auto',
+                display: 'flex',
+                alignItems: 'flex-start',
+                gap: '10px',
+                boxShadow: `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_MD}`,
+              }}
+              onClick={() => removeToast(toast.id)}
+            >
+              <span style={{
+                fontFamily: FONTS.MONO,
+                fontSize: '10px',
+                fontWeight: 500,
+                letterSpacing: '1.5px',
+                textTransform: 'uppercase',
+                color: COLORS.TEXT_DIM,
+                flexShrink: 0,
+                marginTop: '1px',
+              }}>
+                [ SYSTEM ]
+              </span>
+              <span style={{
+                fontFamily: FONTS.MONO,
+                fontSize: '13px',
+                color: COLORS.TEXT_PRIMARY,
+                lineHeight: '1.4',
+              }}>
+                {toast.message}
+              </span>
+              <button
+                onClick={(e) => {
+                  e.stopPropagation();
+                  removeToast(toast.id);
+                }}
+                style={{
+                  marginLeft: 'auto',
+                  flexShrink: 0,
+                  background: 'none',
+                  border: 'none',
+                  color: COLORS.TEXT_DIM,
+                  fontSize: '14px',
+                  cursor: 'pointer',
+                  padding: '0 2px',
+                  lineHeight: '1',
+                  fontFamily: FONTS.MONO,
+                }}
+              >
+                x
+              </button>
+            </motion.div>
+          );
+        })}
+      </AnimatePresence>
     </div>
   );
 }

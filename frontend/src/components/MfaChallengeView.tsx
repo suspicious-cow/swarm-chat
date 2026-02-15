@@ -1,72 +1,113 @@
 import { useState } from 'react';
+import { motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
-import { COLORS } from '../styles/constants';
+import { COLORS, FONTS } from '../styles/constants';
+import { instrumentCard, systemLabel, retroInput, retroButton } from '../styles/retro';
+import { fadeIn } from '../styles/motion';
+
+const pulseKeyframes = `
+@keyframes amberPulse {
+  0%, 100% { opacity: 1; box-shadow: 0 0 6px ${COLORS.ACCENT}; }
+  50% { opacity: 0.4; box-shadow: 0 0 12px ${COLORS.ACCENT}; }
+}
+`;
 
 const styles = {
-  container: {
+  page: {
+    minHeight: '100vh',
     display: 'flex',
     flexDirection: 'column' as const,
     alignItems: 'center',
-    gap: '24px',
-    paddingTop: '80px',
+    justifyContent: 'center',
+    background: COLORS.GRADIENT_HERO,
+    padding: '24px',
   },
+  sysLabel: {
+    ...systemLabel,
+    marginBottom: '24px',
+    color: COLORS.TEXT_MUTED,
+  } as React.CSSProperties,
   card: {
-    background: COLORS.BG_CARD,
-    border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '12px',
+    ...instrumentCard,
     padding: '32px',
-    width: '340px',
+    width: '380px',
+    maxWidth: '100%',
     textAlign: 'center' as const,
-    animation: 'fadeIn 0.3s ease',
+  } as React.CSSProperties,
+  headingRow: {
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    gap: '12px',
+    marginBottom: '12px',
   },
-  title: {
+  heading: {
+    fontFamily: FONTS.DISPLAY,
     fontSize: '18px',
     fontWeight: 600,
-    color: COLORS.TEXT_ACCENT,
-    marginBottom: '8px',
+    letterSpacing: '2px',
+    textTransform: 'uppercase' as const,
+    color: COLORS.TEXT_HEADING,
   },
-  subtitle: {
+  pulseIndicator: {
+    width: '8px',
+    height: '8px',
+    borderRadius: '50%',
+    background: COLORS.ACCENT,
+    boxShadow: `0 0 6px ${COLORS.ACCENT}`,
+    flexShrink: 0,
+    animation: 'amberPulse 2s ease-in-out infinite',
+  } as React.CSSProperties,
+  description: {
+    fontFamily: FONTS.BODY,
     fontSize: '13px',
     color: COLORS.TEXT_MUTED,
-    marginBottom: '20px',
+    marginBottom: '24px',
+    lineHeight: 1.5,
   },
-  input: {
-    width: '100%',
-    padding: '12px 14px',
-    background: COLORS.BG_INPUT,
-    border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    borderRadius: '8px',
-    color: COLORS.TEXT_PRIMARY,
-    fontSize: '20px',
-    letterSpacing: '6px',
+  codeInput: {
+    ...retroInput,
+    fontFamily: FONTS.MONO,
+    fontSize: '24px',
+    letterSpacing: '8px',
     textAlign: 'center' as const,
-    marginBottom: '16px',
-    boxSizing: 'border-box' as const,
-  },
+    padding: '14px 16px',
+    marginBottom: '20px',
+  } as React.CSSProperties,
   btn: {
+    ...retroButton,
     width: '100%',
-    padding: '12px',
-    background: COLORS.BUTTON,
-    border: 'none',
-    borderRadius: '8px',
-    color: '#fff',
-    fontSize: '15px',
-    fontWeight: 600,
-    cursor: 'pointer',
-    transition: 'background 0.15s, transform 0.1s',
   } as React.CSSProperties,
   error: {
+    fontFamily: FONTS.MONO,
+    fontSize: '12px',
     color: COLORS.ERROR,
-    fontSize: '13px',
-    marginTop: '8px',
-  },
-  backLink: {
-    color: COLORS.ACCENT,
-    fontSize: '13px',
-    cursor: 'pointer',
     marginTop: '12px',
   },
+  backLink: {
+    fontFamily: FONTS.MONO,
+    fontSize: '12px',
+    color: COLORS.TEXT_MUTED,
+    cursor: 'pointer',
+    marginTop: '20px',
+    display: 'inline-block',
+    transition: 'color 0.15s',
+  },
 };
+
+const focusStyle = {
+  boxShadow: '0 0 12px rgba(255,184,0,0.2)',
+  borderColor: COLORS.ACCENT,
+};
+
+function handleFocus(e: React.FocusEvent<HTMLInputElement>) {
+  Object.assign(e.currentTarget.style, focusStyle);
+}
+
+function handleBlur(e: React.FocusEvent<HTMLInputElement>) {
+  e.currentTarget.style.boxShadow = '';
+  e.currentTarget.style.borderColor = COLORS.BORDER;
+}
 
 export function MfaChallengeView() {
   const { verifyMfa, logout, loading, error } = useAuthStore();
@@ -82,43 +123,77 @@ export function MfaChallengeView() {
   };
 
   return (
-    <div style={styles.container}>
-      <div style={styles.card}>
-        <h3 style={styles.title}>Two-Factor Authentication</h3>
-        <p style={styles.subtitle}>Enter the 6-digit code from your authenticator app</p>
+    <div style={styles.page}>
+      {/* Inject pulse keyframes */}
+      <style>{pulseKeyframes}</style>
 
-        <input
-          style={styles.input}
-          placeholder="000000"
-          value={code}
-          onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
-          onKeyDown={handleKeyDown}
-          maxLength={6}
-          autoFocus
-        />
+      <motion.div
+        variants={fadeIn}
+        initial="initial"
+        animate="animate"
+        style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}
+      >
+        {/* System label */}
+        <div style={styles.sysLabel}>[ SECURITY VERIFICATION ]</div>
 
-        <button
-          style={styles.btn}
-          onClick={handleSubmit}
-          disabled={loading || code.length !== 6}
-          onMouseEnter={e => {
-            e.currentTarget.style.background = COLORS.BUTTON_HOVER;
-            e.currentTarget.style.transform = 'scale(1.02)';
-          }}
-          onMouseLeave={e => {
-            e.currentTarget.style.background = COLORS.BUTTON;
-            e.currentTarget.style.transform = 'scale(1)';
-          }}
-        >
-          {loading ? 'Verifying...' : 'Verify'}
-        </button>
+        {/* Form card */}
+        <div style={styles.card}>
+          {/* Heading with pulsing indicator */}
+          <div style={styles.headingRow}>
+            <div style={styles.pulseIndicator} />
+            <h2 style={styles.heading}>IDENTITY CONFIRMATION</h2>
+            <div style={styles.pulseIndicator} />
+          </div>
 
-        {error && <p style={styles.error}>{error}</p>}
+          <p style={styles.description}>
+            Enter the 6-digit code from your authenticator app
+          </p>
 
-        <p style={styles.backLink} onClick={logout}>
-          Back to login
-        </p>
-      </div>
+          {/* Code input */}
+          <input
+            style={styles.codeInput}
+            placeholder="000000"
+            value={code}
+            onChange={e => setCode(e.target.value.replace(/\D/g, '').slice(0, 6))}
+            onKeyDown={handleKeyDown}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
+            maxLength={6}
+            autoFocus
+          />
+
+          <button
+            style={styles.btn}
+            onClick={handleSubmit}
+            disabled={loading || code.length !== 6}
+            onMouseEnter={e => {
+              e.currentTarget.style.boxShadow = '0 0 24px rgba(255,184,0,0.35)';
+              e.currentTarget.style.transform = 'scale(1.02)';
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.boxShadow = COLORS.SHADOW_GLOW;
+              e.currentTarget.style.transform = 'scale(1)';
+            }}
+          >
+            {loading ? 'VERIFYING...' : 'VERIFY'}
+          </button>
+
+          {error && <p style={styles.error}>{error}</p>}
+
+          <p
+            style={styles.backLink}
+            onClick={logout}
+            onMouseEnter={e => {
+              e.currentTarget.style.color = COLORS.ACCENT;
+            }}
+            onMouseLeave={e => {
+              e.currentTarget.style.color = COLORS.TEXT_MUTED;
+            }}
+          >
+            Back to login
+          </p>
+        </div>
+      </motion.div>
     </div>
   );
 }
