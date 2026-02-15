@@ -20,8 +20,9 @@ const styles = {
   section: {
     background: COLORS.BG_CARD,
     border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '12px',
+    borderRadius: '14px',
     padding: '24px',
+    boxShadow: COLORS.SHADOW_SM,
   },
   sectionTitle: {
     fontSize: '16px',

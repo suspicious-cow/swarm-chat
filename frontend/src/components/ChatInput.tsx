@@ -20,14 +20,15 @@ const styles = {
   },
   btn: {
     padding: '10px 20px',
-    background: COLORS.BUTTON,
+    background: COLORS.GRADIENT_PRIMARY,
     border: 'none',
     borderRadius: '8px',
     color: '#fff',
     fontSize: '14px',
     fontWeight: 600,
     cursor: 'pointer',
-    transition: 'background 0.15s',
+    transition: 'all 0.15s',
+    boxShadow: '0 1px 4px rgba(217, 119, 6, 0.25)',
   } as React.CSSProperties,
 };
 
@@ -62,8 +63,8 @@ export function ChatInput({ onSend }: Props) {
       <button
         style={styles.btn}
         onClick={handleSend}
-        onMouseEnter={e => { e.currentTarget.style.background = COLORS.BUTTON_HOVER; }}
-        onMouseLeave={e => { e.currentTarget.style.background = COLORS.BUTTON; }}
+        onMouseEnter={e => { e.currentTarget.style.boxShadow = '0 2px 8px rgba(217, 119, 6, 0.4)'; }}
+        onMouseLeave={e => { e.currentTarget.style.boxShadow = '0 1px 4px rgba(217, 119, 6, 0.25)'; }}
       >
         Send
       </button>

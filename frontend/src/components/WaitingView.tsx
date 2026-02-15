@@ -70,10 +70,11 @@ const styles = {
   howItWorks: {
     background: COLORS.BG_CARD,
     border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '12px',
+    borderRadius: '14px',
     padding: '24px',
     width: '100%',
     maxWidth: '560px',
+    boxShadow: COLORS.SHADOW_SM,
   },
   howTitle: {
     fontSize: '15px',

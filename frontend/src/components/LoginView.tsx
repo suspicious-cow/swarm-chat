@@ -33,10 +33,11 @@ const styles = {
   card: {
     background: COLORS.BG_CARD,
     border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '12px',
-    padding: '32px',
-    width: '340px',
+    borderRadius: '16px',
+    padding: '36px',
+    width: '360px',
     animation: 'fadeIn 0.3s ease',
+    boxShadow: COLORS.SHADOW_MD,
   },
   cardTitle: {
     fontSize: '18px',
@@ -64,7 +65,7 @@ const styles = {
   btn: {
     width: '100%',
     padding: '12px',
-    background: COLORS.BUTTON,
+    background: COLORS.GRADIENT_PRIMARY,
     border: 'none',
     borderRadius: '8px',
     color: '#fff',
@@ -72,7 +73,8 @@ const styles = {
     fontWeight: 600,
     cursor: 'pointer',
     marginTop: '8px',
-    transition: 'background 0.15s, transform 0.1s',
+    transition: 'opacity 0.15s, transform 0.1s',
+    boxShadow: '0 2px 8px rgba(217, 119, 6, 0.3)',
   } as React.CSSProperties,
   error: {
     color: COLORS.ERROR,
@@ -169,12 +171,12 @@ export function LoginView() {
           onClick={handleSubmit}
           disabled={loading}
           onMouseEnter={e => {
-            e.currentTarget.style.background = COLORS.BUTTON_HOVER;
             e.currentTarget.style.transform = 'scale(1.02)';
+            e.currentTarget.style.boxShadow = '0 4px 16px rgba(217, 119, 6, 0.4)';
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.background = COLORS.BUTTON;
             e.currentTarget.style.transform = 'scale(1)';
+            e.currentTarget.style.boxShadow = '0 2px 8px rgba(217, 119, 6, 0.3)';
           }}
         >
           {loading ? 'Please wait...' : isRegister ? 'Register' : 'Sign In'}

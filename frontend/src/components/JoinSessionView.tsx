@@ -23,11 +23,12 @@ const styles = {
   joinCard: {
     background: COLORS.BG_CARD,
     border: `1px solid ${COLORS.BORDER}`,
-    borderRadius: '12px',
+    borderRadius: '14px',
     padding: '28px',
     display: 'flex',
     gap: '12px',
     alignItems: 'flex-end',
+    boxShadow: COLORS.SHADOW_SM,
   },
   fieldGroup: {
     display: 'flex',
@@ -49,7 +50,7 @@ const styles = {
   },
   joinBtn: {
     padding: '10px 24px',
-    background: COLORS.BUTTON,
+    background: COLORS.GRADIENT_PRIMARY,
     border: 'none',
     borderRadius: '8px',
     color: '#fff',
@@ -58,6 +59,8 @@ const styles = {
     cursor: 'pointer',
     whiteSpace: 'nowrap' as const,
     height: '42px',
+    transition: 'opacity 0.15s',
+    boxShadow: '0 2px 8px rgba(217, 119, 6, 0.25)',
   },
   btnDisabled: {
     opacity: 0.5,
@@ -68,9 +71,11 @@ const styles = {
     fontSize: '13px',
   },
   sectionTitle: {
-    fontSize: '16px',
+    fontSize: '15px',
     fontWeight: 600,
-    color: COLORS.TEXT_ACCENT,
+    color: COLORS.TEXT_MUTED,
+    textTransform: 'uppercase' as const,
+    letterSpacing: '0.5px',
   },
   sessionList: {
     display: 'flex',
@@ -86,6 +91,8 @@ const styles = {
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
+    transition: 'all 0.15s ease',
+    boxShadow: '0 1px 3px rgba(0,0,0,0.15)',
   },
   sessionInfo: {
     display: 'flex',
@@ -238,6 +245,16 @@ export function JoinSessionView() {
                   cursor: session.status === 'completed' ? 'default' : 'pointer',
                 }}
                 onClick={() => handleSessionClick(session)}
+                onMouseEnter={(e) => {
+                  if (session.status !== 'completed') {
+                    e.currentTarget.style.borderColor = COLORS.BORDER_LIGHT;
+                    e.currentTarget.style.background = COLORS.BG_ELEVATED;
+                  }
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = COLORS.BORDER;
+                  e.currentTarget.style.background = COLORS.BG_CARD;
+                }}
               >
                 <div style={styles.sessionInfo}>
                   <span style={styles.sessionTitle}>{session.title}</span>

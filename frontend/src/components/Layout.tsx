@@ -28,21 +28,40 @@ const styles = {
     padding: '0 24px',
     background: COLORS.BG_CARD,
     borderBottom: `1px solid ${COLORS.BORDER}`,
-    gap: '16px',
+    gap: '12px',
+    boxShadow: '0 1px 4px rgba(0,0,0,0.2)',
   } as React.CSSProperties,
-  userInfo: {
+  userChip: {
+    display: 'flex',
+    alignItems: 'center',
+    gap: '8px',
+    padding: '4px 12px',
+    background: COLORS.BG_HOVER,
+    borderRadius: '20px',
     fontSize: '13px',
-    color: COLORS.TEXT_MUTED,
+    color: COLORS.TEXT_PRIMARY,
+  },
+  userAvatar: {
+    width: '24px',
+    height: '24px',
+    borderRadius: '50%',
+    background: COLORS.GRADIENT_PRIMARY,
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    fontSize: '11px',
+    fontWeight: 700,
+    color: '#fff',
   },
   logoutBtn: {
-    background: 'none',
-    border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    color: COLORS.ERROR,
+    background: 'transparent',
+    border: `1px solid ${COLORS.BORDER}`,
+    color: COLORS.TEXT_MUTED,
     padding: '5px 14px',
     borderRadius: '6px',
     cursor: 'pointer',
     fontSize: '12px',
-    transition: 'border-color 0.15s, color 0.15s',
+    transition: 'all 0.15s',
   },
   main: {
     flex: 1,
@@ -68,6 +87,23 @@ const globalKeyframes = `
     0%, 100% { box-shadow: 0 0 8px rgba(245,158,11,0.2); }
     50% { box-shadow: 0 0 20px rgba(245,158,11,0.4); }
   }
+  @keyframes spin {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+  }
+
+  /* Scrollbar */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: ${COLORS.BORDER}; border-radius: 3px; }
+  ::-webkit-scrollbar-thumb:hover { background: ${COLORS.BORDER_LIGHT}; }
+
+  /* Selection */
+  ::selection { background: rgba(245, 158, 11, 0.25); color: #fff; }
+
+  /* Focus ring */
+  :focus-visible { outline: 2px solid ${COLORS.ACCENT}; outline-offset: 2px; }
+  input:focus-visible, button:focus-visible { outline-offset: 0; }
 `;
 
 export function Layout({ children }: { children: ReactNode }) {
@@ -87,9 +123,25 @@ export function Layout({ children }: { children: ReactNode }) {
         <div style={styles.topBar}>
           {account && (
             <>
-              <span style={styles.userInfo}>{account.display_name}</span>
-              <button style={styles.logoutBtn} onClick={handleLogout}>
-                Logout
+              <div style={styles.userChip}>
+                <div style={styles.userAvatar}>
+                  {account.display_name.charAt(0).toUpperCase()}
+                </div>
+                {account.display_name}
+              </div>
+              <button
+                style={styles.logoutBtn}
+                onClick={handleLogout}
+                onMouseEnter={(e) => {
+                  e.currentTarget.style.borderColor = COLORS.ERROR;
+                  e.currentTarget.style.color = COLORS.ERROR;
+                }}
+                onMouseLeave={(e) => {
+                  e.currentTarget.style.borderColor = COLORS.BORDER;
+                  e.currentTarget.style.color = COLORS.TEXT_MUTED;
+                }}
+              >
+                Sign Out
               </button>
             </>
           )}

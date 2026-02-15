@@ -9,6 +9,7 @@ type View = 'home' | 'new-session' | 'join-session' | 'settings'
 interface NavItem {
   label: string;
   view: View;
+  icon: string;
 }
 
 const styles = {
@@ -23,7 +24,7 @@ const styles = {
     overflow: 'hidden',
   },
   brand: {
-    padding: '16px 20px',
+    padding: '20px 20px 16px',
     fontSize: '18px',
     fontWeight: 700,
     color: COLORS.ACCENT,
@@ -31,27 +32,42 @@ const styles = {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
+    letterSpacing: '-0.3px',
   },
   nav: {
     flex: 1,
     overflowY: 'auto' as const,
     padding: '8px 0',
   },
+  navIcon: {
+    fontSize: '16px',
+    width: '22px',
+    textAlign: 'center' as const,
+    flexShrink: 0,
+    opacity: 0.7,
+  },
+  navIconActive: {
+    opacity: 1,
+  },
   navItem: {
     display: 'flex',
     alignItems: 'center',
     gap: '10px',
-    padding: '10px 20px',
-    fontSize: '14px',
+    padding: '10px 16px 10px 14px',
+    fontSize: '13.5px',
+    fontWeight: 500,
     color: COLORS.TEXT_MUTED,
     cursor: 'pointer',
     borderLeft: '3px solid transparent',
-    transition: 'background 0.15s, color 0.15s',
+    transition: 'all 0.15s ease',
+    borderRadius: '0 6px 6px 0',
+    margin: '1px 8px 1px 0',
   } as React.CSSProperties,
   navItemActive: {
     color: COLORS.TEXT_PRIMARY,
     background: COLORS.NAV_ACTIVE_BG,
     borderLeftColor: COLORS.NAV_ACTIVE_BORDER,
+    fontWeight: 600,
   },
   divider: {
     height: '1px',
@@ -97,15 +113,16 @@ const styles = {
     display: 'block',
     width: 'calc(100% - 32px)',
     margin: '8px 16px 16px',
-    padding: '8px',
-    background: 'transparent',
-    border: `1px solid ${COLORS.BORDER_LIGHT}`,
-    borderRadius: '6px',
+    padding: '9px',
+    background: 'rgba(248, 113, 113, 0.08)',
+    border: `1px solid rgba(248, 113, 113, 0.2)`,
+    borderRadius: '8px',
     color: COLORS.ERROR,
     fontSize: '13px',
+    fontWeight: 500,
     cursor: 'pointer',
     textAlign: 'center' as const,
-    transition: 'border-color 0.15s',
+    transition: 'all 0.15s',
   },
 };
 
@@ -139,21 +156,24 @@ export function Sidebar() {
           if (!isActive) e.currentTarget.style.background = 'transparent';
         }}
       >
+        <span style={{ ...styles.navIcon, ...(isActive ? styles.navIconActive : {}) }}>
+          {item.icon}
+        </span>
         {item.label}
       </div>
     );
   };
 
   const standardNav: NavItem[] = [
-    { label: 'Home', view: 'home' },
-    { label: 'New Session', view: 'new-session' },
-    { label: 'Join Session', view: 'join-session' },
+    { label: 'Home', view: 'home', icon: '\u2302' },
+    { label: 'New Session', view: 'new-session', icon: '+' },
+    { label: 'Join Session', view: 'join-session', icon: '\u2192' },
   ];
 
   const sessionNav: NavItem[] = [
-    { label: 'Chat', view: 'chat' },
-    { label: 'Visualizer', view: 'visualizer' },
-    { label: 'Participants', view: 'participants' },
+    { label: 'Chat', view: 'chat', icon: '\u2709' },
+    { label: 'Visualizer', view: 'visualizer', icon: '\u25C8' },
+    { label: 'Participants', view: 'participants', icon: '\u2637' },
   ];
 
   if (!account) {
@@ -187,12 +207,12 @@ export function Sidebar() {
       <div style={styles.nav}>
         {inSession ? (
           <>
-            {currentSession?.status === 'waiting' && renderNavItem({ label: 'Waiting Room', view: 'waiting' })}
+            {currentSession?.status === 'waiting' && renderNavItem({ label: 'Waiting Room', view: 'waiting', icon: '\u23F3' })}
             {currentSession?.status === 'active' && sessionNav.map(renderNavItem)}
             {currentUser?.is_admin && (
               <>
                 <div style={styles.divider} />
-                {renderNavItem({ label: 'Admin Controls', view: 'waiting' })}
+                {renderNavItem({ label: 'Admin Controls', view: 'waiting', icon: '\u2699' })}
               </>
             )}
           </>
@@ -200,7 +220,7 @@ export function Sidebar() {
           <>
             {standardNav.map(renderNavItem)}
             <div style={styles.divider} />
-            {renderNavItem({ label: 'Settings', view: 'settings' })}
+            {renderNavItem({ label: 'Settings', view: 'settings', icon: '\u2699' })}
           </>
         )}
       </div>
