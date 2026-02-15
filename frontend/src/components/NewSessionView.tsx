@@ -11,6 +11,7 @@ const styles = {
     flexDirection: 'column' as const,
     gap: '32px',
     paddingTop: '20px',
+    animation: 'fadeIn 0.3s ease',
   },
   title: {
     fontSize: '24px',

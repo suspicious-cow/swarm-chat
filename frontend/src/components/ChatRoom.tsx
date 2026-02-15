@@ -3,20 +3,21 @@ import { useDeliberationStore } from '../stores/deliberationStore';
 import { useWebSocket } from '../hooks/useWebSocket';
 import { MessageBubble } from './MessageBubble';
 import { ChatInput } from './ChatInput';
+import { COLORS } from '../styles/constants';
 
 const styles = {
   container: {
     display: 'flex',
     flexDirection: 'column' as const,
     height: 'calc(100vh - 100px)',
-    background: '#1a1a3e',
+    background: COLORS.BG_CARD,
     borderRadius: '12px',
-    border: '1px solid #2a2a5a',
+    border: `1px solid ${COLORS.BORDER}`,
     overflow: 'hidden',
   },
   chatHeader: {
     padding: '12px 20px',
-    borderBottom: '1px solid #2a2a5a',
+    borderBottom: `1px solid ${COLORS.BORDER}`,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -24,12 +25,12 @@ const styles = {
   chatTitle: {
     fontSize: '16px',
     fontWeight: 600,
-    color: '#c0c0ff',
+    color: COLORS.TEXT_ACCENT,
     margin: 0,
   },
   chatSubtitle: {
     fontSize: '12px',
-    color: '#6a6a9a',
+    color: COLORS.TEXT_DIM,
   },
   messageList: {
     flex: 1,
@@ -42,7 +43,7 @@ const styles = {
   typingIndicator: {
     padding: '8px 20px',
     fontSize: '13px',
-    color: '#7c8aff',
+    color: COLORS.ACCENT,
     fontStyle: 'italic' as const,
   },
 };
@@ -91,7 +92,7 @@ export function ChatRoom() {
 
       <div style={styles.messageList}>
         {messages.length === 0 && (
-          <div style={{ textAlign: 'center', color: '#6a6a9a', padding: '40px' }}>
+          <div style={{ textAlign: 'center', color: COLORS.TEXT_DIM, padding: '40px' }}>
             No messages yet. Start the conversation!
           </div>
         )}

@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useDeliberationStore } from '../stores/deliberationStore';
+import { COLORS } from '../styles/constants';
 
 const styles = {
   panel: {
-    background: '#1a1a3e',
-    border: '1px solid #3a3a5a',
+    background: COLORS.BG_CARD,
+    border: `1px solid ${COLORS.BORDER}`,
     borderRadius: '12px',
     padding: '24px',
     width: '100%',
@@ -13,7 +14,7 @@ const styles = {
   title: {
     fontSize: '16px',
     fontWeight: 600,
-    color: '#c0c0ff',
+    color: COLORS.TEXT_ACCENT,
     marginBottom: '16px',
   },
   btn: {
@@ -25,37 +26,38 @@ const styles = {
     cursor: 'pointer',
     width: '100%',
     marginBottom: '8px',
+    transition: 'opacity 0.15s',
   },
   startBtn: {
-    background: '#2a8a2a',
+    background: COLORS.SUCCESS,
     color: '#fff',
   },
   stopBtn: {
-    background: '#8a2a2a',
+    background: COLORS.ERROR,
     color: '#fff',
   },
   summaryBtn: {
-    background: '#3a3a8a',
+    background: COLORS.BUTTON,
     color: '#fff',
   },
   info: {
-    color: '#6a6a9a',
+    color: COLORS.TEXT_DIM,
     fontSize: '13px',
     marginBottom: '12px',
   },
   summary: {
-    background: '#0f0f23',
-    border: '1px solid #2a2a5a',
+    background: COLORS.BG_INPUT,
+    border: `1px solid ${COLORS.BORDER}`,
     borderRadius: '8px',
     padding: '16px',
     marginTop: '12px',
-    color: '#c0c0e0',
+    color: COLORS.TEXT_PRIMARY,
     fontSize: '14px',
     lineHeight: 1.6,
     whiteSpace: 'pre-wrap' as const,
   },
   error: {
-    color: '#ff6b6b',
+    color: COLORS.ERROR,
     fontSize: '13px',
     marginTop: '8px',
   },

@@ -10,6 +10,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: '28px',
+    animation: 'fadeIn 0.3s ease',
   },
   title: {
     fontSize: '24px',

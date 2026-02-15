@@ -1,5 +1,6 @@
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
+import { SwarmLogo } from './SwarmLogo';
 import { LAYOUT, COLORS } from '../styles/constants';
 
 type View = 'home' | 'new-session' | 'join-session' | 'settings'
@@ -8,14 +9,13 @@ type View = 'home' | 'new-session' | 'join-session' | 'settings'
 interface NavItem {
   label: string;
   view: View;
-  icon?: string;
 }
 
 const styles = {
   sidebar: {
     width: `${LAYOUT.SIDEBAR_WIDTH}px`,
     minWidth: `${LAYOUT.SIDEBAR_WIDTH}px`,
-    background: COLORS.BG_SIDEBAR,
+    background: COLORS.GRADIENT_SIDEBAR,
     borderRight: `1px solid ${COLORS.BORDER}`,
     display: 'flex',
     flexDirection: 'column' as const,
@@ -28,6 +28,9 @@ const styles = {
     fontWeight: 700,
     color: COLORS.ACCENT,
     borderBottom: `1px solid ${COLORS.BORDER}`,
+    display: 'flex',
+    alignItems: 'center',
+    gap: '10px',
   },
   nav: {
     flex: 1,
@@ -43,7 +46,7 @@ const styles = {
     color: COLORS.TEXT_MUTED,
     cursor: 'pointer',
     borderLeft: '3px solid transparent',
-    transition: 'background 0.15s',
+    transition: 'background 0.15s, color 0.15s',
   } as React.CSSProperties,
   navItemActive: {
     color: COLORS.TEXT_PRIMARY,
@@ -88,6 +91,7 @@ const styles = {
     borderRadius: '4px',
     cursor: 'pointer',
     fontSize: '11px',
+    transition: 'border-color 0.15s',
   },
   leaveBtn: {
     display: 'block',
@@ -95,12 +99,13 @@ const styles = {
     margin: '8px 16px 16px',
     padding: '8px',
     background: 'transparent',
-    border: `1px solid #5a3a3a`,
+    border: `1px solid ${COLORS.BORDER_LIGHT}`,
     borderRadius: '6px',
-    color: '#d08080',
+    color: COLORS.ERROR,
     fontSize: '13px',
     cursor: 'pointer',
     textAlign: 'center' as const,
+    transition: 'border-color 0.15s',
   },
 };
 
@@ -128,7 +133,7 @@ export function Sidebar() {
         }}
         onClick={() => setView(item.view)}
         onMouseEnter={(e) => {
-          if (!isActive) e.currentTarget.style.background = '#1a1a3e';
+          if (!isActive) e.currentTarget.style.background = COLORS.BG_HOVER;
         }}
         onMouseLeave={(e) => {
           if (!isActive) e.currentTarget.style.background = 'transparent';
@@ -154,14 +159,20 @@ export function Sidebar() {
   if (!account) {
     return (
       <div style={styles.sidebar}>
-        <div style={styles.brand}>Swarm Chat</div>
+        <div style={styles.brand}>
+          <SwarmLogo size={28} />
+          Swarm Chat
+        </div>
       </div>
     );
   }
 
   return (
     <div style={styles.sidebar}>
-      <div style={styles.brand}>Swarm Chat</div>
+      <div style={styles.brand}>
+        <SwarmLogo size={28} />
+        Swarm Chat
+      </div>
 
       {inSession && currentSession && (
         <div style={styles.sessionInfo}>

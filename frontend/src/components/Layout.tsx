@@ -36,12 +36,13 @@ const styles = {
   },
   logoutBtn: {
     background: 'none',
-    border: `1px solid #5a3a3a`,
-    color: '#d08080',
+    border: `1px solid ${COLORS.BORDER_LIGHT}`,
+    color: COLORS.ERROR,
     padding: '5px 14px',
     borderRadius: '6px',
     cursor: 'pointer',
     fontSize: '12px',
+    transition: 'border-color 0.15s, color 0.15s',
   },
   main: {
     flex: 1,
@@ -49,6 +50,25 @@ const styles = {
     padding: `${LAYOUT.CONTENT_PADDING}px`,
   },
 };
+
+const globalKeyframes = `
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.5; }
+  }
+  @keyframes shimmer {
+    0% { background-position: -200% 0; }
+    100% { background-position: 200% 0; }
+  }
+  @keyframes glowPulse {
+    0%, 100% { box-shadow: 0 0 8px rgba(245,158,11,0.2); }
+    50% { box-shadow: 0 0 20px rgba(245,158,11,0.4); }
+  }
+`;
 
 export function Layout({ children }: { children: ReactNode }) {
   const { account, logout } = useAuthStore();
@@ -61,6 +81,7 @@ export function Layout({ children }: { children: ReactNode }) {
 
   return (
     <div style={styles.root}>
+      <style>{globalKeyframes}</style>
       <Sidebar />
       <div style={styles.rightPanel}>
         <div style={styles.topBar}>

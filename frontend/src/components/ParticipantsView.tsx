@@ -3,12 +3,12 @@ import { useDeliberationStore } from '../stores/deliberationStore';
 import { COLORS } from '../styles/constants';
 
 const groupColors = [
-  { bg: '#1a2a4a', border: '#2a4a6a' },
-  { bg: '#2a1a4a', border: '#4a2a6a' },
-  { bg: '#1a3a3a', border: '#2a5a5a' },
-  { bg: '#3a2a1a', border: '#5a4a2a' },
-  { bg: '#1a3a1a', border: '#2a5a2a' },
-  { bg: '#3a1a3a', border: '#5a2a5a' },
+  { bg: '#2a2210', border: '#D97706' },   // amber
+  { bg: '#102a2a', border: '#0D9488' },   // teal
+  { bg: '#2a1a10', border: '#EA580C' },   // coral
+  { bg: '#1a2a1a', border: '#4ADE80' },   // sage
+  { bg: '#241a2a', border: '#A78BFA' },   // lavender
+  { bg: '#2a2018', border: '#B45309' },   // copper
 ];
 
 const styles = {
@@ -18,6 +18,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: '24px',
+    animation: 'fadeIn 0.3s ease',
   },
   header: {
     display: 'flex',

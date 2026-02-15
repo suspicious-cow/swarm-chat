@@ -13,6 +13,7 @@ const styles = {
     display: 'flex',
     flexDirection: 'column' as const,
     gap: '32px',
+    animation: 'fadeIn 0.3s ease',
   },
   welcome: {
     fontSize: '24px',
@@ -37,7 +38,7 @@ const styles = {
     padding: '24px',
     cursor: 'pointer',
     textAlign: 'center' as const,
-    transition: 'border-color 0.15s',
+    transition: 'border-color 0.15s, transform 0.15s, box-shadow 0.15s',
   },
   actionTitle: {
     fontSize: '16px',
@@ -111,9 +112,9 @@ const styles = {
 };
 
 const badgeColors: Record<string, { background: string; color: string }> = {
-  waiting: { background: '#3a3500', color: '#ffd644' },
-  active: { background: '#003a1a', color: '#44ff88' },
-  completed: { background: '#2a2a3a', color: '#8888bb' },
+  waiting: { background: COLORS.BADGE_WAITING_BG, color: COLORS.BADGE_WAITING_TEXT },
+  active: { background: COLORS.BADGE_ACTIVE_BG, color: COLORS.BADGE_ACTIVE_TEXT },
+  completed: { background: COLORS.BADGE_COMPLETED_BG, color: COLORS.BADGE_COMPLETED_TEXT },
 };
 
 export function HomeView() {

@@ -1,10 +1,11 @@
 import { useToastStore } from '../stores/toastStore';
+import { COLORS } from '../styles/constants';
 import type { ToastType } from '../stores/toastStore';
 
 const toastColors: Record<ToastType, { bg: string; border: string; color: string }> = {
-  success: { bg: '#0a2a1a', border: '#1a5a3a', color: '#44ff88' },
-  error: { bg: '#2a0a0a', border: '#5a1a1a', color: '#ff6b6b' },
-  info: { bg: '#0a0a2a', border: '#1a1a5a', color: '#7c8aff' },
+  success: { bg: '#0a2a18', border: '#1a5a38', color: COLORS.SUCCESS },
+  error: { bg: '#2a0a0a', border: '#5a1a1a', color: COLORS.ERROR },
+  info: { bg: '#2a2210', border: '#4a3a10', color: COLORS.ACCENT },
 };
 
 export function ToastContainer() {
@@ -38,7 +39,8 @@ export function ToastContainer() {
               minWidth: '240px',
               maxWidth: '400px',
               cursor: 'pointer',
-              boxShadow: '0 4px 12px rgba(0,0,0,0.4)',
+              boxShadow: COLORS.SHADOW_MD,
+              animation: 'fadeIn 0.2s ease',
             }}
             onClick={() => removeToast(toast.id)}
           >

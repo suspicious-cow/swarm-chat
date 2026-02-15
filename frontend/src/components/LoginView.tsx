@@ -1,5 +1,7 @@
 import { useState } from 'react';
 import { useAuthStore } from '../stores/authStore';
+import { SwarmLogo } from './SwarmLogo';
+import { COLORS } from '../styles/constants';
 
 const styles = {
   container: {
@@ -12,38 +14,43 @@ const styles = {
   hero: {
     textAlign: 'center' as const,
     maxWidth: '600px',
+    display: 'flex',
+    flexDirection: 'column' as const,
+    alignItems: 'center',
+    gap: '16px',
   },
   heroTitle: {
     fontSize: '36px',
     fontWeight: 700,
-    color: '#e0e0ff',
-    marginBottom: '12px',
+    color: COLORS.TEXT_HEADING,
+    marginBottom: '4px',
   },
   heroSubtitle: {
     fontSize: '16px',
-    color: '#8888bb',
+    color: COLORS.TEXT_MUTED,
     lineHeight: 1.6,
   },
   card: {
-    background: '#1a1a3e',
-    border: '1px solid #2a2a5a',
+    background: COLORS.BG_CARD,
+    border: `1px solid ${COLORS.BORDER}`,
     borderRadius: '12px',
     padding: '32px',
     width: '340px',
+    animation: 'fadeIn 0.3s ease',
   },
   cardTitle: {
     fontSize: '18px',
     fontWeight: 600,
-    color: '#c0c0ff',
+    color: COLORS.TEXT_ACCENT,
     marginBottom: '20px',
   },
   input: {
     width: '100%',
     padding: '10px 14px',
-    background: '#0f0f23',
-    border: '1px solid #3a3a6a',
+    background: COLORS.BG_INPUT,
+    border: `1px solid ${COLORS.BORDER_LIGHT}`,
     borderRadius: '8px',
-    color: '#e0e0e0',
+    color: COLORS.TEXT_PRIMARY,
     fontSize: '14px',
     marginBottom: '12px',
     boxSizing: 'border-box' as const,
@@ -51,13 +58,13 @@ const styles = {
   label: {
     display: 'block',
     fontSize: '12px',
-    color: '#6a6a9a',
+    color: COLORS.TEXT_DIM,
     marginBottom: '4px',
   },
   btn: {
     width: '100%',
     padding: '12px',
-    background: '#4a4aff',
+    background: COLORS.BUTTON,
     border: 'none',
     borderRadius: '8px',
     color: '#fff',
@@ -65,14 +72,15 @@ const styles = {
     fontWeight: 600,
     cursor: 'pointer',
     marginTop: '8px',
-  },
+    transition: 'background 0.15s, transform 0.1s',
+  } as React.CSSProperties,
   error: {
-    color: '#ff6b6b',
+    color: COLORS.ERROR,
     fontSize: '13px',
     marginTop: '8px',
   },
   toggle: {
-    color: '#7c8aff',
+    color: COLORS.ACCENT,
     fontSize: '13px',
     marginTop: '16px',
     textAlign: 'center' as const,
@@ -105,6 +113,7 @@ export function LoginView() {
   return (
     <div style={styles.container}>
       <div style={styles.hero}>
+        <SwarmLogo size={56} />
         <h2 style={styles.heroTitle}>Conversational Swarm Intelligence</h2>
         <p style={styles.heroSubtitle}>
           Enable productive real-time group deliberation at scale.
@@ -155,7 +164,19 @@ export function LoginView() {
           </>
         )}
 
-        <button style={styles.btn} onClick={handleSubmit} disabled={loading}>
+        <button
+          style={styles.btn}
+          onClick={handleSubmit}
+          disabled={loading}
+          onMouseEnter={e => {
+            e.currentTarget.style.background = COLORS.BUTTON_HOVER;
+            e.currentTarget.style.transform = 'scale(1.02)';
+          }}
+          onMouseLeave={e => {
+            e.currentTarget.style.background = COLORS.BUTTON;
+            e.currentTarget.style.transform = 'scale(1)';
+          }}
+        >
           {loading ? 'Please wait...' : isRegister ? 'Register' : 'Sign In'}
         </button>
 

@@ -1,4 +1,5 @@
 import type { Subgroup } from '../types';
+import { COLORS } from '../styles/constants';
 
 const styles = {
   node: {
@@ -24,12 +25,12 @@ const styles = {
   label: {
     fontSize: '12px',
     fontWeight: 600,
-    color: '#a0a0d0',
+    color: COLORS.TEXT_MUTED,
     textAlign: 'center' as const,
   },
   count: {
     fontSize: '11px',
-    color: '#6a6a9a',
+    color: COLORS.TEXT_DIM,
   },
 };
 
@@ -43,20 +44,20 @@ interface Props {
   radius: number;
 }
 
-const COLORS = [
-  { bg: '#1a2a5a', border: '#4a6aff', text: '#7c8aff' },
-  { bg: '#1a3a2a', border: '#4aaa6a', text: '#6ad08a' },
-  { bg: '#3a1a2a', border: '#aa4a6a', text: '#d06a8a' },
-  { bg: '#2a2a1a', border: '#aaaa4a', text: '#d0d06a' },
-  { bg: '#1a2a3a', border: '#4a8aaa', text: '#6ab0d0' },
-  { bg: '#2a1a3a', border: '#8a4aaa', text: '#b06ad0' },
+const GROUP_COLORS = [
+  { bg: '#2a2210', border: '#D97706', text: '#F59E0B' },   // amber
+  { bg: '#102a2a', border: '#0D9488', text: '#14B8A6' },   // teal
+  { bg: '#2a1a10', border: '#EA580C', text: '#F97316' },   // coral
+  { bg: '#1a2a1a', border: '#4ADE80', text: '#6EE7A0' },   // sage
+  { bg: '#241a2a', border: '#A78BFA', text: '#C4B5FD' },   // lavender
+  { bg: '#2a2018', border: '#B45309', text: '#D4A574' },   // copper
 ];
 
 export function SubgroupNode({ subgroup, index, total, isHighlighted, centerX, centerY, radius }: Props) {
   const angle = (2 * Math.PI * index) / total - Math.PI / 2;
   const x = centerX + radius * Math.cos(angle);
   const y = centerY + radius * Math.sin(angle);
-  const color = COLORS[index % COLORS.length];
+  const color = GROUP_COLORS[index % GROUP_COLORS.length];
 
   return (
     <div

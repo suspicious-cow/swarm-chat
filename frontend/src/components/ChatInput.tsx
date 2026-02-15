@@ -1,32 +1,34 @@
 import { useState } from 'react';
+import { COLORS } from '../styles/constants';
 
 const styles = {
   container: {
     padding: '12px 16px',
-    borderTop: '1px solid #2a2a5a',
+    borderTop: `1px solid ${COLORS.BORDER}`,
     display: 'flex',
     gap: '10px',
   },
   input: {
     flex: 1,
     padding: '10px 14px',
-    background: '#0f0f23',
-    border: '1px solid #3a3a6a',
+    background: COLORS.BG_INPUT,
+    border: `1px solid ${COLORS.BORDER_LIGHT}`,
     borderRadius: '8px',
-    color: '#e0e0e0',
+    color: COLORS.TEXT_PRIMARY,
     fontSize: '14px',
     outline: 'none',
   },
   btn: {
     padding: '10px 20px',
-    background: '#4a4aff',
+    background: COLORS.BUTTON,
     border: 'none',
     borderRadius: '8px',
     color: '#fff',
     fontSize: '14px',
     fontWeight: 600,
     cursor: 'pointer',
-  },
+    transition: 'background 0.15s',
+  } as React.CSSProperties,
 };
 
 interface Props {
@@ -57,7 +59,12 @@ export function ChatInput({ onSend }: Props) {
           }
         }}
       />
-      <button style={styles.btn} onClick={handleSend}>
+      <button
+        style={styles.btn}
+        onClick={handleSend}
+        onMouseEnter={e => { e.currentTarget.style.background = COLORS.BUTTON_HOVER; }}
+        onMouseLeave={e => { e.currentTarget.style.background = COLORS.BUTTON; }}
+      >
         Send
       </button>
     </div>

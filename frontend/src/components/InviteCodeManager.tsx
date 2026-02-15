@@ -1,12 +1,13 @@
 import { useEffect, useState } from 'react';
+import { COLORS } from '../styles/constants';
 import type { InviteCode } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 const styles = {
   panel: {
-    background: '#1a1a3e',
-    border: '1px solid #2a2a5a',
+    background: COLORS.BG_CARD,
+    border: `1px solid ${COLORS.BORDER}`,
     borderRadius: '12px',
     padding: '24px',
     width: '100%',
@@ -14,7 +15,7 @@ const styles = {
   title: {
     fontSize: '16px',
     fontWeight: 600,
-    color: '#c0c0ff',
+    color: COLORS.TEXT_ACCENT,
     marginBottom: '16px',
   },
   createRow: {
@@ -31,26 +32,27 @@ const styles = {
   },
   label: {
     fontSize: '11px',
-    color: '#6a6a9a',
+    color: COLORS.TEXT_DIM,
   },
   input: {
     padding: '8px 12px',
-    background: '#0f0f23',
-    border: '1px solid #3a3a6a',
+    background: COLORS.BG_INPUT,
+    border: `1px solid ${COLORS.BORDER_LIGHT}`,
     borderRadius: '6px',
-    color: '#e0e0e0',
+    color: COLORS.TEXT_PRIMARY,
     fontSize: '13px',
     width: '120px',
   },
   btn: {
     padding: '8px 16px',
-    background: '#4a4aff',
+    background: COLORS.BUTTON,
     border: 'none',
     borderRadius: '6px',
     color: '#fff',
     fontSize: '13px',
     fontWeight: 600,
     cursor: 'pointer',
+    transition: 'background 0.15s',
   },
   table: {
     width: '100%',
@@ -60,48 +62,48 @@ const styles = {
   th: {
     textAlign: 'left' as const,
     padding: '8px 12px',
-    color: '#6a6a9a',
-    borderBottom: '1px solid #2a2a5a',
+    color: COLORS.TEXT_DIM,
+    borderBottom: `1px solid ${COLORS.BORDER}`,
     fontWeight: 500,
   },
   td: {
     padding: '8px 12px',
-    color: '#c0c0e0',
-    borderBottom: '1px solid #1a1a3a',
+    color: COLORS.TEXT_PRIMARY,
+    borderBottom: `1px solid ${COLORS.BORDER}`,
   },
   code: {
     fontFamily: 'monospace',
     fontWeight: 600,
     letterSpacing: '1px',
-    color: '#7c8aff',
+    color: COLORS.ACCENT,
   },
   active: {
-    color: '#44ff88',
+    color: COLORS.SUCCESS,
     fontWeight: 600,
     fontSize: '12px',
   },
   inactive: {
-    color: '#ff6b6b',
+    color: COLORS.ERROR,
     fontWeight: 600,
     fontSize: '12px',
   },
   deactivateBtn: {
     padding: '4px 10px',
     background: 'transparent',
-    border: '1px solid #ff4444',
+    border: `1px solid ${COLORS.ERROR}`,
     borderRadius: '4px',
-    color: '#ff6b6b',
+    color: COLORS.ERROR,
     fontSize: '11px',
     cursor: 'pointer',
   },
   empty: {
-    color: '#6a6a9a',
+    color: COLORS.TEXT_DIM,
     fontSize: '13px',
     textAlign: 'center' as const,
     padding: '20px 0',
   },
   error: {
-    color: '#ff6b6b',
+    color: COLORS.ERROR,
     fontSize: '13px',
     marginBottom: '8px',
   },

@@ -1,3 +1,4 @@
+import { COLORS } from '../styles/constants';
 import type { Message } from '../types';
 
 const styles = {
@@ -6,6 +7,7 @@ const styles = {
     flexDirection: 'column' as const,
     maxWidth: '75%',
     gap: '2px',
+    animation: 'fadeIn 0.2s ease',
   },
   ownContainer: {
     alignSelf: 'flex-end' as const,
@@ -27,30 +29,30 @@ const styles = {
     wordBreak: 'break-word' as const,
   },
   humanOwn: {
-    background: '#3a3aaa',
-    color: '#fff',
+    background: COLORS.OWN_MSG_BG,
+    color: COLORS.TEXT_PRIMARY,
     borderBottomRightRadius: '4px',
   },
   humanOther: {
-    background: '#2a2a5a',
-    color: '#e0e0e0',
+    background: COLORS.OTHER_MSG_BG,
+    color: COLORS.TEXT_PRIMARY,
     borderBottomLeftRadius: '4px',
   },
   surrogate: {
-    background: '#1a2a3e',
-    color: '#c0d8f0',
-    border: '1px solid #2a3a5a',
+    background: COLORS.SURROGATE_BG,
+    color: COLORS.SURROGATE_TEXT,
+    border: `1px solid ${COLORS.SURROGATE_BORDER}`,
     borderBottomLeftRadius: '4px',
   },
   contributor: {
-    background: '#251a3e',
-    color: '#d0c0f0',
-    border: '1px solid #3a2a5a',
+    background: COLORS.CONTRIBUTOR_BG,
+    color: COLORS.CONTRIBUTOR_TEXT,
+    border: `1px solid ${COLORS.CONTRIBUTOR_BORDER}`,
     borderBottomLeftRadius: '4px',
   },
   time: {
     fontSize: '10px',
-    color: '#5a5a8a',
+    color: COLORS.TEXT_DIM,
     padding: '0 8px',
   },
   badge: {
@@ -64,12 +66,12 @@ const styles = {
     letterSpacing: '0.5px',
   },
   surrogateBadge: {
-    background: 'rgba(106, 176, 208, 0.15)',
-    color: '#6ab0d0',
+    background: 'rgba(20, 184, 166, 0.15)',
+    color: COLORS.ACCENT_TERTIARY,
   },
   contributorBadge: {
-    background: 'rgba(176, 128, 208, 0.15)',
-    color: '#b080d0',
+    background: 'rgba(208, 184, 224, 0.15)',
+    color: COLORS.CONTRIBUTOR_TEXT,
   },
 };
 
@@ -90,7 +92,13 @@ export function MessageBubble({ message, isOwn }: Props) {
     return { ...styles.bubble, ...styles.humanOther };
   };
 
-  const nameColor = isSurrogate ? '#6ab0d0' : isContributor ? '#b080d0' : isOwn ? '#8888cc' : '#9090c0';
+  const nameColor = isSurrogate
+    ? COLORS.SURROGATE_TEXT
+    : isContributor
+      ? COLORS.CONTRIBUTOR_TEXT
+      : isOwn
+        ? COLORS.ACCENT
+        : COLORS.TEXT_MUTED;
 
   const time = message.created_at
     ? new Date(message.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })

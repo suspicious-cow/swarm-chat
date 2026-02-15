@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react';
 import { useDeliberationStore } from '../stores/deliberationStore';
 import { SubgroupNode } from './SubgroupNode';
+import { COLORS } from '../styles/constants';
 
 const styles = {
   container: {
@@ -8,19 +9,20 @@ const styles = {
     flexDirection: 'column' as const,
     height: 'calc(100vh - 100px)',
     gap: '16px',
+    animation: 'fadeIn 0.3s ease',
   },
   vizArea: {
     flex: 1,
-    background: '#1a1a3e',
+    background: COLORS.BG_CARD,
     borderRadius: '12px',
-    border: '1px solid #2a2a5a',
+    border: `1px solid ${COLORS.BORDER}`,
     position: 'relative' as const,
     overflow: 'hidden',
     minHeight: '300px',
   },
   vizHeader: {
     padding: '12px 20px',
-    borderBottom: '1px solid #2a2a5a',
+    borderBottom: `1px solid ${COLORS.BORDER}`,
     display: 'flex',
     justifyContent: 'space-between',
     alignItems: 'center',
@@ -28,7 +30,7 @@ const styles = {
   vizTitle: {
     fontSize: '16px',
     fontWeight: 600,
-    color: '#c0c0ff',
+    color: COLORS.TEXT_ACCENT,
   },
   canvas: {
     position: 'absolute' as const,
@@ -39,8 +41,8 @@ const styles = {
     pointerEvents: 'none' as const,
   },
   ideasPanel: {
-    background: '#1a1a3e',
-    border: '1px solid #2a2a5a',
+    background: COLORS.BG_CARD,
+    border: `1px solid ${COLORS.BORDER}`,
     borderRadius: '12px',
     padding: '16px',
     maxHeight: '240px',
@@ -49,32 +51,32 @@ const styles = {
   ideasTitle: {
     fontSize: '14px',
     fontWeight: 600,
-    color: '#8888bb',
+    color: COLORS.TEXT_MUTED,
     marginBottom: '12px',
   },
   idea: {
     padding: '10px',
-    background: '#0f0f23',
+    background: COLORS.BG_INPUT,
     borderRadius: '8px',
     marginBottom: '8px',
     fontSize: '13px',
     lineHeight: 1.5,
   },
   ideaSummary: {
-    color: '#c0c0e0',
+    color: COLORS.TEXT_PRIMARY,
   },
   ideaMeta: {
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: '6px',
     fontSize: '11px',
-    color: '#6a6a9a',
+    color: COLORS.TEXT_DIM,
   },
   sentimentBar: {
     height: '4px',
     borderRadius: '2px',
     marginTop: '4px',
-    background: '#2a2a5a',
+    background: COLORS.BORDER,
   },
 };
 
@@ -128,9 +130,9 @@ export function Visualizer() {
   }
 
   const getSentimentColor = (s: number) => {
-    if (s > 0.3) return '#4aaa6a';
-    if (s < -0.3) return '#aa4a4a';
-    return '#8888aa';
+    if (s > 0.3) return COLORS.SUCCESS;
+    if (s < -0.3) return COLORS.ERROR;
+    return COLORS.TEXT_MUTED;
   };
 
   return (
@@ -138,7 +140,7 @@ export function Visualizer() {
       <div style={styles.vizArea} ref={vizRef}>
         <div style={styles.vizHeader}>
           <span style={styles.vizTitle}>Deliberation Map</span>
-          <span style={{ color: '#6a6a9a', fontSize: '13px' }}>
+          <span style={{ color: COLORS.TEXT_DIM, fontSize: '13px' }}>
             {subgroups.length} ThinkTanks | {ideas.length} Ideas
           </span>
         </div>
@@ -152,7 +154,7 @@ export function Visualizer() {
               y1={c.y1 + 50}
               x2={c.x2}
               y2={c.y2 + 50}
-              stroke="#2a2a5a"
+              stroke={COLORS.BORDER}
               strokeWidth="1"
               strokeDasharray="4,4"
               opacity="0.5"
@@ -160,7 +162,7 @@ export function Visualizer() {
           ))}
           {/* Animated flow indicators */}
           {connections.map((c, i) => (
-            <circle key={`flow-${i}`} r="3" fill="#4a6aff" opacity="0.6">
+            <circle key={`flow-${i}`} r="3" fill={COLORS.ACCENT} opacity="0.6">
               <animateMotion
                 dur={`${3 + i * 0.5}s`}
                 repeatCount="indefinite"
@@ -191,7 +193,7 @@ export function Visualizer() {
           Live Ideas ({ideas.length})
         </div>
         {ideas.length === 0 && (
-          <div style={{ color: '#6a6a9a', fontSize: '13px' }}>
+          <div style={{ color: COLORS.TEXT_DIM, fontSize: '13px' }}>
             Ideas will appear here as the discussion progresses.
           </div>
         )}

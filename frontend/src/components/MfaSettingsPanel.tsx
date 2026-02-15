@@ -1,10 +1,11 @@
 import { useState } from 'react';
 import { useAuthStore } from '../stores/authStore';
+import { COLORS } from '../styles/constants';
 
 const styles = {
   panel: {
-    background: '#1a1a3e',
-    border: '1px solid #2a2a5a',
+    background: COLORS.BG_CARD,
+    border: `1px solid ${COLORS.BORDER}`,
     borderRadius: '12px',
     padding: '24px',
     width: '100%',
@@ -12,36 +13,36 @@ const styles = {
   title: {
     fontSize: '16px',
     fontWeight: 600,
-    color: '#c0c0ff',
+    color: COLORS.TEXT_ACCENT,
     marginBottom: '16px',
   },
   status: {
     fontSize: '14px',
-    color: '#8888bb',
+    color: COLORS.TEXT_MUTED,
     marginBottom: '16px',
   },
   enabled: {
-    color: '#44ff88',
+    color: COLORS.SUCCESS,
     fontWeight: 600,
   },
   disabled: {
-    color: '#ff6b6b',
+    color: COLORS.ERROR,
     fontWeight: 600,
   },
   input: {
     width: '100%',
     padding: '10px 14px',
-    background: '#0f0f23',
-    border: '1px solid #3a3a6a',
+    background: COLORS.BG_INPUT,
+    border: `1px solid ${COLORS.BORDER_LIGHT}`,
     borderRadius: '8px',
-    color: '#e0e0e0',
+    color: COLORS.TEXT_PRIMARY,
     fontSize: '14px',
     marginBottom: '12px',
     boxSizing: 'border-box' as const,
   },
   btn: {
     padding: '10px 20px',
-    background: '#4a4aff',
+    background: COLORS.BUTTON,
     border: 'none',
     borderRadius: '8px',
     color: '#fff',
@@ -49,23 +50,25 @@ const styles = {
     fontWeight: 600,
     cursor: 'pointer',
     marginRight: '8px',
+    transition: 'background 0.15s',
   },
   btnDanger: {
     padding: '10px 20px',
-    background: '#ff4444',
+    background: COLORS.ERROR,
     border: 'none',
     borderRadius: '8px',
     color: '#fff',
     fontSize: '14px',
     fontWeight: 600,
     cursor: 'pointer',
+    transition: 'background 0.15s',
   },
   btnSecondary: {
     padding: '10px 20px',
     background: 'transparent',
-    border: '1px solid #3a3a6a',
+    border: `1px solid ${COLORS.BORDER_LIGHT}`,
     borderRadius: '8px',
-    color: '#8888bb',
+    color: COLORS.TEXT_MUTED,
     fontSize: '14px',
     cursor: 'pointer',
   },
@@ -75,17 +78,17 @@ const styles = {
   },
   secretText: {
     fontSize: '12px',
-    color: '#6a6a9a',
+    color: COLORS.TEXT_DIM,
     wordBreak: 'break-all' as const,
     margin: '8px 0',
   },
   error: {
-    color: '#ff6b6b',
+    color: COLORS.ERROR,
     fontSize: '13px',
     marginTop: '8px',
   },
   success: {
-    color: '#44ff88',
+    color: COLORS.SUCCESS,
     fontSize: '13px',
     marginTop: '8px',
   },
@@ -161,7 +164,7 @@ export function MfaSettingsPanel() {
 
       {setupData && (
         <div>
-          <p style={{ color: '#e0e0e0', fontSize: '14px', marginBottom: '12px' }}>
+          <p style={{ color: COLORS.TEXT_PRIMARY, fontSize: '14px', marginBottom: '12px' }}>
             Scan this QR code with your authenticator app, or manually enter the secret key:
           </p>
           <div style={styles.qrContainer}>
@@ -174,7 +177,7 @@ export function MfaSettingsPanel() {
             />
             <p style={styles.secretText}>Secret: {setupData.secret}</p>
           </div>
-          <label style={{ display: 'block', fontSize: '12px', color: '#6a6a9a', marginBottom: '4px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: COLORS.TEXT_DIM, marginBottom: '4px' }}>
             Enter code from authenticator to confirm
           </label>
           <input
@@ -195,7 +198,7 @@ export function MfaSettingsPanel() {
 
       {hasMfa && (
         <div>
-          <label style={{ display: 'block', fontSize: '12px', color: '#6a6a9a', marginBottom: '4px' }}>
+          <label style={{ display: 'block', fontSize: '12px', color: COLORS.TEXT_DIM, marginBottom: '4px' }}>
             Enter current TOTP code to disable MFA
           </label>
           <input
