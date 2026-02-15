@@ -79,7 +79,7 @@ export function HomeView() {
       <h1
         style={{
           ...phosphorHeading,
-          fontSize: '28px',
+          fontSize: '36px',
           margin: 0,
         }}
       >
@@ -90,7 +90,7 @@ export function HomeView() {
       <p
         style={{
           fontFamily: FONTS.BODY,
-          fontSize: '14px',
+          fontSize: '18px',
           color: COLORS.TEXT_PRIMARY,
           lineHeight: 1.7,
           maxWidth: '600px',
@@ -108,7 +108,7 @@ export function HomeView() {
             <div
               style={{
                 fontFamily: FONTS.MONO,
-                fontSize: '24px',
+                fontSize: '32px',
                 fontWeight: 700,
                 color: COLORS.ACCENT,
                 lineHeight: 1.2,
@@ -119,7 +119,7 @@ export function HomeView() {
             <div
               style={{
                 fontFamily: FONTS.MONO,
-                fontSize: '10px',
+                fontSize: '13px',
                 color: COLORS.TEXT_DIM,
                 marginTop: '4px',
                 textTransform: 'uppercase' as const,
@@ -133,7 +133,7 @@ export function HomeView() {
             <div
               style={{
                 fontFamily: FONTS.MONO,
-                fontSize: '24px',
+                fontSize: '32px',
                 fontWeight: 700,
                 color: COLORS.SUCCESS,
                 lineHeight: 1.2,
@@ -144,7 +144,7 @@ export function HomeView() {
             <div
               style={{
                 fontFamily: FONTS.MONO,
-                fontSize: '10px',
+                fontSize: '13px',
                 color: COLORS.TEXT_DIM,
                 marginTop: '4px',
                 textTransform: 'uppercase' as const,
@@ -158,7 +158,7 @@ export function HomeView() {
             <div
               style={{
                 fontFamily: FONTS.MONO,
-                fontSize: '24px',
+                fontSize: '32px',
                 fontWeight: 700,
                 color: COLORS.TEAL,
                 lineHeight: 1.2,
@@ -169,7 +169,7 @@ export function HomeView() {
             <div
               style={{
                 fontFamily: FONTS.MONO,
-                fontSize: '10px',
+                fontSize: '13px',
                 color: COLORS.TEXT_DIM,
                 marginTop: '4px',
                 textTransform: 'uppercase' as const,
@@ -211,7 +211,7 @@ export function HomeView() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '20px',
+              fontSize: '26px',
               fontWeight: 700,
               marginBottom: '14px',
               background: COLORS.ACCENT_GLOW,
@@ -224,7 +224,7 @@ export function HomeView() {
           <div
             style={{
               fontFamily: FONTS.DISPLAY,
-              fontSize: '16px',
+              fontSize: '21px',
               fontWeight: 600,
               color: COLORS.TEXT_HEADING,
               marginBottom: '6px',
@@ -236,7 +236,7 @@ export function HomeView() {
           <div
             style={{
               fontFamily: FONTS.BODY,
-              fontSize: '13px',
+              fontSize: '18px',
               color: COLORS.TEXT_MUTED,
               lineHeight: 1.5,
             }}
@@ -272,7 +272,7 @@ export function HomeView() {
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center',
-              fontSize: '20px',
+              fontSize: '26px',
               fontWeight: 700,
               marginBottom: '14px',
               background: COLORS.TEAL_GLOW,
@@ -285,7 +285,7 @@ export function HomeView() {
           <div
             style={{
               fontFamily: FONTS.DISPLAY,
-              fontSize: '16px',
+              fontSize: '21px',
               fontWeight: 600,
               color: COLORS.TEXT_HEADING,
               marginBottom: '6px',
@@ -297,7 +297,7 @@ export function HomeView() {
           <div
             style={{
               fontFamily: FONTS.BODY,
-              fontSize: '13px',
+              fontSize: '18px',
               color: COLORS.TEXT_MUTED,
               lineHeight: 1.5,
             }}
@@ -322,7 +322,7 @@ export function HomeView() {
               style={{
                 ...retroButton,
                 padding: '6px 16px',
-                fontSize: '11px',
+                fontSize: '15px',
                 background: 'transparent',
                 border: `1px solid ${COLORS.BORDER_LIGHT}`,
                 color: COLORS.ACCENT,
@@ -350,7 +350,7 @@ export function HomeView() {
               style={{
                 fontFamily: FONTS.MONO,
                 color: COLORS.TEXT_DIM,
-                fontSize: '13px',
+                fontSize: '18px',
                 textAlign: 'center' as const,
                 padding: '40px 0',
               }}
@@ -365,11 +365,11 @@ export function HomeView() {
                 textAlign: 'center' as const,
                 fontFamily: FONTS.BODY,
                 color: COLORS.TEXT_MUTED,
-                fontSize: '14px',
+                fontSize: '18px',
                 borderStyle: 'dashed',
               }}
             >
-              <div style={{ fontSize: '24px', marginBottom: '8px', opacity: 0.5 }}>
+              <div style={{ fontSize: '32px', marginBottom: '8px', opacity: 0.5 }}>
                 {'\u2B22'}
               </div>
               No sessions yet. Create your first session to get started!
@@ -421,7 +421,7 @@ export function HomeView() {
                       <span
                         style={{
                           fontFamily: FONTS.BODY,
-                          fontSize: '14px',
+                          fontSize: '18px',
                           fontWeight: 600,
                           color: COLORS.TEXT_PRIMARY,
                         }}
@@ -431,7 +431,7 @@ export function HomeView() {
                       <span
                         style={{
                           fontFamily: FONTS.MONO,
-                          fontSize: '11px',
+                          fontSize: '15px',
                           color: COLORS.TEXT_DIM,
                         }}
                       >
@@ -444,7 +444,7 @@ export function HomeView() {
                     style={{
                       padding: '3px 10px',
                       borderRadius: '2px',
-                      fontSize: '10px',
+                      fontSize: '13px',
                       fontWeight: 600,
                       fontFamily: FONTS.MONO,
                       textTransform: 'uppercase' as const,

@@ -37,13 +37,13 @@ const styles = {
   },
   name: {
     fontFamily: FONTS.MONO,
-    fontSize: '12px',
+    fontSize: '16px',
     fontWeight: 700,
   },
   badge: {
     fontFamily: FONTS.MONO,
     display: 'inline-block',
-    fontSize: '9px',
+    fontSize: '12px',
     fontWeight: 600,
     padding: '1px 5px',
     borderRadius: '2px',
@@ -60,14 +60,14 @@ const styles = {
   },
   timestamp: {
     fontFamily: FONTS.MONO,
-    fontSize: '11px',
+    fontSize: '15px',
     color: COLORS.TEXT_MUTED,
     marginLeft: 'auto',
     flexShrink: 0,
   },
   content: {
     fontFamily: FONTS.BODY,
-    fontSize: '14px',
+    fontSize: '18px',
     lineHeight: 1.5,
     color: COLORS.TEXT_PRIMARY,
     wordBreak: 'break-word' as const,

@@ -43,7 +43,7 @@ const styles = {
   },
   heading: {
     fontFamily: FONTS.DISPLAY,
-    fontSize: '18px',
+    fontSize: '24px',
     fontWeight: 600,
     letterSpacing: '2px',
     textTransform: 'uppercase' as const,
@@ -60,7 +60,7 @@ const styles = {
   } as React.CSSProperties,
   description: {
     fontFamily: FONTS.BODY,
-    fontSize: '13px',
+    fontSize: '18px',
     color: COLORS.TEXT_MUTED,
     marginBottom: '24px',
     lineHeight: 1.5,
@@ -68,7 +68,7 @@ const styles = {
   codeInput: {
     ...retroInput,
     fontFamily: FONTS.MONO,
-    fontSize: '24px',
+    fontSize: '32px',
     letterSpacing: '8px',
     textAlign: 'center' as const,
     padding: '14px 16px',
@@ -80,13 +80,13 @@ const styles = {
   } as React.CSSProperties,
   error: {
     fontFamily: FONTS.MONO,
-    fontSize: '12px',
+    fontSize: '16px',
     color: COLORS.ERROR,
     marginTop: '12px',
   },
   backLink: {
     fontFamily: FONTS.MONO,
-    fontSize: '12px',
+    fontSize: '16px',
     color: COLORS.TEXT_MUTED,
     cursor: 'pointer',
     marginTop: '20px',

@@ -21,7 +21,7 @@ const styles = {
   } as React.CSSProperties,
   heading: {
     fontFamily: FONTS.DISPLAY,
-    fontSize: '16px',
+    fontSize: '21px',
     fontWeight: 600,
     color: COLORS.TEXT_HEADING,
     letterSpacing: '1px',
@@ -42,20 +42,20 @@ const styles = {
   },
   fieldLabel: {
     ...systemLabel,
-    fontSize: '10px',
+    fontSize: '13px',
     letterSpacing: '1.5px',
   } as React.CSSProperties,
   input: {
     ...retroInput,
     width: '140px',
-    fontSize: '13px',
+    fontSize: '18px',
     fontFamily: FONTS.MONO,
     padding: '8px 12px',
   } as React.CSSProperties,
   btn: {
     ...retroButton,
     padding: '9px 18px',
-    fontSize: '12px',
+    fontSize: '16px',
   } as React.CSSProperties,
   codeRow: {
     ...instrumentCard,
@@ -68,7 +68,7 @@ const styles = {
   codeText: {
     ...dataReadout,
     fontFamily: FONTS.MONO,
-    fontSize: '16px',
+    fontSize: '21px',
     fontWeight: 600,
     letterSpacing: '2px',
     padding: '6px 14px',
@@ -76,13 +76,13 @@ const styles = {
   } as React.CSSProperties,
   usageText: {
     fontFamily: FONTS.MONO,
-    fontSize: '12px',
+    fontSize: '16px',
     color: COLORS.TEXT_MUTED,
     minWidth: '60px',
   },
   expiryText: {
     fontFamily: FONTS.MONO,
-    fontSize: '11px',
+    fontSize: '15px',
     color: COLORS.TEXT_MUTED,
     flexGrow: 1,
   },
@@ -94,7 +94,7 @@ const styles = {
   },
   statusTextActive: {
     fontFamily: FONTS.MONO,
-    fontSize: '11px',
+    fontSize: '15px',
     fontWeight: 600,
     color: COLORS.SUCCESS,
     letterSpacing: '1px',
@@ -102,7 +102,7 @@ const styles = {
   },
   statusTextInactive: {
     fontFamily: FONTS.MONO,
-    fontSize: '11px',
+    fontSize: '15px',
     fontWeight: 600,
     color: COLORS.TEXT_MUTED,
     letterSpacing: '1px',
@@ -115,7 +115,7 @@ const styles = {
     borderRadius: '2px',
     color: COLORS.ACCENT,
     fontFamily: FONTS.MONO,
-    fontSize: '10px',
+    fontSize: '13px',
     letterSpacing: '1px',
     textTransform: 'uppercase' as const,
     cursor: 'pointer',
@@ -129,7 +129,7 @@ const styles = {
     borderRadius: '2px',
     color: COLORS.ERROR,
     fontFamily: FONTS.MONO,
-    fontSize: '10px',
+    fontSize: '13px',
     letterSpacing: '1px',
     textTransform: 'uppercase' as const,
     cursor: 'pointer',
@@ -138,7 +138,7 @@ const styles = {
   empty: {
     fontFamily: FONTS.MONO,
     color: COLORS.TEXT_MUTED,
-    fontSize: '12px',
+    fontSize: '16px',
     textAlign: 'center' as const,
     padding: '24px 0',
     letterSpacing: '1px',
@@ -147,7 +147,7 @@ const styles = {
   error: {
     fontFamily: FONTS.MONO,
     color: COLORS.ERROR,
-    fontSize: '12px',
+    fontSize: '16px',
     marginBottom: '12px',
   },
 };

@@ -49,20 +49,20 @@ const styles = {
     ...instrumentCard,
     padding: '10px 12px',
     marginBottom: '8px',
-    fontSize: '13px',
+    fontSize: '18px',
     lineHeight: 1.5,
   },
   ideaSummary: {
     color: COLORS.TEXT_PRIMARY,
     fontFamily: FONTS.BODY,
-    fontSize: '13px',
+    fontSize: '18px',
   },
   ideaMeta: {
     display: 'flex',
     justifyContent: 'space-between',
     marginTop: '6px',
     fontFamily: FONTS.MONO,
-    fontSize: '11px',
+    fontSize: '15px',
     color: COLORS.TEXT_MUTED,
   },
   sentimentBar: {
@@ -75,7 +75,7 @@ const styles = {
     ...dataReadout,
     display: 'inline-block',
     padding: '4px 10px',
-    fontSize: '11px',
+    fontSize: '15px',
   } as React.CSSProperties,
 };
 
@@ -298,7 +298,7 @@ export function Visualizer() {
           [ LIVE IDEAS ] &mdash; {ideas.length}
         </div>
         {ideas.length === 0 && (
-          <div style={{ color: COLORS.TEXT_MUTED, fontFamily: FONTS.MONO, fontSize: '12px' }}>
+          <div style={{ color: COLORS.TEXT_MUTED, fontFamily: FONTS.MONO, fontSize: '16px' }}>
             Ideas will appear here as the discussion progresses.
           </div>
         )}

@@ -13,7 +13,7 @@ const styles = {
   },
   prompt: {
     fontFamily: FONTS.MONO,
-    fontSize: '16px',
+    fontSize: '21px',
     fontWeight: 700,
     color: COLORS.ACCENT,
     userSelect: 'none' as const,
@@ -22,7 +22,7 @@ const styles = {
   input: {
     ...retroInput,
     fontFamily: FONTS.MONO,
-    fontSize: '14px',
+    fontSize: '18px',
     flex: 1,
     width: 'auto',
     outline: 'none',
@@ -30,7 +30,7 @@ const styles = {
   btn: {
     ...retroButton,
     padding: '8px 18px',
-    fontSize: '13px',
+    fontSize: '18px',
     flexShrink: 0,
   } as React.CSSProperties,
 };

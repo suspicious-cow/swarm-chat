@@ -52,7 +52,7 @@ export function ParticipantsView() {
         <h2
           style={{
             ...phosphorHeading,
-            fontSize: '22px',
+            fontSize: '28px',
             letterSpacing: '1px',
             margin: 0,
           }}
@@ -62,7 +62,7 @@ export function ParticipantsView() {
         <span
           style={{
             fontFamily: FONTS.MONO,
-            fontSize: '11px',
+            fontSize: '15px',
             color: COLORS.TEXT_MUTED,
             letterSpacing: '1px',
           }}
@@ -78,7 +78,7 @@ export function ParticipantsView() {
             padding: '40px',
             textAlign: 'center' as const,
             fontFamily: FONTS.MONO,
-            fontSize: '13px',
+            fontSize: '18px',
             color: COLORS.TEXT_MUTED,
           }}
         >
@@ -114,14 +114,14 @@ export function ParticipantsView() {
                   }}
                 >
                   <span>[ GROUP {i + 1} ]</span>
-                  <span style={{ color: COLORS.TEXT_MUTED, fontSize: '10px' }}>
+                  <span style={{ color: COLORS.TEXT_MUTED, fontSize: '13px' }}>
                     &mdash; {sg.label}
                   </span>
                   {isMyGroup && (
                     <span
                       style={{
                         fontFamily: FONTS.MONO,
-                        fontSize: '9px',
+                        fontSize: '12px',
                         color: COLORS.ACCENT,
                         letterSpacing: '1px',
                         border: `1px solid ${COLORS.ACCENT_DIM}`,
@@ -170,7 +170,7 @@ export function ParticipantsView() {
                         <span
                           style={{
                             fontFamily: FONTS.BODY,
-                            fontSize: '14px',
+                            fontSize: '18px',
                             fontWeight: 500,
                             color: isYou ? COLORS.TEXT_HEADING : COLORS.TEXT_PRIMARY,
                             flex: 1,
@@ -183,7 +183,7 @@ export function ParticipantsView() {
                         <span
                           style={{
                             fontFamily: FONTS.MONO,
-                            fontSize: '10px',
+                            fontSize: '13px',
                             color: COLORS.TEXT_MUTED,
                             letterSpacing: '1px',
                             textTransform: 'uppercase' as const,
@@ -197,7 +197,7 @@ export function ParticipantsView() {
                           <span
                             style={{
                               fontFamily: FONTS.MONO,
-                              fontSize: '9px',
+                              fontSize: '12px',
                               fontWeight: 600,
                               color: COLORS.ACCENT,
                               letterSpacing: '1px',
@@ -221,7 +221,7 @@ export function ParticipantsView() {
                         ...instrumentCard,
                         padding: '12px 14px',
                         fontFamily: FONTS.MONO,
-                        fontSize: '11px',
+                        fontSize: '15px',
                         color: COLORS.TEXT_MUTED,
                       }}
                     >
@@ -234,7 +234,7 @@ export function ParticipantsView() {
                 <div
                   style={{
                     fontFamily: FONTS.MONO,
-                    fontSize: '10px',
+                    fontSize: '13px',
                     color: COLORS.TEXT_MUTED,
                     marginTop: '4px',
                     textAlign: 'right' as const,

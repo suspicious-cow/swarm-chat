@@ -59,7 +59,7 @@ export function NewSessionView() {
         <h2
           style={{
             ...phosphorHeading,
-            fontSize: '24px',
+            fontSize: '32px',
             margin: 0,
           }}
         >
@@ -69,7 +69,7 @@ export function NewSessionView() {
         <p
           style={{
             fontFamily: FONTS.BODY,
-            fontSize: '14px',
+            fontSize: '18px',
             color: COLORS.TEXT_MUTED,
             lineHeight: 1.5,
             margin: 0,
@@ -82,7 +82,7 @@ export function NewSessionView() {
         <div
           style={{
             ...dataReadout,
-            fontSize: '36px',
+            fontSize: '46px',
             fontWeight: 800,
             letterSpacing: '10px',
             padding: '20px 32px',
@@ -104,7 +104,7 @@ export function NewSessionView() {
               padding: '8px 20px',
               cursor: 'pointer',
               fontFamily: FONTS.MONO,
-              fontSize: '12px',
+              fontSize: '16px',
               letterSpacing: '1px',
               textTransform: 'uppercase' as const,
               transition: 'all 0.15s',
@@ -119,7 +119,7 @@ export function NewSessionView() {
         <p
           style={{
             fontFamily: FONTS.MONO,
-            fontSize: '13px',
+            fontSize: '18px',
             color: COLORS.TEXT_MUTED,
             margin: 0,
           }}
@@ -146,7 +146,7 @@ export function NewSessionView() {
             style={{
               fontFamily: FONTS.MONO,
               color: COLORS.ERROR,
-              fontSize: '13px',
+              fontSize: '18px',
               margin: 0,
             }}
           >
@@ -174,7 +174,7 @@ export function NewSessionView() {
       <h2
         style={{
           ...phosphorHeading,
-          fontSize: '24px',
+          fontSize: '32px',
           margin: 0,
         }}
       >
@@ -192,7 +192,7 @@ export function NewSessionView() {
           style={{
             display: 'block',
             fontFamily: FONTS.MONO,
-            fontSize: '11px',
+            fontSize: '15px',
             fontWeight: 500,
             color: COLORS.TEXT_MUTED,
             letterSpacing: '1.5px',
@@ -223,7 +223,7 @@ export function NewSessionView() {
         <p
           style={{
             fontFamily: FONTS.BODY,
-            fontSize: '12px',
+            fontSize: '16px',
             color: COLORS.TEXT_MUTED,
             marginTop: '4px',
             marginBottom: '20px',
@@ -238,7 +238,7 @@ export function NewSessionView() {
           style={{
             display: 'block',
             fontFamily: FONTS.MONO,
-            fontSize: '11px',
+            fontSize: '15px',
             fontWeight: 500,
             color: COLORS.TEXT_MUTED,
             letterSpacing: '1.5px',
@@ -274,7 +274,7 @@ export function NewSessionView() {
             ...dataReadout,
             marginTop: '8px',
             marginBottom: '20px',
-            fontSize: '12px',
+            fontSize: '16px',
           }}
         >
           Research shows groups of 4-7 participants with an AI Surrogate produce optimal
@@ -300,7 +300,7 @@ export function NewSessionView() {
             style={{
               fontFamily: FONTS.MONO,
               color: COLORS.ERROR,
-              fontSize: '13px',
+              fontSize: '18px',
               marginTop: '8px',
             }}
           >

@@ -11,7 +11,7 @@ export const instrumentCard: React.CSSProperties = {
 /** [ SECTION NAME ] system label in monospace, uppercase, letter-spaced */
 export const systemLabel: React.CSSProperties = {
   fontFamily: FONTS.MONO,
-  fontSize: '11px',
+  fontSize: '15px',
   fontWeight: 500,
   letterSpacing: '2px',
   textTransform: 'uppercase',
@@ -21,7 +21,7 @@ export const systemLabel: React.CSSProperties = {
 /** Data readout — monospace on tinted background */
 export const dataReadout: React.CSSProperties = {
   fontFamily: FONTS.MONO,
-  fontSize: '13px',
+  fontSize: '18px',
   fontWeight: 400,
   background: 'rgba(255,184,0,0.06)',
   border: `1px solid ${COLORS.BORDER}`,
@@ -100,7 +100,7 @@ export const retroInput: React.CSSProperties = {
   borderRadius: '2px',
   color: COLORS.TEXT_PRIMARY,
   fontFamily: FONTS.BODY,
-  fontSize: '14px',
+  fontSize: '18px',
   boxSizing: 'border-box',
   transition: 'border-color 0.15s, box-shadow 0.15s',
 };
@@ -113,7 +113,7 @@ export const retroButton: React.CSSProperties = {
   borderRadius: '2px',
   color: '#0a0a0f',
   fontFamily: FONTS.DISPLAY,
-  fontSize: '14px',
+  fontSize: '18px',
   fontWeight: 600,
   letterSpacing: '1px',
   textTransform: 'uppercase',

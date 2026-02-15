@@ -124,7 +124,7 @@ export function SubgroupNode({ subgroup, index, total, isHighlighted, centerX, c
           textAnchor="middle"
           dominantBaseline="central"
           fill={COLORS.BG_PRIMARY}
-          fontSize="11"
+          fontSize="15"
           fontFamily={FONTS.MONO}
           fontWeight="700"
         >
@@ -154,7 +154,7 @@ export function SubgroupNode({ subgroup, index, total, isHighlighted, centerX, c
       <div
         style={{
           fontFamily: FONTS.MONO,
-          fontSize: '10px',
+          fontSize: '13px',
           fontWeight: 500,
           letterSpacing: '1px',
           color: color,
@@ -172,7 +172,7 @@ export function SubgroupNode({ subgroup, index, total, isHighlighted, centerX, c
       <div
         style={{
           fontFamily: FONTS.MONO,
-          fontSize: '9px',
+          fontSize: '12px',
           color: COLORS.TEXT_DIM,
           textAlign: 'center' as const,
           marginTop: '1px',

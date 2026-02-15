@@ -20,7 +20,7 @@ const styles = {
   } as React.CSSProperties,
   title: {
     ...phosphorHeading,
-    fontSize: '24px',
+    fontSize: '32px',
     margin: 0,
   },
   section: {
@@ -34,7 +34,7 @@ const styles = {
   } as React.CSSProperties,
   sectionHeading: {
     fontFamily: FONTS.DISPLAY,
-    fontSize: '16px',
+    fontSize: '21px',
     fontWeight: 600,
     color: COLORS.TEXT_ACCENT,
     letterSpacing: '1px',
@@ -56,13 +56,13 @@ const styles = {
   },
   label: {
     fontFamily: FONTS.BODY,
-    fontSize: '13px',
+    fontSize: '18px',
     color: COLORS.TEXT_MUTED,
   },
   value: {
     ...dataReadout,
     padding: '4px 10px',
-    fontSize: '13px',
+    fontSize: '18px',
   } as React.CSSProperties,
 };
 

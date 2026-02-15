@@ -17,7 +17,7 @@ const styles = {
   } as React.CSSProperties,
   heading: {
     fontFamily: FONTS.DISPLAY,
-    fontSize: '16px',
+    fontSize: '21px',
     fontWeight: 600,
     color: COLORS.TEXT_HEADING,
     letterSpacing: '1px',
@@ -31,12 +31,12 @@ const styles = {
     gap: '10px',
     marginBottom: '20px',
     fontFamily: FONTS.MONO,
-    fontSize: '13px',
+    fontSize: '18px',
     color: COLORS.TEXT_MUTED,
   },
   statusText: {
     fontWeight: 600,
-    fontSize: '13px',
+    fontSize: '18px',
     fontFamily: FONTS.MONO,
   },
   qrFrame: {
@@ -51,14 +51,14 @@ const styles = {
   } as React.CSSProperties,
   secretDisplay: {
     ...dataReadout,
-    fontSize: '11px',
+    fontSize: '15px',
     wordBreak: 'break-all' as const,
     maxWidth: '320px',
   } as React.CSSProperties,
   codeInput: {
     ...retroInput,
     fontFamily: FONTS.MONO,
-    fontSize: '20px',
+    fontSize: '26px',
     letterSpacing: '6px',
     textAlign: 'center' as const,
     maxWidth: '220px',
@@ -68,7 +68,7 @@ const styles = {
   label: {
     display: 'block',
     fontFamily: FONTS.MONO,
-    fontSize: '11px',
+    fontSize: '15px',
     letterSpacing: '1px',
     color: COLORS.TEXT_MUTED,
     marginBottom: '6px',
@@ -77,7 +77,7 @@ const styles = {
   btn: {
     ...retroButton,
     padding: '10px 20px',
-    fontSize: '13px',
+    fontSize: '18px',
     marginRight: '8px',
   } as React.CSSProperties,
   btnDanger: {
@@ -87,7 +87,7 @@ const styles = {
     borderRadius: '2px',
     color: '#0a0a0f',
     fontFamily: FONTS.DISPLAY,
-    fontSize: '13px',
+    fontSize: '18px',
     fontWeight: 600,
     letterSpacing: '1px',
     textTransform: 'uppercase' as const,
@@ -101,7 +101,7 @@ const styles = {
     borderRadius: '2px',
     color: COLORS.TEXT_MUTED,
     fontFamily: FONTS.MONO,
-    fontSize: '12px',
+    fontSize: '16px',
     cursor: 'pointer',
     letterSpacing: '1px',
     textTransform: 'uppercase' as const,
@@ -109,20 +109,20 @@ const styles = {
   bodyText: {
     fontFamily: FONTS.BODY,
     color: COLORS.TEXT_PRIMARY,
-    fontSize: '14px',
+    fontSize: '18px',
     marginBottom: '12px',
     lineHeight: '1.5',
   },
   error: {
     fontFamily: FONTS.MONO,
     color: COLORS.ERROR,
-    fontSize: '12px',
+    fontSize: '16px',
     marginTop: '12px',
   },
   success: {
     fontFamily: FONTS.MONO,
     color: COLORS.SUCCESS,
-    fontSize: '12px',
+    fontSize: '16px',
     marginTop: '12px',
   },
 };

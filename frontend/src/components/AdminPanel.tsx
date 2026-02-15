@@ -26,7 +26,7 @@ const styles = {
   },
   infoLabel: {
     fontFamily: FONTS.MONO,
-    fontSize: '11px',
+    fontSize: '15px',
     color: COLORS.TEXT_MUTED,
     textTransform: 'uppercase' as const,
     letterSpacing: '1px',
@@ -34,7 +34,7 @@ const styles = {
   infoValue: {
     ...dataReadout,
     padding: '4px 10px',
-    fontSize: '12px',
+    fontSize: '16px',
   } as React.CSSProperties,
   statusRow: {
     display: 'flex',
@@ -44,7 +44,7 @@ const styles = {
   },
   statusText: {
     fontFamily: FONTS.MONO,
-    fontSize: '12px',
+    fontSize: '16px',
     color: COLORS.TEXT_PRIMARY,
     textTransform: 'uppercase' as const,
     letterSpacing: '1px',
@@ -63,7 +63,7 @@ const styles = {
     justifyContent: 'center',
     gap: '10px',
     padding: '14px 24px',
-    fontSize: '14px',
+    fontSize: '18px',
   } as React.CSSProperties,
   startBtn: {
     background: 'linear-gradient(135deg, #00CC66, #00FF88)',
@@ -83,7 +83,7 @@ const styles = {
   summary: {
     ...dataReadout,
     marginTop: '16px',
-    fontSize: '13px',
+    fontSize: '18px',
     lineHeight: 1.6,
     whiteSpace: 'pre-wrap' as const,
     color: COLORS.TEXT_PRIMARY,
@@ -93,7 +93,7 @@ const styles = {
   error: {
     fontFamily: FONTS.MONO,
     color: COLORS.ERROR,
-    fontSize: '12px',
+    fontSize: '16px',
     marginTop: '8px',
     letterSpacing: '0.5px',
   },

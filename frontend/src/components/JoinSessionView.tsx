@@ -85,7 +85,7 @@ export function JoinSessionView() {
       <h2
         style={{
           ...phosphorHeading,
-          fontSize: '24px',
+          fontSize: '32px',
           margin: 0,
         }}
       >
@@ -106,7 +106,7 @@ export function JoinSessionView() {
           <span
             style={{
               fontFamily: FONTS.MONO,
-              fontSize: '11px',
+              fontSize: '15px',
               fontWeight: 500,
               color: COLORS.TEXT_MUTED,
               letterSpacing: '1.5px',
@@ -119,7 +119,7 @@ export function JoinSessionView() {
             style={{
               ...retroInput,
               fontFamily: FONTS.MONO,
-              fontSize: '18px',
+              fontSize: '24px',
               letterSpacing: '4px',
               textTransform: 'uppercase' as const,
               padding: '10px 14px',
@@ -143,7 +143,7 @@ export function JoinSessionView() {
           <span
             style={{
               fontFamily: FONTS.MONO,
-              fontSize: '11px',
+              fontSize: '15px',
               fontWeight: 500,
               color: COLORS.TEXT_MUTED,
               letterSpacing: '1.5px',
@@ -179,7 +179,7 @@ export function JoinSessionView() {
             borderRadius: '2px',
             color: '#0a0a0f',
             fontFamily: FONTS.DISPLAY,
-            fontSize: '14px',
+            fontSize: '18px',
             fontWeight: 600,
             letterSpacing: '1px',
             textTransform: 'uppercase' as const,
@@ -202,7 +202,7 @@ export function JoinSessionView() {
           style={{
             fontFamily: FONTS.MONO,
             color: COLORS.ERROR,
-            fontSize: '13px',
+            fontSize: '18px',
             margin: 0,
           }}
         >
@@ -229,7 +229,7 @@ export function JoinSessionView() {
             style={{
               fontFamily: FONTS.MONO,
               color: COLORS.TEXT_MUTED,
-              fontSize: '13px',
+              fontSize: '18px',
               textAlign: 'center' as const,
               padding: '32px 0',
             }}
@@ -241,7 +241,7 @@ export function JoinSessionView() {
             style={{
               fontFamily: FONTS.MONO,
               color: COLORS.TEXT_MUTED,
-              fontSize: '13px',
+              fontSize: '18px',
               textAlign: 'center' as const,
               padding: '32px 0',
             }}
@@ -295,7 +295,7 @@ export function JoinSessionView() {
                     <span
                       style={{
                         fontFamily: FONTS.BODY,
-                        fontSize: '14px',
+                        fontSize: '18px',
                         fontWeight: 600,
                         color: COLORS.TEXT_PRIMARY,
                       }}
@@ -305,7 +305,7 @@ export function JoinSessionView() {
                     <span
                       style={{
                         fontFamily: FONTS.MONO,
-                        fontSize: '11px',
+                        fontSize: '15px',
                         color: COLORS.TEXT_MUTED,
                       }}
                     >
@@ -318,7 +318,7 @@ export function JoinSessionView() {
                   <span
                     style={{
                       fontFamily: FONTS.MONO,
-                      fontSize: '13px',
+                      fontSize: '18px',
                       fontWeight: 600,
                       color: COLORS.ACCENT,
                       letterSpacing: '2px',
@@ -330,7 +330,7 @@ export function JoinSessionView() {
                     style={{
                       padding: '3px 10px',
                       borderRadius: '2px',
-                      fontSize: '10px',
+                      fontSize: '13px',
                       fontWeight: 600,
                       fontFamily: FONTS.MONO,
                       textTransform: 'uppercase' as const,

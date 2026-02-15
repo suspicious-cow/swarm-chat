@@ -38,7 +38,7 @@ const styles = {
   } as React.CSSProperties,
   heading: {
     fontFamily: FONTS.DISPLAY,
-    fontSize: '20px',
+    fontSize: '26px',
     fontWeight: 600,
     letterSpacing: '3px',
     textTransform: 'uppercase' as const,
@@ -49,7 +49,7 @@ const styles = {
   label: {
     display: 'block',
     fontFamily: FONTS.MONO,
-    fontSize: '11px',
+    fontSize: '15px',
     fontWeight: 500,
     letterSpacing: '1.5px',
     textTransform: 'uppercase' as const,
@@ -69,14 +69,14 @@ const styles = {
   } as React.CSSProperties,
   error: {
     fontFamily: FONTS.MONO,
-    fontSize: '12px',
+    fontSize: '16px',
     color: COLORS.ERROR,
     marginTop: '12px',
     textAlign: 'center' as const,
   },
   toggle: {
     fontFamily: FONTS.MONO,
-    fontSize: '12px',
+    fontSize: '16px',
     color: COLORS.TEXT_MUTED,
     marginTop: '20px',
     textAlign: 'center' as const,

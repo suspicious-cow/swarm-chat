@@ -53,7 +53,7 @@ export function ToastContainer() {
             >
               <span style={{
                 fontFamily: FONTS.MONO,
-                fontSize: '10px',
+                fontSize: '13px',
                 fontWeight: 500,
                 letterSpacing: '1.5px',
                 textTransform: 'uppercase',
@@ -65,7 +65,7 @@ export function ToastContainer() {
               </span>
               <span style={{
                 fontFamily: FONTS.MONO,
-                fontSize: '13px',
+                fontSize: '18px',
                 color: COLORS.TEXT_PRIMARY,
                 lineHeight: '1.4',
               }}>
@@ -82,7 +82,7 @@ export function ToastContainer() {
                   background: 'none',
                   border: 'none',
                   color: COLORS.TEXT_DIM,
-                  fontSize: '14px',
+                  fontSize: '18px',
                   cursor: 'pointer',
                   padding: '0 2px',
                   lineHeight: '1',
