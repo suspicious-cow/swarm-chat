@@ -20,9 +20,9 @@ const styles = {
   } as React.CSSProperties,
   infoRow: {
     display: 'flex',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    marginBottom: '8px',
+    flexDirection: 'column' as const,
+    gap: '4px',
+    marginBottom: '12px',
   },
   infoLabel: {
     fontFamily: FONTS.MONO,
@@ -33,8 +33,9 @@ const styles = {
   },
   infoValue: {
     ...dataReadout,
-    padding: '4px 10px',
+    padding: '6px 10px',
     fontSize: '16px',
+    wordBreak: 'break-word' as const,
   } as React.CSSProperties,
   statusRow: {
     display: 'flex',
