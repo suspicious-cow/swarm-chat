@@ -2,9 +2,10 @@ import type { ReactNode } from 'react';
 import { AnimatePresence, motion } from 'motion/react';
 import { useAuthStore } from '../stores/authStore';
 import { useDeliberationStore } from '../stores/deliberationStore';
+import { useThemeStore } from '../stores/themeStore';
 import { Sidebar } from './Sidebar';
 import { ToastContainer } from './ToastContainer';
-import { LAYOUT, COLORS, FONTS } from '../styles/constants';
+import { LAYOUT, COLORS, FONTS, DARK_THEME, LIGHT_THEME, themeToCSS } from '../styles/constants';
 import { scanLineOverlay, crtVignette, gridBg } from '../styles/retro';
 import { viewTransition } from '../styles/motion';
 
@@ -70,6 +71,21 @@ const styles = {
     fontFamily: FONTS.BODY,
     transition: 'all 0.15s',
   },
+  themeToggle: {
+    width: '36px',
+    height: '36px',
+    borderRadius: '50%',
+    background: 'transparent',
+    border: `1px solid ${COLORS.BORDER}`,
+    color: COLORS.ACCENT,
+    cursor: 'pointer',
+    fontSize: '18px',
+    display: 'flex',
+    alignItems: 'center',
+    justifyContent: 'center',
+    transition: 'all 0.2s',
+    flexShrink: 0,
+  } as React.CSSProperties,
   main: {
     flex: 1,
     overflow: 'auto',
@@ -121,14 +137,18 @@ const globalKeyframes = `
 export function Layout({ children }: { children: ReactNode }) {
   const { account, logout } = useAuthStore();
   const { view, reset } = useDeliberationStore();
+  const { mode, toggle } = useThemeStore();
 
   const handleLogout = () => {
     logout();
     reset();
   };
 
+  const themeVars = themeToCSS(mode === 'dark' ? DARK_THEME : LIGHT_THEME);
+
   return (
     <div style={styles.root}>
+      <style>{`:root { ${themeVars} }`}</style>
       <style>{globalKeyframes}</style>
 
       {/* Scan lines overlay */}
@@ -140,6 +160,21 @@ export function Layout({ children }: { children: ReactNode }) {
       <Sidebar />
       <div style={styles.rightPanel}>
         <div style={styles.topBar}>
+          <button
+            style={styles.themeToggle}
+            onClick={toggle}
+            title={mode === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+            onMouseEnter={(e) => {
+              e.currentTarget.style.borderColor = COLORS.ACCENT;
+              e.currentTarget.style.boxShadow = COLORS.SHADOW_GLOW;
+            }}
+            onMouseLeave={(e) => {
+              e.currentTarget.style.borderColor = COLORS.BORDER;
+              e.currentTarget.style.boxShadow = 'none';
+            }}
+          >
+            {mode === 'dark' ? '\u2600' : '\u263D'}
+          </button>
           {account && (
             <>
               <div style={styles.userChip}>

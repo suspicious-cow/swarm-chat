@@ -23,7 +23,7 @@ export const dataReadout: React.CSSProperties = {
   fontFamily: FONTS.MONO,
   fontSize: '18px',
   fontWeight: 400,
-  background: 'rgba(255,184,0,0.06)',
+  background: 'var(--c-data-readout-bg)',
   border: `1px solid ${COLORS.BORDER}`,
   borderRadius: '2px',
   padding: '8px 12px',
@@ -57,7 +57,7 @@ export const scanLineOverlay: React.CSSProperties = {
   height: '100%',
   pointerEvents: 'none',
   zIndex: 9998,
-  background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.04) 2px, rgba(0,0,0,0.04) 4px)',
+  background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, var(--c-scan-line) 2px, var(--c-scan-line) 4px)',
 };
 
 /** CRT vignette radial gradient */
@@ -69,14 +69,14 @@ export const crtVignette: React.CSSProperties = {
   height: '100%',
   pointerEvents: 'none',
   zIndex: 9997,
-  background: 'radial-gradient(ellipse at center, transparent 60%, rgba(0,0,0,0.4) 100%)',
+  background: 'radial-gradient(ellipse at center, transparent 60%, var(--c-vignette) 100%)',
 };
 
 /** Faint graph-paper grid background */
 export const gridBg: React.CSSProperties = {
   backgroundImage: `
-    linear-gradient(rgba(255,184,0,0.03) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,184,0,0.03) 1px, transparent 1px)
+    linear-gradient(var(--c-grid-line) 1px, transparent 1px),
+    linear-gradient(90deg, var(--c-grid-line) 1px, transparent 1px)
   `,
   backgroundSize: '24px 24px',
 };
