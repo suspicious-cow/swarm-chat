@@ -102,4 +102,8 @@ Write in a clear, professional tone. Use "we" and "our" to reflect the collectiv
 The summary should read as the group's own deliberative report, not an external analysis."""
 
     summary = await generate_text(prompt)
+
+    session.summary = summary
+    await db.commit()
+
     return {"summary": summary}

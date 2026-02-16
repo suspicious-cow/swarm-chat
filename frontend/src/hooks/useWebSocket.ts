@@ -87,11 +87,19 @@ export function useWebSocket() {
           fetchSubgroups();
         }
       } else if (evt === 'session:completed') {
+        const store = useDeliberationStore.getState();
+        const sessionId = store.currentSession?.id;
         useDeliberationStore.setState(s => ({
           currentSession: s.currentSession
             ? { ...s.currentSession, status: 'completed' as const }
             : null
         }));
+        // Auto-navigate to results view
+        if (sessionId) {
+          store.fetchResults(sessionId).then(() => {
+            setView('results');
+          });
+        }
       } else if (evt === 'session:convergence') {
         const convergence = data.convergence as number;
         useDeliberationStore.setState(s => ({

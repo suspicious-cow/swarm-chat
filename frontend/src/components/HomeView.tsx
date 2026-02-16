@@ -23,7 +23,7 @@ const statusLedColor: Record<string, string> = {
 
 export function HomeView() {
   const { account } = useAuthStore();
-  const { setView, joinSession } = useDeliberationStore();
+  const { setView, joinSession, fetchResults } = useDeliberationStore();
   const [sessions, setSessions] = useState<Session[]>([]);
   const [loading, setLoading] = useState(true);
   const [hoveredCard, setHoveredCard] = useState<string | null>(null);
@@ -46,8 +46,11 @@ export function HomeView() {
     fetchSessions();
   }, []);
 
-  const handleSessionClick = (session: Session) => {
-    if ((session.status === 'active' || session.status === 'waiting') && account) {
+  const handleSessionClick = async (session: Session) => {
+    if (session.status === 'completed') {
+      await fetchResults(session.id);
+      setView('results');
+    } else if ((session.status === 'active' || session.status === 'waiting') && account) {
       joinSession(session.join_code, account.display_name);
     }
   };
@@ -388,14 +391,14 @@ export function HomeView() {
                   style={{
                     ...instrumentCard,
                     padding: '14px 18px',
-                    cursor: isCompleted ? 'default' : 'pointer',
+                    cursor: 'pointer',
                     display: 'flex',
                     justifyContent: 'space-between',
                     alignItems: 'center',
                     transition: 'all 0.15s ease',
-                    opacity: isCompleted ? 0.6 : 1,
-                    borderColor: isHovered && !isCompleted ? COLORS.ACCENT_DIM : COLORS.BORDER,
-                    boxShadow: isHovered && !isCompleted
+                    opacity: isCompleted ? 0.75 : 1,
+                    borderColor: isHovered ? COLORS.ACCENT_DIM : COLORS.BORDER,
+                    boxShadow: isHovered
                       ? `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_GLOW}`
                       : `inset 0 1px 0 rgba(255,255,255,0.03), ${COLORS.SHADOW_SM}`,
                   }}

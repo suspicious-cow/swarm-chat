@@ -5,7 +5,7 @@ import { LAYOUT, COLORS, FONTS } from '../styles/constants';
 import { systemLabel, statusLed } from '../styles/retro';
 
 type View = 'home' | 'new-session' | 'join-session' | 'settings'
-  | 'waiting' | 'chat' | 'visualizer' | 'participants';
+  | 'waiting' | 'chat' | 'visualizer' | 'participants' | 'results';
 
 interface NavItem {
   label: string;
@@ -165,6 +165,7 @@ export function Sidebar() {
 
   const inSession = !!(currentUser && currentSession &&
     (currentSession.status === 'waiting' || currentSession.status === 'active'));
+  const inResults = view === 'results';
 
   const handleCopy = () => {
     if (currentSession?.join_code) {
@@ -262,6 +263,14 @@ export function Sidebar() {
                 {renderNavItem({ label: 'Admin Controls', view: 'waiting', icon: '\u2699' })}
               </>
             )}
+          </>
+        ) : inResults ? (
+          <>
+            <div style={styles.sectionLabel}>[ DEBRIEF ]</div>
+            {renderNavItem({ label: 'Results', view: 'results', icon: '\u2637' })}
+            <div style={styles.divider} />
+            <div style={styles.sectionLabel}>[ NAVIGATION ]</div>
+            {renderNavItem({ label: 'Home', view: 'home', icon: '\u2302' })}
           </>
         ) : (
           <>

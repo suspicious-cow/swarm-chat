@@ -3,7 +3,7 @@ import uuid
 import random
 import string
 
-from sqlalchemy import String, Integer, Enum
+from sqlalchemy import String, Integer, Float, Text, Enum
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy.orm import Mapped, mapped_column, relationship
 
@@ -30,6 +30,10 @@ class Session(Base, UUIDPrimaryKey, TimestampMixin):
     subgroup_size: Mapped[int] = mapped_column(Integer, default=5)
     join_code: Mapped[str] = mapped_column(
         String(8), unique=True, default=generate_join_code
+    )
+    summary: Mapped[str | None] = mapped_column(Text, nullable=True, default=None)
+    final_convergence: Mapped[float | None] = mapped_column(
+        Float, nullable=True, default=None
     )
 
     users = relationship("User", back_populates="session")

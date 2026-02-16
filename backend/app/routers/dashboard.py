@@ -24,6 +24,8 @@ class DashboardSession(BaseModel):
     join_code: str
     user_count: int
     created_at: datetime
+    summary: str | None = None
+    final_convergence: float | None = None
 
 
 @router.get("/sessions", response_model=list[DashboardSession])
@@ -51,6 +53,8 @@ async def list_sessions(
             Session.status,
             Session.join_code,
             Session.created_at,
+            Session.summary,
+            Session.final_convergence,
             my_user.c.is_admin,
             func.coalesce(user_count_sq.c.user_count, 0).label("user_count"),
         )
@@ -69,6 +73,8 @@ async def list_sessions(
             join_code=row.join_code,
             user_count=row.user_count,
             created_at=row.created_at,
+            summary=row.summary,
+            final_convergence=row.final_convergence,
         )
         for row in rows
     ]

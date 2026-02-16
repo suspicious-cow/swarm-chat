@@ -12,6 +12,7 @@ import { WaitingView } from './components/WaitingView';
 import { ChatRoom } from './components/ChatRoom';
 import { Visualizer } from './components/Visualizer';
 import { ParticipantsView } from './components/ParticipantsView';
+import { ResultsView } from './components/ResultsView';
 
 export default function App() {
   const { account, loading, mfaRequired, fetchMe } = useAuthStore();
@@ -57,6 +58,7 @@ export default function App() {
       {view === 'chat' && <ChatRoom />}
       {view === 'visualizer' && <Visualizer />}
       {view === 'participants' && <ParticipantsView />}
+      {view === 'results' && <ResultsView />}
     </Layout>
   );
 }

@@ -7,7 +7,21 @@ export interface Session {
   user_count?: number;
   subgroup_count?: number;
   convergence?: number;
+  summary?: string | null;
+  final_convergence?: number | null;
   created_at: string;
+}
+
+export interface SessionResults {
+  id: string;
+  title: string;
+  status: 'waiting' | 'active' | 'completed';
+  created_at: string;
+  summary: string | null;
+  final_convergence: number | null;
+  subgroups: Subgroup[];
+  ideas: Idea[];
+  messages: Message[];
 }
 
 export interface User {

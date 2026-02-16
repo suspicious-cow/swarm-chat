@@ -1,12 +1,12 @@
 import { create } from 'zustand';
 import { persist } from 'zustand/middleware';
 import { useToastStore } from './toastStore';
-import type { Session, User, Subgroup, Message, Idea } from '../types';
+import type { Session, SessionResults, User, Subgroup, Message, Idea } from '../types';
 
 const API_BASE = import.meta.env.VITE_API_URL || '';
 
 type View = 'home' | 'new-session' | 'join-session' | 'settings'
-  | 'waiting' | 'chat' | 'visualizer' | 'participants';
+  | 'waiting' | 'chat' | 'visualizer' | 'participants' | 'results';
 
 interface DeliberationState {
   // Current user & session
@@ -23,6 +23,7 @@ interface DeliberationState {
   view: View;
   surrogateTyping: boolean;
   error: string | null;
+  resultsData: SessionResults | null;
 
   // Actions
   createSession: (title: string, subgroupSize: number) => Promise<void>;
@@ -33,6 +34,7 @@ interface DeliberationState {
   fetchMessages: () => Promise<void>;
   fetchSubgroups: () => Promise<void>;
   fetchIdeas: () => Promise<void>;
+  fetchResults: (sessionId: string) => Promise<void>;
   addMessage: (message: Message) => void;
   setSurrogateTyping: (typing: boolean) => void;
   setSubgroups: (subgroups: Subgroup[]) => void;
@@ -52,6 +54,7 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
   view: 'home',
   surrogateTyping: false,
   error: null,
+  resultsData: null,
 
   createSession: async (title, subgroupSize) => {
     try {
@@ -219,6 +222,20 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
     }
   },
 
+  fetchResults: async (sessionId: string) => {
+    try {
+      const res = await fetch(`${API_BASE}/api/sessions/${sessionId}/results`, {
+        credentials: 'include',
+      });
+      if (res.ok) {
+        const data: SessionResults = await res.json();
+        set({ resultsData: data });
+      }
+    } catch {
+      // silent
+    }
+  },
+
   addMessage: (message) => {
     set((state) => ({
       messages: [...state.messages, message],
@@ -241,6 +258,7 @@ export const useDeliberationStore = create<DeliberationState>()(persist((set, ge
     view: 'home',
     surrogateTyping: false,
     error: null,
+    resultsData: null,
   }),
 }), {
   name: 'swarm-chat-session',

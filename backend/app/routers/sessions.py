@@ -11,11 +11,14 @@ from app.models.account import Account
 from app.models.session import Session, SessionStatus
 from app.models.subgroup import Subgroup
 from app.models.user import User
-from app.schemas.session import SessionCreate, SessionOut, SessionDetail
+from app.schemas.session import SessionCreate, SessionOut, SessionDetail, SessionResults
 from app.schemas.subgroup import SubgroupOut
 from app.schemas.idea import IdeaOut
+from app.schemas.message import MessageOut
 from app.models.idea import Idea
+from app.models.message import Message
 from app.engine.partitioner import create_subgroups_for_session
+from app.engine.taxonomy import compute_convergence
 from app.websocket.manager import manager
 
 router = APIRouter(prefix="/api/sessions", tags=["sessions"])
@@ -125,6 +128,8 @@ async def stop_session(session_id: uuid.UUID, db: AsyncSession = Depends(get_db)
     if not session:
         raise HTTPException(status_code=404, detail="Session not found")
 
+    score = await compute_convergence(db, session_id)
+    session.final_convergence = score
     session.status = SessionStatus.completed
     await db.commit()
 
@@ -152,3 +157,51 @@ async def get_ideas(session_id: uuid.UUID, db: AsyncSession = Depends(get_db)):
         .order_by(Idea.created_at.desc())
     )
     return result.scalars().all()
+
+
+@router.get("/{session_id}/results", response_model=SessionResults)
+async def get_session_results(
+    session_id: uuid.UUID, db: AsyncSession = Depends(get_db)
+):
+    session = await db.get(Session, session_id)
+    if not session:
+        raise HTTPException(status_code=404, detail="Session not found")
+
+    # Subgroups with members
+    sg_result = await db.execute(
+        select(Subgroup)
+        .options(selectinload(Subgroup.members))
+        .where(Subgroup.session_id == session_id)
+    )
+    subgroups = sg_result.scalars().all()
+
+    # Ideas
+    idea_result = await db.execute(
+        select(Idea)
+        .where(Idea.session_id == session_id)
+        .order_by(Idea.created_at.desc())
+    )
+    ideas = idea_result.scalars().all()
+
+    # All messages across all subgroups
+    subgroup_ids = [sg.id for sg in subgroups]
+    messages: list[Message] = []
+    if subgroup_ids:
+        msg_result = await db.execute(
+            select(Message)
+            .where(Message.subgroup_id.in_(subgroup_ids))
+            .order_by(Message.created_at)
+        )
+        messages = list(msg_result.scalars().all())
+
+    return SessionResults(
+        id=session.id,
+        title=session.title,
+        status=session.status,
+        created_at=session.created_at,
+        summary=session.summary,
+        final_convergence=session.final_convergence,
+        subgroups=[SubgroupOut.model_validate(sg) for sg in subgroups],
+        ideas=[IdeaOut.model_validate(i) for i in ideas],
+        messages=[MessageOut.model_validate(m) for m in messages],
+    )
