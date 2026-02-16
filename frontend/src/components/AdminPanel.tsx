@@ -153,6 +153,44 @@ export function AdminPanel() {
         <span style={styles.statusText}>{currentSession.status}</span>
       </div>
 
+      {currentSession.convergence != null && currentSession.status === 'active' && (
+        <div style={styles.infoRow}>
+          <span style={styles.infoLabel}>Convergence</span>
+          <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
+            <div style={{
+              flex: 1,
+              height: '8px',
+              background: COLORS.BG_INPUT,
+              borderRadius: '4px',
+              overflow: 'hidden',
+              border: `1px solid ${COLORS.BORDER}`,
+            }}>
+              <div style={{
+                width: `${Math.round(currentSession.convergence * 100)}%`,
+                height: '100%',
+                background: currentSession.convergence > 0.7
+                  ? COLORS.SUCCESS
+                  : currentSession.convergence > 0.4
+                    ? COLORS.ACCENT
+                    : COLORS.ERROR,
+                transition: 'width 0.6s ease, background 0.6s ease',
+                boxShadow: currentSession.convergence > 0.7
+                  ? `0 0 8px ${COLORS.SUCCESS}`
+                  : 'none',
+              }} />
+            </div>
+            <span style={{
+              ...dataReadout,
+              fontSize: '14px',
+              minWidth: '42px',
+              textAlign: 'right' as const,
+            }}>
+              {Math.round(currentSession.convergence * 100)}%
+            </span>
+          </div>
+        </div>
+      )}
+
       <div style={styles.buttonGroup}>
         {currentSession.status === 'waiting' && (
           <button

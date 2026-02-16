@@ -6,6 +6,7 @@ export interface Session {
   subgroup_size: number;
   user_count?: number;
   subgroup_count?: number;
+  convergence?: number;
   created_at: string;
 }
 

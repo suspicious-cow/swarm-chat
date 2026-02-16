@@ -92,6 +92,13 @@ export function useWebSocket() {
             ? { ...s.currentSession, status: 'completed' as const }
             : null
         }));
+      } else if (evt === 'session:convergence') {
+        const convergence = data.convergence as number;
+        useDeliberationStore.setState(s => ({
+          currentSession: s.currentSession
+            ? { ...s.currentSession, convergence }
+            : null
+        }));
       }
     };
 

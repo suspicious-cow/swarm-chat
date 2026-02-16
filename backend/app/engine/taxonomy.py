@@ -96,12 +96,69 @@ async def get_ideas_not_in_subgroup(
     session_id: uuid.UUID,
     subgroup_id: uuid.UUID,
 ) -> list[Idea]:
-    """Get ideas from other subgroups not yet discussed in this one."""
+    """Get ideas from other subgroups, prioritizing those that challenge local consensus.
+
+    The CME paper specifies that cross-pollinated content should prioritize
+    ideas that CHALLENGE a subgroup's prevailing beliefs, not just any unheard
+    idea. We compute the subgroup's average sentiment and rank foreign ideas
+    by how far they diverge from it.
+    """
+    from sqlalchemy import func as sa_func
+
+    # Compute local subgroup's average sentiment
+    local_avg = await db.scalar(
+        select(sa_func.avg(Idea.sentiment))
+        .where(Idea.session_id == session_id)
+        .where(Idea.subgroup_id == subgroup_id)
+    )
+    local_sentiment: float = float(local_avg) if local_avg is not None else 0.0
+
+    # Fetch foreign ideas
     result = await db.execute(
         select(Idea)
         .where(Idea.session_id == session_id)
         .where(Idea.subgroup_id != subgroup_id)
-        .order_by(Idea.created_at.desc())
-        .limit(10)
     )
-    return list(result.scalars().all())
+    foreign_ideas = list(result.scalars().all())
+
+    # Sort by sentiment distance from local consensus (most challenging first)
+    foreign_ideas.sort(key=lambda idea: abs(idea.sentiment - local_sentiment), reverse=True)
+
+    return foreign_ideas[:10]
+
+
+async def compute_convergence(
+    db: AsyncSession,
+    session_id: uuid.UUID,
+) -> float:
+    """Compute convergence score (0.0 = divergent, 1.0 = fully converged).
+
+    Measures how aligned subgroup sentiments are across the session.
+    When all subgroups share similar average sentiment, convergence is high.
+    """
+    from sqlalchemy import func as sa_func
+
+    # Get average sentiment per subgroup
+    result = await db.execute(
+        select(
+            Idea.subgroup_id,
+            sa_func.avg(Idea.sentiment).label("avg_sentiment"),
+        )
+        .where(Idea.session_id == session_id)
+        .group_by(Idea.subgroup_id)
+    )
+    rows = result.all()
+
+    if len(rows) < 2:
+        return 0.0  # Need at least 2 subgroups to measure convergence
+
+    sentiments = [float(row.avg_sentiment) for row in rows]
+
+    # Compute variance of subgroup sentiments
+    mean = sum(sentiments) / len(sentiments)
+    variance = sum((s - mean) ** 2 for s in sentiments) / len(sentiments)
+
+    # Map variance to 0-1 scale. Max possible variance for sentiment in [-1,1] is 1.0.
+    # Score = 1 - sqrt(variance) gives us a 0-1 convergence metric.
+    convergence = max(0.0, 1.0 - variance ** 0.5)
+    return round(convergence, 3)

@@ -16,9 +16,15 @@ from sqlalchemy import select
 from app.database import async_session
 from app.models.session import Session, SessionStatus
 from app.models.subgroup import Subgroup
-from app.engine.taxonomy import update_taxonomy_for_subgroup, get_ideas_not_in_subgroup
+from app.engine.taxonomy import (
+    update_taxonomy_for_subgroup,
+    get_ideas_not_in_subgroup,
+    compute_convergence,
+)
 from app.engine.surrogate import deliver_surrogate_message
-from app.services.redis import get_redis
+from app.engine.contributor import deliver_contributor_message
+from app.models.message import Message
+from app.services.redis import get_redis, publish_to_session
 from app.config import settings
 
 logger = logging.getLogger(__name__)
@@ -107,7 +113,39 @@ async def process_session(session: Session):
                 except Exception as e:
                     logger.error(f"Surrogate delivery failed for {sg.label}: {e}")
 
+                # Contributor agent: generate novel contributions
+                try:
+                    recent_msgs = await sg_db.execute(
+                        select(Message)
+                        .where(Message.subgroup_id == sg.id)
+                        .order_by(Message.created_at.desc())
+                        .limit(10)
+                    )
+                    messages = list(recent_msgs.scalars().all())
+                    if messages:
+                        context = "\n".join(
+                            f"- {m.content}" for m in reversed(messages)
+                        )
+                        session_obj = await sg_db.get(Session, session.id)
+                        await deliver_contributor_message(sg_db, session_obj, sg, context)
+                        await sg_db.commit()
+                except Exception as e:
+                    logger.error(f"Contributor delivery failed for {sg.label}: {e}")
+
     await asyncio.gather(*[process_subgroup(sg) for sg in subgroups])
+
+    # Convergence tracking: compute and broadcast after each cycle
+    try:
+        async with async_session() as conv_db:
+            score = await compute_convergence(conv_db, session.id)
+            logger.info(f"Session {session.title}: convergence={score:.3f}")
+            await publish_to_session(
+                session.id,
+                "session:convergence",
+                {"convergence": score, "session_id": str(session.id)},
+            )
+    except Exception as e:
+        logger.error(f"Convergence tracking failed for {session.title}: {e}")
 
 
 async def start_cme_loop():
